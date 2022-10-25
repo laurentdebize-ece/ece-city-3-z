@@ -1,6 +1,6 @@
 #include <stdio.h>
 
 int main() {
-    printf("ece city\n");
+    printf("helllllo\n");
     return 0;
 }
