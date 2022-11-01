@@ -57,6 +57,7 @@ int main() {
                         else{
                             niveau=0;
                         }
+                        break;
                     }
                     case ALLEGRO_KEY_RIGHT : {
                         if(categorieConstruction!=4) {
@@ -65,6 +66,7 @@ int main() {
                         else{
                             categorieConstruction=0;
                         }
+                        break;
                     }
                 }
 
