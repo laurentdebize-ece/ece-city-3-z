@@ -2,16 +2,16 @@
 #define ECE_CITY_3_Z_GRAPHE_H
 
 
-/////////////Bibiliotheques/////////////////
+/////////////////////Bibiliotheques////////////////////////
 
 #include <stdio.h>
 #include <stdlib.h>
 
-///////////////Les macros///////////////////
+////////////////////////Les macros/////////////////////////
 
 
 
-////////////// Les enums utilisés////////////
+////////////////////// Les enums utilisés///////////////////
 
 //Le .h ou on mettra toutes les fonctions en lien avec le graphe et le déroulement du jeu
 enum construction{terrainVague, cabane, maison, immeuble, gratteCiel};
