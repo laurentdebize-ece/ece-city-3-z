@@ -1,8 +1,12 @@
-#include <stdio.h>
+#include "graphe.h"
+
+
+
 
 int main() {
-    printf("ece city\n");
-    printf("iqshdkqndkqsbdklqsdn");
-    printf("bonjour");
-    return 0;
+    Graphe * g=lire_graphe("./fichierGrapheTab2D.txt");
+
+
+
+
 }
