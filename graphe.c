@@ -14,7 +14,9 @@ Graphe* CreerGraphe(int ordre)
     }
     for (int i=0; i<38; i++){
         for (int j=0; j<38; j++){
-
+            //fscanf(ifs, "%d", &Newgraphe->tabSommet[i][j].valeur);
+            Newgraphe->tabSommet[i][j].valeur = i*j;
+            Newgraphe->tabSommet[i][j].etat = 0;   //il n'y a aucune construction au debut
         }
     }
     return Newgraphe;
@@ -33,6 +35,7 @@ Graphe * lire_graphe(char * nomFichier)
     fscanf(ifs,"%d",&ordre);
     graphe=CreerGraphe(ordre); // pn creer un graphe de 1444 sommets (38*38)
     graphe->ordre=ordre;
+
 
     return graphe;
 }
