@@ -26,21 +26,16 @@ Graphe* CreerGraphe(int ordre)
 
 Graphe * lire_graphe(char * nomFichier)
 {
-
     Graphe* graphe;
     FILE * ifs = fopen(nomFichier,"r+");   //r+ pour lecture ET ecriture dans un fichier texte déjà crée
     int taille, ordre;
     if (!ifs){
-
         printf("Erreur de lecture fichier\n");
         exit(-1);
     }
 
-
     fscanf(ifs,"%d",&ordre);
     graphe=CreerGraphe(ordre); // pn creer un graphe de 1444 sommets (38*38)
     graphe->ordre=ordre;
-
-
     return graphe;
 }
