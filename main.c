@@ -14,7 +14,7 @@ int main() {
     int compteurRoute = 0;
     int compteurHabitation = 0;
     int NbrHabitant = 0;
-    int compteEnBanque = 500000;
+
     
     typedef struct{
         float x, y;
@@ -43,6 +43,7 @@ int main() {
     al_start_timer(timer);
 
     while (!fini) {
+        int compteEnBanque = 500000;
         al_wait_for_event(queue, &event);
         switch (event.type) {
 
@@ -94,18 +95,18 @@ int main() {
                                 event.mouse.x < tabCase[x][y].x + (TUILE / 2) &&
                                 event.mouse.y < tabCase[x][y].y + (TUILE / 2)) {
                                 niveau = 0;
-                                if(categorieConstruction==0 && tabCase[x][y].construction == 0) {
+                                if(categorieConstruction==0 && tabCase[x][y].construction == 0 && compteEnBanque >50) {
                                     tabCase[x][y].construction = 1;
                                     compteurRoute++;
                                     tabCase[x][y].identite = compteurRoute;
-                                    if (compteEnBanque < 50){
-                                        printf("Vous n'avez pas assez d'argent");
-                                    }
-                                    else{
-                                        compteEnBanque = compteEnBanque - COUT_ROUTE;
-                                    }
+
+                                    compteEnBanque = compteEnBanque - COUT_ROUTE;
+
                                 }
-                                if(categorieConstruction==1 && tabCase[x][y].construction == 0) {
+                                else {
+                                    printf("Vous n'avez pas assez d'argent");
+                                }
+                                if(categorieConstruction==1 && tabCase[x][y].construction == 0 && compteEnBanque > 1000) {
                                     if(x-1 >= 0 && x+1 < COLONNES && y-1 >= 0 && y+1 < LIGNES && tabCase[x - 1][y].construction == 0 && tabCase[x + 1][y].construction == 0 && tabCase[x][y - 1].construction == 0 && tabCase[x][y + 1].construction == 0 && tabCase[x - 1][y - 1].construction == 0 && tabCase[x + 1][y + 1].construction == 0 && tabCase[x + 1][y - 1].construction == 0 && tabCase[x - 1][y + 1].construction == 0) {
                                         compteurHabitation++;
                                         tabCase[x][y].construction = 2;
@@ -136,12 +137,11 @@ int main() {
                                         tabCase[x - 1][y + 1].identite = compteurHabitation;
 
                                     }
-                                    if (compteEnBanque < 1000){
-                                        printf("Vous n'avez pas assez d'argent");
-                                    }
-                                    else{
-                                        compteEnBanque = compteEnBanque - COUT_TERRAIN_VAGUE;
-                                    }
+                                    compteEnBanque = compteEnBanque - COUT_TERRAIN_VAGUE;
+
+                                }
+                                else{
+                                    printf("Vous n'avez pas assez d'argent");
                                 }
                                 // théophile met ta prtie pour le chateau d'eau !!!
 
