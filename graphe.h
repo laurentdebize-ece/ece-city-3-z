@@ -8,7 +8,12 @@
 #include <stdlib.h>
 
 ///////////////////////////Les macros/////////////////////////////
-
+#define COUT_CENTRAL 100000
+#define COUT_CHATEAU_DEAU 100000
+#define COUT_ROUTE 10
+#define COUT_TERRAIN_VAGUE 1000
+#define COUT_CASERNE 10000
+#define TAXE 50
 
 
 ////////////////////// Les enums utilisés///////////////////

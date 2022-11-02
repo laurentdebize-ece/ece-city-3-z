@@ -13,6 +13,8 @@ int main() {
     int construction;
     int compteurRoute = 0;
     int compteurHabitation = 0;
+    int NbrHabitant = 0;
+    int compteEnBanque = 500000;
     
     typedef struct{
         float x, y;
@@ -96,6 +98,12 @@ int main() {
                                     tabCase[x][y].construction = 1;
                                     compteurRoute++;
                                     tabCase[x][y].identite = compteurRoute;
+                                    if (compteEnBanque < 50){
+                                        printf("Vous n'avez pas assez d'argent");
+                                    }
+                                    else{
+                                        compteEnBanque = compteEnBanque - COUT_ROUTE;
+                                    }
                                 }
                                 if(categorieConstruction==1 && tabCase[x][y].construction == 0) {
                                     if(x-1 >= 0 && x+1 < COLONNES && y-1 >= 0 && y+1 < LIGNES && tabCase[x - 1][y].construction == 0 && tabCase[x + 1][y].construction == 0 && tabCase[x][y - 1].construction == 0 && tabCase[x][y + 1].construction == 0 && tabCase[x - 1][y - 1].construction == 0 && tabCase[x + 1][y + 1].construction == 0 && tabCase[x + 1][y - 1].construction == 0 && tabCase[x - 1][y + 1].construction == 0) {
@@ -128,6 +136,36 @@ int main() {
                                         tabCase[x - 1][y + 1].identite = compteurHabitation;
 
                                     }
+                                    if (compteEnBanque < 1000){
+                                        printf("Vous n'avez pas assez d'argent");
+                                    }
+                                    else{
+                                        compteEnBanque = compteEnBanque - COUT_TERRAIN_VAGUE;
+                                    }
+                                }
+                                // théophile met ta prtie pour le chateau d'eau !!!
+
+                                if (compteEnBanque < 100000){
+                                    printf("Vous n'avez pas assez d'argent");
+                                }
+                                else{
+                                    compteEnBanque = compteEnBanque - COUT_CHATEAU_DEAU;
+                                }
+                                // partie sur la centrale électrique !!!
+
+                                if (compteEnBanque < 100000){
+                                    printf("Vous n'avez pas assez d'argent");
+                                }
+                                else{
+                                    compteEnBanque = compteEnBanque - COUT_CENTRAL;
+                                }
+                                // partie sur la caserne !!!
+
+                                if (compteEnBanque < 10000){
+                                    printf("Vous n'avez pas assez d'argent");
+                                }
+                                else{
+                                    compteEnBanque = compteEnBanque - COUT_CASERNE;
                                 }
                             }
                         }
