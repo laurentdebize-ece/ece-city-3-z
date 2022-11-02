@@ -12,7 +12,7 @@ int main() {
     int fini = 0;
     int niveau = 0;
     int construction;
-    int* compteurRoute = 0;
+    int compteurRoute = 0;
     int compteurHabitation = 0;
     int NbrHabitant = 0;
 
