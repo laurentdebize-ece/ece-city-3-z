@@ -2,40 +2,38 @@
 
 int main() {
 
-    Graphe * g=lire_graphe("./fichierGrapheTab2D.txt");
+    FILE * ifs = fopen("map.txt","r");
 
     ALLEGRO_DISPLAY *display = NULL;
     ALLEGRO_EVENT_QUEUE *queue = NULL;
     ALLEGRO_TIMER *timer = NULL;
     ALLEGRO_EVENT event = {0};
     int fini = 0;
-    int niveau = 1;
-
-    typedef struct{
-        int route, habitation, usine, chateauEau, caserne;
-    }CONSTRUCTION;
+    int niveau = 0;
+    int construction;
+    int compteurRoute = 0;
+    int compteurHabitation = 0;
+    
     typedef struct{
         float x, y;
-        CONSTRUCTION construction;
+        int construction;
+        int identite;
     }CASE;
 
 
-    int categorieConstruction = 0; // 0:route 1:habotation 2:usine 3:chateauEau 4:caserne
+    int categorieConstruction = 0; // 0:route 1:habitation 2:usine 3:chateauEau 4:caserne
 
     CASE ** tabCase = malloc((COLONNES)*sizeof(CASE*));
     for(int i = 0; i<COLONNES; i++){
         tabCase[i] = malloc((LIGNES)*sizeof(CASE));
     }
 
-    for(int x=0; x<COLONNES; x++) {
-        for (int y = 0; y < LIGNES; y++) {
+    for (int y = 0; y < LIGNES; y++) {
+        for (int x = 0; x < COLONNES; x++) {
+            fscanf(ifs, "%d", &construction);
+            tabCase[x][y].construction = construction; // 0: rien 1:route 2:habitation 3:usine 4:chateauEau 5:caserne
             tabCase[x][y].x = TUILE/2+x*TUILE;
             tabCase[x][y].y = TUILE/2+y*TUILE;
-            tabCase[x][y].construction.route=0;
-            tabCase[x][y].construction.habitation=0;
-            tabCase[x][y].construction.usine=0;
-            tabCase[x][y].construction.chateauEau=0;
-            tabCase[x][y].construction.caserne=0;
         }
     }
 
@@ -46,45 +44,90 @@ int main() {
         al_wait_for_event(queue, &event);
         switch (event.type) {
 
-            case ALLEGRO_EVENT_DISPLAY_CLOSE:
+            case ALLEGRO_EVENT_DISPLAY_CLOSE: {
+                /*FILE * n = fopen("map.txt","w+");
+                for (int y = 0; y < LIGNES; y++) {
+                    for (int x = 0; x < COLONNES; x++) {
+                        fprintf(n, "%d ",tabCase[x][y].construction);
+                    }
+                    fputs("\n",n);
+                }*/
                 fini = 1;
                 break;
-
-            case ALLEGRO_EVENT_KEY_UP:
+            }
+            case ALLEGRO_EVENT_KEY_UP: {
 
                 switch (event.keyboard.keycode) {
                     case ALLEGRO_KEY_SPACE : {
-                        if(niveau!=2){
+                        if (niveau != 2) {
                             niveau++;
-                        }
-                        else{
-                            niveau=0;
+                        } else {
+                            niveau = 0;
                         }
                         break;
                     }
                     case ALLEGRO_KEY_RIGHT : {
-                        if(categorieConstruction!=4) {
+                        if (categorieConstruction != 4) {
                             categorieConstruction++;
-                        }
-                        else{
-                            categorieConstruction=0;
+                        } else {
+                            categorieConstruction = 0;
                         }
                         break;
                     }
                 }
+            }
+
+            case ALLEGRO_EVENT_MOUSE_AXES: {
+
+                break;
+            }
 
             case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN: {
 
-                for(int x=0; x<COLONNES; x++) {
-                    for (int y = 0; y < LIGNES; y++) {
+                for (int y = 0; y < LIGNES; y++) {
+                    for (int x = 0; x < COLONNES; x++) {
                         if (event.mouse.x % 32 != 0 && event.mouse.y % 32 != 0 && event.mouse.x != 0 && event.mouse.y != 0) {
                             if (event.mouse.x > tabCase[x][y].x - (TUILE / 2) &&
                                 event.mouse.y > tabCase[x][y].y - (TUILE / 2) &&
                                 event.mouse.x < tabCase[x][y].x + (TUILE / 2) &&
                                 event.mouse.y < tabCase[x][y].y + (TUILE / 2)) {
                                 niveau = 0;
-                                if(categorieConstruction==0) {
-                                    tabCase[x][y].construction.route = 1;
+                                if(categorieConstruction==0 && tabCase[x][y].construction == 0) {
+                                    tabCase[x][y].construction = 1;
+                                    compteurRoute++;
+                                    tabCase[x][y].identite = compteurRoute;
+                                }
+                                if(categorieConstruction==1 && tabCase[x][y].construction == 0) {
+                                    if(x-1 >= 0 && x+1 < COLONNES && y-1 >= 0 && y+1 < LIGNES && tabCase[x - 1][y].construction == 0 && tabCase[x + 1][y].construction == 0 && tabCase[x][y - 1].construction == 0 && tabCase[x][y + 1].construction == 0 && tabCase[x - 1][y - 1].construction == 0 && tabCase[x + 1][y + 1].construction == 0 && tabCase[x + 1][y - 1].construction == 0 && tabCase[x - 1][y + 1].construction == 0) {
+                                        compteurHabitation++;
+                                        tabCase[x][y].construction = 2;
+                                        tabCase[x][y].identite = compteurHabitation;
+
+                                        tabCase[x - 1][y].construction = 2;
+                                        tabCase[x - 1][y].identite = compteurHabitation;
+
+                                        tabCase[x + 1][y].construction = 2;
+                                        tabCase[x + 1][y].identite = compteurHabitation;
+
+                                        tabCase[x][y -1 ].construction = 2;
+                                        tabCase[x][y - 1].identite = compteurHabitation;
+
+                                        tabCase[x][y + 1].construction = 2;
+                                        tabCase[x][y + 1].identite = compteurHabitation;
+
+                                        tabCase[x - 1][y - 1].construction = 2;
+                                        tabCase[x - 1][y - 1].identite = compteurHabitation;
+
+                                        tabCase[x + 1][y + 1].construction = 2;
+                                        tabCase[x + 1][y + 1].identite = compteurHabitation;
+
+                                        tabCase[x + 1][y - 1].construction = 2;
+                                        tabCase[x + 1][y - 1].identite = compteurHabitation;
+
+                                        tabCase[x - 1][y + 1].construction = 2;
+                                        tabCase[x - 1][y + 1].identite = compteurHabitation;
+
+                                    }
                                 }
                             }
                         }
@@ -94,9 +137,9 @@ int main() {
             }
             case ALLEGRO_EVENT_TIMER: {
                 al_clear_to_color(al_map_rgb(0, 0, 0));
-                for(int x=0; x<COLONNES; x++) {
-                    for (int y = 0; y < LIGNES; y++) {
-                        if(tabCase[x][y].construction.route == 1){
+                for (int y = 0; y < LIGNES; y++) {
+                    for (int x = 0; x < COLONNES; x++) {
+                        if(tabCase[x][y].construction == 1){
                             if(niveau==0) {
                                 al_draw_filled_rectangle(tabCase[x][y].x - TUILE / 2, tabCase[x][y].y - TUILE / 2,
                                                          tabCase[x][y].x + TUILE / 2, tabCase[x][y].y + TUILE / 2,
@@ -108,6 +151,11 @@ int main() {
                             if(niveau==2) {al_draw_filled_rectangle(tabCase[x][y].x - TUILE / 2, tabCase[x][y].y - TUILE / 2,
                                                                     tabCase[x][y].x + TUILE / 2, tabCase[x][y].y + TUILE / 2,
                                                                     al_map_rgb(255, 255, 0));}
+                        }
+                        if(tabCase[x][y].construction == 2){
+                            al_draw_filled_rectangle(tabCase[x][y].x - TUILE / 2, tabCase[x][y].y - TUILE / 2,
+                                                     tabCase[x][y].x + TUILE / 2, tabCase[x][y].y + TUILE / 2,
+                                                     al_map_rgb(0, 255, 0));
                         }
                     }
                 }
