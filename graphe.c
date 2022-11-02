@@ -1,5 +1,5 @@
 
-#include "graphe.h"
+#include "bibliotheque.h"
 
 
 
@@ -19,7 +19,6 @@ Graphe* CreerGraphe(int ordre)
             Newgraphe->tabSommet[i][j].valeur = i*j;
             Newgraphe->tabSommet[i][j].etat = 0;   //il n'y a aucune construction au debut
         }
-
     }
     return Newgraphe;
 }

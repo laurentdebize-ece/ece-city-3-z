@@ -3,6 +3,7 @@
 int main() {
 
     FILE * ifs = fopen("map.txt","r");
+    //Graphe* g = lire_graphe("./fichierGrapheTab2D.txt");
 
     ALLEGRO_DISPLAY *display = NULL;
     ALLEGRO_EVENT_QUEUE *queue = NULL;
@@ -11,14 +12,13 @@ int main() {
     int fini = 0;
     int niveau = 0;
     int construction;
-    int compteurRoute = 0;
+    int* compteurRoute = 0;
     int compteurHabitation = 0;
     int NbrHabitant = 0;
 
-    
     typedef struct{
         float x, y;
-        int construction;
+        CONSTRUCTION construction;
         int identite;
     }CASE;
 
@@ -135,7 +135,6 @@ int main() {
 
                                         tabCase[x - 1][y + 1].construction = 2;
                                         tabCase[x - 1][y + 1].identite = compteurHabitation;
-
                                     }
                                     compteEnBanque = compteEnBanque - COUT_TERRAIN_VAGUE;
 
@@ -194,7 +193,29 @@ int main() {
                             al_draw_filled_rectangle(tabCase[x][y].x - TUILE / 2, tabCase[x][y].y - TUILE / 2,
                                                      tabCase[x][y].x + TUILE / 2, tabCase[x][y].y + TUILE / 2,
                                                      al_map_rgb(0, 255, 0));
+
                         }
+                    }
+                }
+                if (timer%15 == 0){
+                    payerTaxebanque(*compteEnBanque, NbrHabitant);
+
+                    ///evolution des constructions
+                    if(tabCase[x][y].construction.etat == 0){ //etat0 : terrain vague
+                        tabCase[x][y].construction.etat ++;   //passe à l'etat cabane
+                        NbrHabitant += NBRHABITANT_CABANE;
+                    }
+                    if(tabCase[x][y].construction.etat == 1){ //etat1 : cabane
+                        tabCase[x][y].construction.etat ++;   //passe à l'état maison
+                        NbrHabitant += NBRHABITANT_MAISON;
+                    }
+                    if(tabCase[x][y].construction.etat == 2){  //etat 2 : maison
+                        tabCase[x][y].construction.etat ++;
+                        NbrHabitant += NBRHABITANT_IMMEUBLE;
+                    }
+                    if(tabCase[x][y].construction.etat == 3){
+                        tabCase[x][y].construction.etat ++;
+                        NbrHabitant += NBRHABITANT_GRATTECIEL;
                     }
                 }
             }

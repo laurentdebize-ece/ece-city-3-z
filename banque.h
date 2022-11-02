@@ -1,6 +1,4 @@
-//
-// Created by Utilisateur on 01/11/2022.
-//
+
 
 #ifndef ECE_CITY_3_Z_BANQUE_H
 #define ECE_CITY_3_Z_BANQUE_H

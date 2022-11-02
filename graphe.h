@@ -19,7 +19,6 @@
 #define NBRHABITANT_IMMEUBLE 100
 #define NBRHABITANT_GRATTECIEL 1000
 
-
 ////////////////////// Les enums utilisés///////////////////
 
 //Le .h ou on mettra toutes les fonctions en lien avec le graphe et le déroulement du jeu
@@ -41,6 +40,10 @@ typedef struct {
     int valeur; //valeur de la case : ex tabSommet[21][12]
 }Sommet;
 
+typedef struct {
+    int prix;
+    int type;
+}Batiment;
 
 typedef struct {
     Niveau mapAffiche;   // par exemple si on a case[0][5].mapAfficher.niveau == 1  ->  on affichera la canalisation
@@ -48,6 +51,7 @@ typedef struct {
     int ordre;
     int orientation;
     Sommet** tabSommet;  //matrice du graphe (tab de 38x38 cases)
+    Batiment construction;
 }Graphe;  //chaque case correspond a un sommet de notre graphe
 
 
