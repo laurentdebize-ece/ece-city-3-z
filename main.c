@@ -8,17 +8,16 @@ int main() {
     ALLEGRO_EVENT_QUEUE *queue = NULL;
     ALLEGRO_TIMER *timer = NULL;
     ALLEGRO_EVENT event = {0};
+
     int fini = 0;
     int niveau = 0;
     int construction;
     int compteurRoute = 0;
     int compteurHabitation = 0;
-    
-    typedef struct{
-        float x, y;
-        int construction;
-        int identite;
-    }CASE;
+    int compteurChateauEau = 0;
+    float rotationX = 1;
+    float rotationY = 1.5f;
+
 
 
     int categorieConstruction = 0; // 0:route 1:habitation 2:usine 3:chateauEau 4:caserne
@@ -31,7 +30,7 @@ int main() {
     for (int y = 0; y < LIGNES; y++) {
         for (int x = 0; x < COLONNES; x++) {
             fscanf(ifs, "%d", &construction);
-            tabCase[x][y].construction = construction; // 0: rien 1:route 2:habitation 3:usine 4:chateauEau 5:caserne
+            tabCase[x][y].construction.type = construction; // 0: rien 1:route 2:habitation 3:usine 4:chateauEau 5:caserne
             tabCase[x][y].x = TUILE/2+x*TUILE;
             tabCase[x][y].y = TUILE/2+y*TUILE;
         }
@@ -48,7 +47,7 @@ int main() {
                 /*FILE * n = fopen("map.txt","w+");
                 for (int y = 0; y < LIGNES; y++) {
                     for (int x = 0; x < COLONNES; x++) {
-                        fprintf(n, "%d ",tabCase[x][y].construction);
+                        fprintf(n, "%d ",tabCase[x][y].construction.type);
                     }
                     fputs("\n",n);
                 }*/
@@ -74,11 +73,37 @@ int main() {
                         }
                         break;
                     }
+                    case ALLEGRO_KEY_DOWN : {
+
+                        break;
+                    }
+                    case ALLEGRO_KEY_UP : {
+
+                        break;
+                    }
+                    
                 }
             }
 
             case ALLEGRO_EVENT_MOUSE_AXES: {
+                for (int y = 0; y < LIGNES; y++) {
+                    for (int x = 0; x < COLONNES; x++) {
+                        if (event.mouse.x % 32 != 0 && event.mouse.y % 32 != 0 && event.mouse.x != 0 && event.mouse.y != 0) {
+                            if (event.mouse.x > tabCase[x][y].x - (TUILE / 2) &&
+                                event.mouse.y > tabCase[x][y].y - (TUILE / 2) &&
+                                event.mouse.x < tabCase[x][y].x + (TUILE / 2) &&
+                                event.mouse.y < tabCase[x][y].y + (TUILE / 2)) {
 
+                                /*if(categorieConstruction==0 && tabCase[x][y].construction.type == 0) {
+                                    route(tabCase, x, y, &compteurRoute);
+                                }
+                                else{
+                                    tabCase[x][y].construction.type = 0;
+                                }*/
+                            }
+                        }
+                    }
+                }
                 break;
             }
 
@@ -92,42 +117,16 @@ int main() {
                                 event.mouse.x < tabCase[x][y].x + (TUILE / 2) &&
                                 event.mouse.y < tabCase[x][y].y + (TUILE / 2)) {
                                 niveau = 0;
-                                if(categorieConstruction==0 && tabCase[x][y].construction == 0) {
-                                    tabCase[x][y].construction = 1;
-                                    compteurRoute++;
-                                    tabCase[x][y].identite = compteurRoute;
+
+                                if(categorieConstruction==0 && tabCase[x][y].construction.type == 0) {
+                                    route(tabCase, x, y, &compteurRoute);
                                 }
-                                if(categorieConstruction==1 && tabCase[x][y].construction == 0) {
-                                    if(x-1 >= 0 && x+1 < COLONNES && y-1 >= 0 && y+1 < LIGNES && tabCase[x - 1][y].construction == 0 && tabCase[x + 1][y].construction == 0 && tabCase[x][y - 1].construction == 0 && tabCase[x][y + 1].construction == 0 && tabCase[x - 1][y - 1].construction == 0 && tabCase[x + 1][y + 1].construction == 0 && tabCase[x + 1][y - 1].construction == 0 && tabCase[x - 1][y + 1].construction == 0) {
-                                        compteurHabitation++;
-                                        tabCase[x][y].construction = 2;
-                                        tabCase[x][y].identite = compteurHabitation;
 
-                                        tabCase[x - 1][y].construction = 2;
-                                        tabCase[x - 1][y].identite = compteurHabitation;
-
-                                        tabCase[x + 1][y].construction = 2;
-                                        tabCase[x + 1][y].identite = compteurHabitation;
-
-                                        tabCase[x][y -1 ].construction = 2;
-                                        tabCase[x][y - 1].identite = compteurHabitation;
-
-                                        tabCase[x][y + 1].construction = 2;
-                                        tabCase[x][y + 1].identite = compteurHabitation;
-
-                                        tabCase[x - 1][y - 1].construction = 2;
-                                        tabCase[x - 1][y - 1].identite = compteurHabitation;
-
-                                        tabCase[x + 1][y + 1].construction = 2;
-                                        tabCase[x + 1][y + 1].identite = compteurHabitation;
-
-                                        tabCase[x + 1][y - 1].construction = 2;
-                                        tabCase[x + 1][y - 1].identite = compteurHabitation;
-
-                                        tabCase[x - 1][y + 1].construction = 2;
-                                        tabCase[x - 1][y + 1].identite = compteurHabitation;
-
-                                    }
+                                if(categorieConstruction==1 && tabCase[x][y].construction.type == 0) {
+                                    habitaion(tabCase, x, y, &compteurHabitation);
+                                }
+                                if(categorieConstruction==2 && tabCase[x][y].construction.type == 0) {
+                                    batiment(tabCase, x, y, &compteurChateauEau);
                                 }
                             }
                         }
@@ -139,7 +138,7 @@ int main() {
                 al_clear_to_color(al_map_rgb(0, 0, 0));
                 for (int y = 0; y < LIGNES; y++) {
                     for (int x = 0; x < COLONNES; x++) {
-                        if(tabCase[x][y].construction == 1){
+                        if(tabCase[x][y].construction.type == 1){
                             if(niveau==0) {
                                 al_draw_filled_rectangle(tabCase[x][y].x - TUILE / 2, tabCase[x][y].y - TUILE / 2,
                                                          tabCase[x][y].x + TUILE / 2, tabCase[x][y].y + TUILE / 2,
@@ -148,14 +147,21 @@ int main() {
                             if(niveau==1) {al_draw_filled_rectangle(tabCase[x][y].x - TUILE / 2, tabCase[x][y].y - TUILE / 2,
                                                                     tabCase[x][y].x + TUILE / 2, tabCase[x][y].y + TUILE / 2,
                                                                     al_map_rgb(0, 0, 255));}
+
                             if(niveau==2) {al_draw_filled_rectangle(tabCase[x][y].x - TUILE / 2, tabCase[x][y].y - TUILE / 2,
                                                                     tabCase[x][y].x + TUILE / 2, tabCase[x][y].y + TUILE / 2,
                                                                     al_map_rgb(255, 255, 0));}
+
                         }
-                        if(tabCase[x][y].construction == 2){
+                        if(tabCase[x][y].construction.type == 2){
                             al_draw_filled_rectangle(tabCase[x][y].x - TUILE / 2, tabCase[x][y].y - TUILE / 2,
                                                      tabCase[x][y].x + TUILE / 2, tabCase[x][y].y + TUILE / 2,
                                                      al_map_rgb(0, 255, 0));
+                        }
+                        if(tabCase[x][y].construction.type == 3){
+                            al_draw_filled_rectangle(tabCase[x][y].x - TUILE / 2, tabCase[x][y].y - TUILE / 2,
+                                                     tabCase[x][y].x + TUILE / 2, tabCase[x][y].y + TUILE / 2,
+                                                     al_map_rgb(255, 0, 0));
                         }
                     }
                 }

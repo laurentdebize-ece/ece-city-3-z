@@ -17,7 +17,17 @@
 #include <allegro5/allegro_audio.h>
 #include <allegro5/allegro_acodec.h>
 #include <allegro5/allegro_image.h>
-#include "graphe.h"
 
+
+typedef struct{
+    int identite;
+    int type;
+}CONSTRUCTION;
+typedef struct{
+    float x, y;
+    CONSTRUCTION construction;
+}CASE;
+#include "graphe.h"
+#include "construction.h"
 void allegroCreation(ALLEGRO_DISPLAY** display, ALLEGRO_EVENT_QUEUE** queue, ALLEGRO_TIMER** timer);
 #endif //ECE_CITY_3_Z_BIBLIOTHEQUE_H
