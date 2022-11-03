@@ -201,21 +201,21 @@ int main() {
                     payerTaxebanque(*compteEnBanque, NbrHabitant);
 
                     ///evolution des constructions
-                    if(tabCase[x][y].construction.etat == 0){ //etat0 : terrain vague
-                        tabCase[x][y].construction.etat ++;   //passe à l'etat cabane
-                        NbrHabitant += NBRHABITANT_CABANE;
+                    if(tabCase[x][y].construction.type == 5){ // 5 : terrainVague
+                        tabCase[x][y].construction.type ++;
+                        NbrHabitant += NBRHABITANT_CABANE * compteur.cabane;
                     }
-                    if(tabCase[x][y].construction.etat == 1){ //etat1 : cabane
-                        tabCase[x][y].construction.etat ++;   //passe à l'état maison
-                        NbrHabitant += NBRHABITANT_MAISON;
+                    if(tabCase[x][y].construction.type == 6){  // cabane
+                        tabCase[x][y].construction.type ++;
+                        NbrHabitant += NBRHABITANT_MAISON * compteur.maison;
                     }
-                    if(tabCase[x][y].construction.etat == 2){  //etat 2 : maison
-                        tabCase[x][y].construction.etat ++;
-                        NbrHabitant += NBRHABITANT_IMMEUBLE;
+                    if(tabCase[x][y].construction.type == 7){ //maison
+                        tabCase[x][y].construction.type ++;
+                        NbrHabitant += NBRHABITANT_IMMEUBLE * compteur.immeuble;
                     }
-                    if(tabCase[x][y].construction.etat == 3){
-                        tabCase[x][y].construction.etat ++;
-                        NbrHabitant += NBRHABITANT_GRATTECIEL;
+                    if(tabCase[x][y].construction.type == 8){ //immeuble
+                        tabCase[x][y].construction.type ++;
+                        NbrHabitant += NBRHABITANT_GRATTECIEL * compteur.gratteCiel;
                     }
                 }
             }

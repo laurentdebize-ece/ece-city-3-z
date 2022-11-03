@@ -27,6 +27,7 @@ typedef struct{
     int prix;
     int etat; //0 : terrain vague 1: cabane  2: maison   3:immeuble  4:gratte-ciel
 }CONSTRUCTION;
+
 typedef struct{
     float x, y;
     CONSTRUCTION construction;

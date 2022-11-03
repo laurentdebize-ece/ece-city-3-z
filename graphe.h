@@ -42,7 +42,7 @@ typedef struct {
 
 typedef struct {
     int prix;
-    int type;
+    int type; //0 : rien  1 :
 }Batiment;
 
 typedef struct {
@@ -55,6 +55,10 @@ typedef struct {
 }Graphe;  //chaque case correspond a un sommet de notre graphe
 
 
+
+typedef struct {
+    int tarraincabane, maison, immeuble,
+}Compteur;
 
 
 
