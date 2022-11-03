@@ -28,15 +28,6 @@
 #include <allegro5/allegro_acodec.h>
 #include <allegro5/allegro_image.h>
 
-
-typedef struct{
-    int identite;
-    int type;
-}CONSTRUCTION;
-typedef struct{
-    float x, y;
-    CONSTRUCTION construction;
-}CASE;
 #include "graphe.h"
 #include "construction.h"
 #include "banque.h"
