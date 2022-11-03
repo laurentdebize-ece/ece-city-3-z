@@ -79,7 +79,7 @@ typedef struct{
 }Usines;
 
 typedef struct {
-    int tarrainVague , cabane, maison, immeuble, gratteCiel;
+    int tarrainVague, cabane, maison, immeuble, gratteCiel;
 }Compteur;
 
 typedef struct{
@@ -90,7 +90,7 @@ typedef struct{
 
 typedef struct{
     Graphe G; //Graphe du jeu
-    //ilayda struct compteur;
+    Compteur compteur;
     Habitations* tabHab; //tableau repertoriant chaque habitation
     Usines* tabE;//tableau repertoriant chaque Usine
     ChateauO* tabO;//tableau repertoriant chaque Chateau d'eau
