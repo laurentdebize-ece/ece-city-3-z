@@ -57,7 +57,7 @@ typedef struct {
 
 
 typedef struct {
-    int tarraincabane, maison, immeuble,
+    int tarrainVague , cabane, maison, immeuble, gratteCiel;
 }Compteur;
 
 
