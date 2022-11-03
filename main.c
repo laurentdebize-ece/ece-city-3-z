@@ -14,6 +14,7 @@ int main() {
     int construction;
     int compteurRoute = 0;
     int compteurHabitation = 0;
+    int NbrHabitant = 0;
     int compteurChateauEau = 0;
     float rotationX = 1;
     float rotationY = 1.5f;
@@ -40,6 +41,7 @@ int main() {
     al_start_timer(timer);
 
     while (!fini) {
+        int compteEnBanque = 500000;
         al_wait_for_event(queue, &event);
         switch (event.type) {
 
@@ -81,7 +83,7 @@ int main() {
 
                         break;
                     }
-                    
+
                 }
             }
 
@@ -117,6 +119,22 @@ int main() {
                                 event.mouse.x < tabCase[x][y].x + (TUILE / 2) &&
                                 event.mouse.y < tabCase[x][y].y + (TUILE / 2)) {
                                 niveau = 0;
+                                if(categorieConstruction==0 && tabCase[x][y].construction == 0 && compteEnBanque >50) {
+                                    tabCase[x][y].construction = 1;
+                                    compteurRoute++;
+                                    tabCase[x][y].identite = compteurRoute;
+
+                                    compteEnBanque = compteEnBanque - COUT_ROUTE;
+
+                                }
+                                else {
+                                    printf("Vous n'avez pas assez d'argent");
+                                }
+                                if(categorieConstruction==1 && tabCase[x][y].construction == 0 && compteEnBanque > 1000) {
+                                    if(x-1 >= 0 && x+1 < COLONNES && y-1 >= 0 && y+1 < LIGNES && tabCase[x - 1][y].construction == 0 && tabCase[x + 1][y].construction == 0 && tabCase[x][y - 1].construction == 0 && tabCase[x][y + 1].construction == 0 && tabCase[x - 1][y - 1].construction == 0 && tabCase[x + 1][y + 1].construction == 0 && tabCase[x + 1][y - 1].construction == 0 && tabCase[x - 1][y + 1].construction == 0) {
+                                        compteurHabitation++;
+                                        tabCase[x][y].construction = 2;
+                                        tabCase[x][y].identite = compteurHabitation;
 
                                 if(categorieConstruction==0 && tabCase[x][y].construction.type == 0) {
                                     route(tabCase, x, y, &compteurRoute);
@@ -124,9 +142,62 @@ int main() {
 
                                 if(categorieConstruction==1 && tabCase[x][y].construction.type == 0) {
                                     habitaion(tabCase, x, y, &compteurHabitation);
+                                    compteEnBanque = compteEnBanque - COUT_TERRAIN_VAGUE;
+
                                 }
                                 if(categorieConstruction==2 && tabCase[x][y].construction.type == 0) {
                                     batiment(tabCase, x, y, &compteurChateauEau);
+                                        tabCase[x + 1][y].construction = 2;
+                                        tabCase[x + 1][y].identite = compteurHabitation;
+
+                                        tabCase[x][y -1 ].construction = 2;
+                                        tabCase[x][y - 1].identite = compteurHabitation;
+
+                                        tabCase[x][y + 1].construction = 2;
+                                        tabCase[x][y + 1].identite = compteurHabitation;
+
+                                        tabCase[x - 1][y - 1].construction = 2;
+                                        tabCase[x - 1][y - 1].identite = compteurHabitation;
+
+                                        tabCase[x + 1][y + 1].construction = 2;
+                                        tabCase[x + 1][y + 1].identite = compteurHabitation;
+
+                                        tabCase[x + 1][y - 1].construction = 2;
+                                        tabCase[x + 1][y - 1].identite = compteurHabitation;
+
+                                        tabCase[x - 1][y + 1].construction = 2;
+                                        tabCase[x - 1][y + 1].identite = compteurHabitation;
+
+                                    }
+                                    compteEnBanque = compteEnBanque - COUT_TERRAIN_VAGUE;
+
+                                }
+                                else{
+                                    printf("Vous n'avez pas assez d'argent");
+                                }
+                                // théophile met ta prtie pour le chateau d'eau !!!
+
+                                if (compteEnBanque < 100000){
+                                    printf("Vous n'avez pas assez d'argent");
+                                }
+                                else{
+                                    compteEnBanque = compteEnBanque - COUT_CHATEAU_DEAU;
+                                }
+                                // partie sur la centrale électrique !!!
+
+                                if (compteEnBanque < 100000){
+                                    printf("Vous n'avez pas assez d'argent");
+                                }
+                                else{
+                                    compteEnBanque = compteEnBanque - COUT_CENTRAL;
+                                }
+                                // partie sur la caserne !!!
+
+                                if (compteEnBanque < 10000){
+                                    printf("Vous n'avez pas assez d'argent");
+                                }
+                                else{
+                                    compteEnBanque = compteEnBanque - COUT_CASERNE;
                                 }
                             }
                         }
