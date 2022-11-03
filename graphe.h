@@ -27,6 +27,16 @@ enum construction{terrainVague, cabane, maison, immeuble, gratteCiel};
 //                   0             1       2      3          4
 
 
+typedef struct{
+    int identite;
+    int type;
+}CONSTRUCTION;
+
+typedef struct{
+    float x, y;
+    CONSTRUCTION construction;
+}CASE;
+
 ////////////////Les structures du graphe///////
 
 typedef struct {
@@ -51,7 +61,32 @@ typedef struct {
 }Graphe;  //chaque case correspond a un sommet de notre graphe
 
 
+typedef struct{
+    int connexe;
+    int nbHabitant;
+    int QE;
+    int QO;
+}Habitations;
 
+typedef struct{
+    int connexe;
+    int QEmax;
+    int QErestant;
+}Usines;
+
+typedef struct{
+    int connexe;
+    int QOmax;
+    int QOrestant;
+}ChateauO;
+
+typedef struct{
+    Graphe G; //Graphe du jeu
+    //ilayda struct compteur;
+    Habitations* tabHab; //tableau repertoriant chaque habitation
+    Usines* tabE;//tableau repertoriant chaque Usine
+    ChateauO* tabO;//tableau repertoriant chaque Chateau d'eau
+}ECECITY;
 
 
 ////////////Fonction pour la creation et la lecturedu graphe////////////////

@@ -3,6 +3,7 @@
 //
 
 #include "bibliotheque.h"
+#include "graphe.h"
 void allegroCreation(ALLEGRO_DISPLAY** display, ALLEGRO_EVENT_QUEUE** queue, ALLEGRO_TIMER** timer){
 
     assert(al_init());
