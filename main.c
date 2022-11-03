@@ -31,7 +31,7 @@ int main() {
     for (int y = 0; y < LIGNES; y++) {
         for (int x = 0; x < COLONNES; x++) {
             fscanf(ifs, "%d", &construction);
-            tabCase[x][y].construction.type = construction; // 0: rien 1:route 2:habitation 3:usine 4:chateauEau 5:caserne
+            tabCase[x][y].construction.type = construction; // 0: rien 1:route 2:usine 3:chateauEau 4:caserne 5:terrain vague
             tabCase[x][y].x = TUILE/2+x*TUILE;
             tabCase[x][y].y = TUILE/2+y*TUILE;
         }
@@ -121,26 +121,35 @@ int main() {
                                 niveau = 0;
 
                                 if(categorieConstruction==0 && tabCase[x][y].construction.type == 0) {
-                                    if(compteEnBanque >= 10) {
+                                    if(compteEnBanque >= COUT_ROUTE) {
                                         route(tabCase, x, y, &compteurRoute);
                                         compteEnBanque = compteEnBanque - COUT_ROUTE;
                                     }
                                     else {
-                                        printf("Vous n'avez pas assez d'argent");
+                                        printf("Vous n'avez pas assez d'argent\n");
                                     }
                                 }
 
 
                                 if(categorieConstruction==1 && tabCase[x][y].construction.type == 0) {
-                                    if(compteEnBanque >= 1000) {
+                                    if(compteEnBanque >= COUT_TERRAIN_VAGUE) {
                                         habitaion(tabCase, x, y, &compteurHabitation);
                                         compteEnBanque = compteEnBanque - COUT_TERRAIN_VAGUE;
                                     }
                                     else{
-                                        printf("Vous n'avez pas assez d'argent");
+                                        printf("Vous n'avez pas assez d'argent\n");
                                     }
                                 }
 
+                                if(categorieConstruction==2 && tabCase[x][y].construction.type == 0) {
+                                    if (compteEnBanque >= COUT_CHATEAU_DEAU){
+                                        batiment(tabCase, x, y, &compteurChateauEau);
+                                        compteEnBanque = compteEnBanque - COUT_CHATEAU_DEAU;
+                                    }
+                                    else{
+                                        printf("Vous n'avez pas assez d'argent\n");
+                                    }
+                                }
                                 // théophile met ta prtie pour le chateau d'eau !!!
 
                                 /*if (compteEnBanque < 100000){
@@ -190,7 +199,7 @@ int main() {
                                                                     al_map_rgb(255, 255, 0));}
 
                         }
-                        if(tabCase[x][y].construction.type == 2){
+                        if(tabCase[x][y].construction.type == 5){
                             al_draw_filled_rectangle(tabCase[x][y].x - TUILE / 2, tabCase[x][y].y - TUILE / 2,
                                                      tabCase[x][y].x + TUILE / 2, tabCase[x][y].y + TUILE / 2,
                                                      al_map_rgb(0, 255, 0));
