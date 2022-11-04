@@ -39,7 +39,6 @@ void habitaion (CASE** tabCase, int x, int y, int* compteur){
 
         tabCase[x - 1][y + 1].construction.type = 2;
         tabCase[x - 1][y + 1].construction.identite = *compteur;
-
     }
 }
 

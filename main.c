@@ -19,6 +19,7 @@ int main() {
     float rotationX = 1;
     float rotationY = 1.5f;
     int compteEnBanque = 999999999;
+    Compteur compteur;
 
 
     int categorieConstruction = 0; // 0:route 1:habitation 2:usine 3:chateauEau 4:caserne
@@ -209,6 +210,7 @@ int main() {
                     if(tabCase[x][y].construction.type == 5){ // 5 : terrainVague
                         tabCase[x][y].construction.type ++;
                         NbrHabitant += NBRHABITANT_CABANE * compteur.cabane;
+                        //a chaque etape changer le bitmap en fonction de l'evolution
                     }
                     if(tabCase[x][y].construction.type == 6){  // cabane
                         tabCase[x][y].construction.type ++;
