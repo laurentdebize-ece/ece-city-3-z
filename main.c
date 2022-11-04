@@ -17,6 +17,7 @@ int main() {
     float rotationX = 1;
     float rotationY = 1.5f;
     int compteEnBanque = 999999999;
+    Compteur compteur;
 
 
     int categorieConstruction = 0; // 0:route 1:habitation 2:usine 3:chateauEau 4:caserne
@@ -179,6 +180,28 @@ int main() {
                     for (int x = 0; x < COLONNES; x++) {
                         affichageConstruction(tabCase, x, y, niveau);
                         apercuConstruction(tabCase, x, y);
+                    }
+                }
+                if (timer%15 == 0){
+                    payerTaxebanque(*compteEnBanque, NbrHabitant);
+
+                    ///evolution des constructions
+                    if(tabCase[x][y].construction.type == 5){ // 5 : terrainVague
+                        tabCase[x][y].construction.type ++;
+                        NbrHabitant += NBRHABITANT_CABANE * compteur.cabane;
+                        //a chaque etape changer le bitmap en fonction de l'evolution
+                    }
+                    if(tabCase[x][y].construction.type == 6){  // cabane
+                        tabCase[x][y].construction.type ++;
+                        NbrHabitant += NBRHABITANT_MAISON * compteur.maison;
+                    }
+                    if(tabCase[x][y].construction.type == 7){ //maison
+                        tabCase[x][y].construction.type ++;
+                        NbrHabitant += NBRHABITANT_IMMEUBLE * compteur.immeuble;
+                    }
+                    if(tabCase[x][y].construction.type == 8){ //immeuble
+                        tabCase[x][y].construction.type ++;
+                        NbrHabitant += NBRHABITANT_GRATTECIEL * compteur.gratteCiel;
                     }
                 }
             }

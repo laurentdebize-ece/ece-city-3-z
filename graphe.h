@@ -18,7 +18,75 @@ enum construction{terrainVague, cabane, maison, immeuble, gratteCiel};
 //                   0             1       2      3          4
 
 
+typedef struct{
+    int identite;
+    int type;
+}CONSTRUCTION;
 
+typedef struct{
+    float x, y;
+    CONSTRUCTION construction;
+}CASE;
+
+////////////////Les structures du graphe///////
+
+typedef struct {
+    int niveau; // 0 = sur terre   -1 = canalisation       -2 = réseau d'electricité
+    int carence;  // 0 si le batiment est bien alimenté en eau/electricité   //   1 si il y a une carrence d'eau ou d'electricté
+}Niveau;
+
+//informations relatives aux sommets (chauque case du graphe)
+typedef struct {
+    int EnCoursDeConstruction;  //1 si nla construction a debuté mais que les 15 sec ne sont pas encore terminé  // 2 si les 15 sec on ecoulé et que c'est construit
+    int etat; //etat des constructions -> on utilisera l'enum "construction" pour que ce soit plus facile
+    int valeur; //valeur de la case : ex tabSommet[21][12]
+}Sommet;
+
+typedef struct {
+    int prix;
+    int type; //0 : rien  1 :
+}Batiment;
+
+typedef struct {
+    Niveau mapAffiche;   // par exemple si on a case[0][5].mapAfficher.niveau == 1  ->  on affichera la canalisation
+    int taille;
+    int ordre;
+    int orientation;
+    Sommet** tabSommet;  //matrice du graphe (tab de 38x38 cases)
+    Batiment construction;
+}Graphe;  //chaque case correspond a un sommet de notre graphe
+
+
+typedef struct{
+    int connexe;
+    int nbHabitant;
+    int QE;
+    int QO;
+}Habitations;
+
+typedef struct{
+    int connexe;
+    int QEmax;
+    int QErestant;
+}Usines;
+
+typedef struct {
+    int tarrainVague, cabane, maison, immeuble, gratteCiel;
+}Compteur;
+
+typedef struct{
+    int connexe;
+    int QOmax;
+    int QOrestant;
+}ChateauO;
+
+typedef struct{
+    Graphe G; //Graphe du jeu
+    Compteur compteur;
+    Habitations* tabHab; //tableau repertoriant chaque habitation
+    Usines* tabE;//tableau repertoriant chaque Usine
+    ChateauO* tabO;//tableau repertoriant chaque Chateau d'eau
+}ECECITY;
 
 
 ////////////Fonction pour la creation et la lecturedu graphe////////////////

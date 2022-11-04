@@ -41,7 +41,6 @@ void habitation (CASE** tabCase, int x, int y, int* compteur){
 
         tabCase[x - 1][y + 1].construction.type = 5;
         tabCase[x - 1][y + 1].construction.identite = *compteur;
-
     }
 }
 int possibiliteDeConstruire(CASE** tabCase, int x, int y){
