@@ -9,6 +9,8 @@ void route (CASE** tabCase, int x, int y, int* compteur){
     tabCase[x][y].construction.identite = *compteur;
 }
 
+
+
 void habitation (CASE** tabCase, int x, int y, int* compteur){
     if(x-1 >= 0 && x+1 < COLONNES && y-1 >= 0 && y+1 < LIGNES && tabCase[x - 1][y].construction.type == 0 && tabCase[x + 1][y].construction.type == 0 && tabCase[x][y - 1].construction.type == 0 && tabCase[x][y + 1].construction.type == 0 && tabCase[x - 1][y - 1].construction.type == 0 && tabCase[x + 1][y + 1].construction.type == 0 && tabCase[x + 1][y - 1].construction.type == 0 && tabCase[x - 1][y + 1].construction.type == 0) {
         (*compteur)++;
@@ -63,5 +65,16 @@ void batiment (CASE** tabCase, int x, int y, int* compteur, int typeBatiment){
             }
         }
     }
+}
+
+void routeApercu (CASE** tabCase, int x, int y){
+    tabCase[x][y].construction.apercu = 1;
+}
+
+void habitationApercu (CASE** tabCase, int x, int y){
+
+}
+void batimentApercu(CASE** tabCase, int x, int y, int typeBatiment){
+
 }
 

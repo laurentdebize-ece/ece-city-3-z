@@ -5,4 +5,5 @@
 #ifndef ECE_CITY_3_Z_AFFICHAGE_H
 #define ECE_CITY_3_Z_AFFICHAGE_H
 void affichageConstruction(CASE** tabCase, int x, int y,int niveau);
+void apercuConstruction(CASE** tabCase, int x, int y);
 #endif //ECE_CITY_3_Z_AFFICHAGE_H

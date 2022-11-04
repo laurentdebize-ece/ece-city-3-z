@@ -95,7 +95,16 @@ int main() {
                                 event.mouse.y < tabCase[x][y].y + (TUILE / 2)) {
 
                                 if(categorieConstruction==0 && tabCase[x][y].construction.type == 0) {
-                                    //route(tabCase, x, y, &compteurRoute);
+                                    routeApercu(tabCase, x, y);
+                                }
+                                if(categorieConstruction==1 && tabCase[x][y].construction.type == 0) {
+                                    habitationApercu(tabCase, x, y);
+                                }
+                                if(categorieConstruction==2 && tabCase[x][y].construction.type == 0) {
+                                    batimentApercu(tabCase, x, y,3);
+                                }
+                                if(categorieConstruction==3 && tabCase[x][y].construction.type == 0) {
+                                    batimentApercu(tabCase, x, y,2);
                                 }
                             }
                             else{
@@ -169,6 +178,7 @@ int main() {
                 for (int y = 0; y < LIGNES; y++) {
                     for (int x = 0; x < COLONNES; x++) {
                         affichageConstruction(tabCase, x, y, niveau);
+                        apercuConstruction(tabCase, x, y);
                     }
                 }
             }

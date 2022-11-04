@@ -9,4 +9,8 @@ void route (CASE** tabCase, int x, int y, int* compteur);
 void habitation (CASE** tabCase, int x, int y, int* compteur);
 void batiment (CASE** tabCase, int x, int y, int* compteur, int typeBatiment);
 int possibiliteDeConstruire(CASE** tabCase, int x, int y);
+
+void routeApercu (CASE** tabCase, int x, int y);
+void habitationApercu (CASE** tabCase, int x, int y);
+void batimentApercu(CASE** tabCase, int x, int y, int typeBatiment);
 #endif //ECE_CITY_3_Z_CONSTRUCTION_H
