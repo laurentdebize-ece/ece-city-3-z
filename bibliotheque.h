@@ -23,14 +23,6 @@
 #define ECE_CITY_3_Z_BIBLIOTHEQUE_H
 #include <stdlib.h>
 #include <stdio.h>
-#include <allegro5/allegro.h>
-#include <allegro5/allegro_primitives.h>
-#include <allegro5/allegro_font.h>
-#include <allegro5/allegro_ttf.h>
-#include <allegro5/allegro_audio.h>
-#include <allegro5/allegro_acodec.h>
-#include <allegro5/allegro_image.h>
-#include "menu.h"
 
 typedef struct{
     int identite;
@@ -104,5 +96,4 @@ typedef struct{
 #include "construction.h"
 #include "banque.h"
 #include "affichage.h"
-void allegroCreation(ALLEGRO_DISPLAY** display, ALLEGRO_EVENT_QUEUE** queue, ALLEGRO_TIMER** timer);
 #endif //ECE_CITY_3_Z_BIBLIOTHEQUE_H
