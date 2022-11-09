@@ -13,12 +13,26 @@
 #include <allegro5/allegro_ttf.h>
 #include <allegro5/allegro_image.h>
 #include <time.h>
-#include "jeu.h"
+
+
+///Déclaration importantes
+
+enum gameMode {PLAY, RULES, TEAM, MENU, END};
 
 #define PI 3.141592
+#define RULESPAGEMAX 10
+
+///STRUCTURE QU'ON PEUT METTRE EN PARAMETRES DE FONCTION POUR EVITER TROP DE PARAMETRES
+typedef struct {
+    int mouse_x, mouse_y ;
+    double height, width ;
+} InfoEcran;
 
 
-/// A METTRE DANS UN FICHIER .C/.H CAR GRANDE STRUCTURE
+typedef struct {
+    float startTheta, endTheta, currentTheta, currentEndTheta ;
+} ArcDeCercle ;
+
 typedef struct {
     int playRect, rulesRect, teamRect, gameMode, persoRect;
     ArcDeCercle arc ;
@@ -30,7 +44,25 @@ typedef struct {
     InfoEcran ecran ;
 } Rules;
 
+//Peut supprimer cette structure (je ne sais pas encore si je vais l'utiliser
 
+typedef struct {
+    double x, y, width, height ;
+} Image ;
+
+
+void initialiserMenu(Menu* mainMenu, float width, float height) ;
+void drawMenuV2(Menu* mainMenu, ALLEGRO_FONT *gameFont);
+void menuSouris(Menu* mainMenu, InfoEcran ecran) ;
+void moveGameModeArc(Menu** mainMenu) ;
+void drawRules(int* pages, float height, float width, int mouse_x, int mouse_y, ALLEGRO_FONT* gameFontRegles, ALLEGRO_FONT* gameFont, ALLEGRO_FONT* gameFont1, ALLEGRO_BITMAP* kirbyIcone, ALLEGRO_BITMAP* pacmanIcone, ALLEGRO_BITMAP* peachIcone, ALLEGRO_BITMAP* marioIcone, ALLEGRO_BITMAP* donkey_kongIcone);
+void afficherPages(int pages, ALLEGRO_FONT* gameFontRegles, ALLEGRO_COLOR gameColor, float height, float width, ALLEGRO_BITMAP* kirbyIcone, ALLEGRO_BITMAP* pacmanIcone, ALLEGRO_BITMAP* peachIcone, ALLEGRO_BITMAP* marioIcone, ALLEGRO_BITMAP* donkey_kongIcone) ;
+void drawTeam(float height, float width, int mouse_x, int mouse_y, ALLEGRO_FONT *gameFont, ALLEGRO_BITMAP* team);
+
+
+
+
+void initialiserMenu(Menu* mainMenu, float width, float height);
 
 
 

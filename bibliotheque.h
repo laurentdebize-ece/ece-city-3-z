@@ -30,6 +30,8 @@
 #include <allegro5/allegro_audio.h>
 #include <allegro5/allegro_acodec.h>
 #include <allegro5/allegro_image.h>
+#include "menu.h"
+
 typedef struct{
     int identite;
     int type;
