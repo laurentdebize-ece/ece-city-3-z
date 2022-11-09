@@ -11,7 +11,7 @@ int main() {
     float rotationX = 1;
     float rotationY = 1.5f;
     int compteEnBanque = 999999999;
-    FILE * ifs = fopen("map.txt","r");
+    FILE * ifs = fopen("../map.txt","r");
 
     int categorieConstruction = 0; // 0:route 1:habitation 2:usine 3:chateauEau 4:caserne
 
