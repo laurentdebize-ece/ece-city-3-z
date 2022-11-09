@@ -1,14 +1,8 @@
+#include <stdio.h>
+#include <raylib.h>
 #include "bibliotheque.h"
 
 int main() {
-
-    FILE * ifs = fopen("map.txt","r");
-
-    ALLEGRO_DISPLAY *display = NULL;
-    ALLEGRO_EVENT_QUEUE *queue = NULL;
-    ALLEGRO_TIMER *timer = NULL;
-    ALLEGRO_EVENT event = {0};
-
     int fini = 0;
     int niveau = 0;
     int construction;
@@ -17,7 +11,7 @@ int main() {
     float rotationX = 1;
     float rotationY = 1.5f;
     int compteEnBanque = 999999999;
-
+    FILE * ifs = fopen("map.txt","r");
 
     int categorieConstruction = 0; // 0:route 1:habitation 2:usine 3:chateauEau 4:caserne
 
@@ -35,187 +29,131 @@ int main() {
         }
     }
 
-    allegroCreation(&display, &queue, &timer);
-    al_start_timer(timer);
+    InitWindow(1024, 768, "Projet");
+    SetWindowState(FLAG_WINDOW_RESIZABLE);
 
-    while (!fini) {
+    while (!WindowShouldClose()) {
 
-        al_wait_for_event(queue, &event);
-        switch (event.type) {
-
-            case ALLEGRO_EVENT_DISPLAY_CLOSE: {
-                /*FILE * n = fopen("map.txt","w+");
-                for (int y = 0; y < LIGNES; y++) {
-                    for (int x = 0; x < COLONNES; x++) {
-                        fprintf(n, "%d ",tabCase[x][y].construction.type);
-                    }
-                    fputs("\n",n);
-                }*/
-                fini = 1;
-                break;
+        BeginDrawing();
+        ClearBackground(BLACK);
+        if(IsKeyPressed(KEY_SPACE) == true){
+            if (niveau != 2) {
+                niveau++;
+            } else {
+                niveau = 0;
             }
-            case ALLEGRO_EVENT_KEY_UP: {
-
-                switch (event.keyboard.keycode) {
-                    case ALLEGRO_KEY_SPACE : {
-                        if (niveau != 2) {
-                            niveau++;
-                        } else {
+        }
+        if(IsKeyPressed(KEY_RIGHT) == true){
+            if (categorieConstruction != 4) {
+                categorieConstruction++;
+            } else {
+                categorieConstruction = 0;
+            }
+        }
+        if(IsMouseButtonDown(MOUSE_BUTTON_LEFT) == true){
+            for (int y = 0; y < LIGNES; y++) {
+                for (int x = 0; x < COLONNES; x++) {
+                    if (GetMouseX() % 20 != 0 && GetMouseY() % 20 != 0 && GetMouseX() != 0 && GetMouseY() != 0) {
+                        if (GetMouseX() > tabCase[x][y].x - (TUILE / 2) &&
+                            GetMouseY() > tabCase[x][y].y - (TUILE / 2) &&
+                            GetMouseX() < tabCase[x][y].x + (TUILE / 2) &&
+                            GetMouseY() < tabCase[x][y].y + (TUILE / 2)) {
                             niveau = 0;
-                        }
-                        break;
-                    }
-                    case ALLEGRO_KEY_RIGHT : {
-                        if (categorieConstruction != 4) {
-                            categorieConstruction++;
-                        } else {
-                            categorieConstruction = 0;
-                        }
-                        break;
-                    }
-                    case ALLEGRO_KEY_DOWN : {
-
-                        break;
-                    }
-                    case ALLEGRO_KEY_UP : {
-
-                        break;
-                    }
-
-                }
-            }
-
-            case ALLEGRO_EVENT_MOUSE_AXES: {
-                for (int y = 0; y < LIGNES; y++) {
-                    for (int x = 0; x < COLONNES; x++) {
-                        if (event.mouse.x % 32 != 0 && event.mouse.y % 32 != 0 && event.mouse.x != 0 && event.mouse.y != 0) {
-                            if (event.mouse.x > tabCase[x][y].x - (TUILE / 2) &&
-                                event.mouse.y > tabCase[x][y].y - (TUILE / 2) &&
-                                event.mouse.x < tabCase[x][y].x + (TUILE / 2) &&
-                                event.mouse.y < tabCase[x][y].y + (TUILE / 2)) {
-
-                                if(categorieConstruction==0 && tabCase[x][y].construction.type == 0) {
-                                    routeApercu(tabCase, x, y);
+                            if(categorieConstruction==0 && tabCase[x][y].construction.type == 0) {
+                                if(compteEnBanque >= COUT_ROUTE) {
+                                    route(tabCase, x, y, &(compteur.nbRues));
+                                    /*for (int y = 0; y < LIGNES; y++) {
+                                        for (int x = 0; x < COLONNES; x++) {
+                                            printf("%d\n", tabCase[x][y].construction.identite);
+                                        }
+                                    }*/
+                                    compteEnBanque = compteEnBanque - COUT_ROUTE;
                                 }
-                                if(categorieConstruction==1 && tabCase[x][y].construction.type == 0) {
-                                    habitationApercu(tabCase, x, y);
-                                }
-                                if(categorieConstruction==2 && tabCase[x][y].construction.type == 0) {
-                                    batimentApercu(tabCase, x, y,3);
-                                }
-                                if(categorieConstruction==3 && tabCase[x][y].construction.type == 0) {
-                                    batimentApercu(tabCase, x, y,2);
+                                else {
+                                    printf("Vous n'avez pas assez d'argent\n");
                                 }
                             }
-                            else{
-                                tabCase[x][y].construction.apercu = 0;
+
+
+                            if(categorieConstruction==1 && tabCase[x][y].construction.type == 0) {
+                                if(compteEnBanque >= COUT_TERRAIN_VAGUE) {
+                                    habitation(tabCase, x, y, &(compteur.nbHab));
+                                    compteEnBanque = compteEnBanque - COUT_TERRAIN_VAGUE;
+                                }
+                                else{
+                                    printf("Vous n'avez pas assez d'argent\n");
+                                }
                             }
-                        }
-                    }
-                }
-                break;
-            }
 
-            case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN: {
-
-                for (int y = 0; y < LIGNES; y++) {
-                    for (int x = 0; x < COLONNES; x++) {
-                        if (event.mouse.x % 32 != 0 && event.mouse.y % 32 != 0 && event.mouse.x != 0 && event.mouse.y != 0) {
-                            if (event.mouse.x > tabCase[x][y].x - (TUILE / 2) &&
-                                event.mouse.y > tabCase[x][y].y - (TUILE / 2) &&
-                                event.mouse.x < tabCase[x][y].x + (TUILE / 2) &&
-                                event.mouse.y < tabCase[x][y].y + (TUILE / 2)) {
-                                niveau = 0;
-
-                                if(categorieConstruction==0 && tabCase[x][y].construction.type == 0) {
-                                    if(compteEnBanque >= COUT_ROUTE) {
-                                        route(tabCase, x, y, &(compteur.nbRues));
-                                        compteEnBanque = compteEnBanque - COUT_ROUTE;
-                                    }
-                                    else {
-                                        printf("Vous n'avez pas assez d'argent\n");
-                                    }
+                            if(categorieConstruction==2 && tabCase[x][y].construction.type == 0) {
+                                if (compteEnBanque >= COUT_CHATEAU_DEAU){
+                                    batiment(tabCase, x, y, &(compteur.nbUsines), 3);
+                                    compteEnBanque = compteEnBanque - COUT_CHATEAU_DEAU;
                                 }
-
-
-                                if(categorieConstruction==1 && tabCase[x][y].construction.type == 0) {
-                                    if(compteEnBanque >= COUT_TERRAIN_VAGUE) {
-                                        habitation(tabCase, x, y, &(compteur.nbHab));
-                                        compteEnBanque = compteEnBanque - COUT_TERRAIN_VAGUE;
-                                    }
-                                    else{
-                                        printf("Vous n'avez pas assez d'argent\n");
-                                    }
+                                else{
+                                    printf("Vous n'avez pas assez d'argent\n");
                                 }
+                            }
 
-                                if(categorieConstruction==2 && tabCase[x][y].construction.type == 0) {
-                                    if (compteEnBanque >= COUT_CHATEAU_DEAU){
-                                        batiment(tabCase, x, y, &(compteur.nbUsines), 3);
-                                        compteEnBanque = compteEnBanque - COUT_CHATEAU_DEAU;
-                                    }
-                                    else{
-                                        printf("Vous n'avez pas assez d'argent\n");
-                                    }
+                            if(categorieConstruction==3 && tabCase[x][y].construction.type == 0) {
+                                if (compteEnBanque >= COUT_CENTRAL){
+                                    batiment(tabCase, x, y, &(compteur.nbChateauO), 2);
+                                    compteEnBanque = compteEnBanque - COUT_CENTRAL;
                                 }
-
-                                if(categorieConstruction==3 && tabCase[x][y].construction.type == 0) {
-                                    if (compteEnBanque >= COUT_CENTRAL){
-                                        batiment(tabCase, x, y, &(compteur.nbChateauO), 2);
-                                        compteEnBanque = compteEnBanque - COUT_CENTRAL;
-                                    }
-                                    else{
-                                        printf("Vous n'avez pas assez d'argent\n");
-                                    }
+                                else{
+                                    printf("Vous n'avez pas assez d'argent\n");
                                 }
                             }
                         }
-                    }
-                }
-                break;
-            }
-            case ALLEGRO_EVENT_TIMER: {
-                al_clear_to_color(al_map_rgb(0, 0, 0));
-                for (int y = 0; y < LIGNES; y++) {
-                    for (int x = 0; x < COLONNES; x++) {
-                        affichageConstruction(tabCase, x, y, niveau);
-                        apercuConstruction(tabCase, x, y);
-                       /* if (timer%15 == 0){
-                            payerTaxebanque(*compteEnBanque, NbrHabitant);
-
-                            ///evolution des constructions
-                            if(tabCase[x][y].construction.type == 5){ // 5 : terrainVague
-                                tabCase[x][y].construction.type ++;
-                                NbrHabitant += NBRHABITANT_CABANE * compteur.cabane;
-                                //a chaque etape changer le bitmap en fonction de l'evolution
-                            }
-                            if(tabCase[x][y].construction.type == 6){  // cabane
-                                tabCase[x][y].construction.type ++;
-                                NbrHabitant += NBRHABITANT_MAISON * compteur.maison;
-                            }
-                            if(tabCase[x][y].construction.type == 7){ //maison
-                                tabCase[x][y].construction.type ++;
-                                NbrHabitant += NBRHABITANT_IMMEUBLE * compteur.immeuble;
-                            }
-                            if(tabCase[x][y].construction.type == 8){ //immeuble
-                                tabCase[x][y].construction.type ++;
-                                NbrHabitant += NBRHABITANT_GRATTECIEL * compteur.gratteCiel;
-                            }
-                        }*/
                     }
                 }
             }
         }
-        for(int i=0; i<=35; i++){
-            for(int y = 0; y<=45; y++) {
-                al_draw_line(y * TUILE, 0, y * TUILE, TUILE * 35, al_map_rgb(255, 255, 255), 0);
+
+        for (int y = 0; y < LIGNES; y++) {
+            for (int x = 0; x < COLONNES; x++) {
+                if (tabCase[x][y].construction.type == 1) {
+                    if (niveau == 0) {
+                        DrawRectangle(tabCase[x][y].x - TUILE / 2, tabCase[x][y].y - TUILE / 2,
+                                      TUILE, TUILE,
+                                      WHITE);
+                    }
+                    if (niveau == 1) {
+                        DrawRectangle(tabCase[x][y].x - TUILE / 2, tabCase[x][y].y - TUILE / 2,TUILE, TUILE,BLUE);
+                    }
+
+                    if (niveau == 2) {
+                        DrawRectangle(tabCase[x][y].x - TUILE / 2, tabCase[x][y].y - TUILE / 2,TUILE, TUILE,YELLOW);
+                    }
+
+                }
+                if (tabCase[x][y].construction.type == 5) {
+                    DrawRectangle(tabCase[x][y].x - TUILE / 2, tabCase[x][y].y - TUILE / 2,  TUILE, TUILE,
+                                  GREEN);
+                }
+                if (tabCase[x][y].construction.type == 3) {
+                    DrawRectangle(tabCase[x][y].x - TUILE / 2, tabCase[x][y].y - TUILE / 2,  TUILE, TUILE,RED);
+                }
+                if (tabCase[x][y].construction.type == 2) {
+                    DrawRectangle(tabCase[x][y].x - TUILE / 2, tabCase[x][y].y - TUILE / 2,  TUILE, TUILE,PURPLE);
+                }
             }
-            al_draw_line(0, i * TUILE, TUILE * 45, i * TUILE, al_map_rgb(255, 255, 255), 0);
         }
-        al_flip_display();
+        for(int y=0; y<=35; y++){
+            for(int x = 0; x<=45; x++) {
+                DrawLine(x * TUILE, 0, x * TUILE, TUILE * 35, WHITE);
+            }
+            DrawLine(0, y * TUILE, TUILE * 45, y * TUILE, WHITE);
+        }
+        /*int hauteur = 30;
+        int largeur = 52;
+        for (int y = 0; y < LIGNES; y++) {
+            for (int x = 0; x < COLONNES; x++) {
+                DrawRectangleLines((hauteur/2 * y) + (hauteur/2 * x), (largeur/2 * y) + (largeur/2 * x), WHITE);
+            }
+        }*/
+        EndDrawing();
+
     }
-
-    al_destroy_display(display);
-    al_destroy_event_queue(queue);
-    al_destroy_timer(timer);
     return 0;
 }
