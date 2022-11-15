@@ -8,8 +8,8 @@
 void route (CASE** tabCase, int x, int y, int* compteur);
 void habitation (CASE** tabCase, int x, int y, int* compteur);
 void batiment (CASE** tabCase, int x, int y, int* compteur, int typeBatiment);
-int possibiliteDeConstruire(CASE** tabCase, int x, int y);
-
+int possibiliteDeConstruire(CASE** tabCase, int x, int y, int dimensionX, int dimensionY);
+int presenceRoute(CASE** tabCase, int x, int y, int dimensionX, int dimensionY);
 void routeApercu (CASE** tabCase, int x, int y);
 void habitationApercu (CASE** tabCase, int x, int y);
 void batimentApercu(CASE** tabCase, int x, int y, int typeBatiment);

@@ -1,16 +1,24 @@
 //
 // Created by Théophile Dutrey on 01/11/2022.
 //
-#define LARGEUR 1024
+#define LARGEUR 1700
 #define HAUTEUR 768
+#define LARGEUR_GRILLE 45*20
+#define HAUTEUR_GRILLE 35*20
 #define COLONNES 45
 #define LIGNES 35
 #define TUILE 20
+#define LARGEUR_TUILE_ISO 34
+#define HAUTEUR_TUILE_ISO 18
+#define ISO_DECALAGE_X 2
+#define ISO_DECALAGE_Y 20
 #define COUT_CENTRAL 100000
 #define COUT_CHATEAU_DEAU 100000
 #define COUT_ROUTE 50
 #define COUT_TERRAIN_VAGUE 1000
 #define COUT_CASERNE 10000
+
+
 #define TAXE 50
 #define NBRHABITANT_CABANE 10
 #define NBRHABITANT_MAISON 50
@@ -18,6 +26,8 @@
 #define NBRHABITANT_GRATTECIEL 1000
 #define LONGUEURE_TERRAIN_VAGUE 3
 #define LARGEUR_TERRAIN_VAGUE 3
+#define LONGUEURE_BATTIMENT 6
+#define LARGEUR_BATTIMENT 4
 
 #ifndef ECE_CITY_3_Z_BIBLIOTHEQUE_H
 #define ECE_CITY_3_Z_BIBLIOTHEQUE_H
@@ -31,8 +41,9 @@ typedef struct{
 }CONSTRUCTION;
 
 typedef struct{
-    float x, y;
     CONSTRUCTION construction;
+    int route;
+    int typeRoute;
 }CASE;
 
 ////////////////Les structures du graphe///////
@@ -92,8 +103,15 @@ typedef struct{
 
 }COMPTEUR;
 
+typedef struct{
+   int x,y;
+}VECTEUR;
+
+#include <raylib.h>
 #include "graphe.h"
 #include "construction.h"
 #include "banque.h"
 #include "affichage.h"
+#include "isoConfig.h"
+
 #endif //ECE_CITY_3_Z_BIBLIOTHEQUE_H
