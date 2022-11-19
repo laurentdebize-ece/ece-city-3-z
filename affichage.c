@@ -31,16 +31,17 @@ void affichageRoute(Texture2D Routes, CASE** tabCase, int niveau){
     Rectangle route;
     route.width= LARGEUR_TUILE_ISO;
     route.height = HAUTEUR_TUILE_ISO;
+    int TypeRoute;
 
     for (int y = 0; y < LIGNES; y++) {
         for (int x = 0; x < COLONNES; x++) {
             positionSprite.x = x * (LARGEUR_TUILE_ISO / 2) + y * (LARGEUR_TUILE_ISO / 2) + LARGEUR_TUILE_ISO * ISO_DECALAGE_X;
             positionSprite.y = x * (HAUTEUR_TUILE_ISO / 2) - y * (HAUTEUR_TUILE_ISO / 2) + HAUTEUR_TUILE_ISO * ISO_DECALAGE_Y;
             if (tabCase[x][y].construction.type == 1) {
-                typeRoute(tabCase, x , y);
+                TypeRoute = typeRoute(tabCase,x,y);
                 if (niveau == 0) {
                     for(int i = 0; i<=15; i++) {
-                        if (tabCase[x][y].typeRoute == i) {
+                        if (TypeRoute == i) {
                             route.x = i * LARGEUR_TUILE_ISO + i;
                             route.y = 0;
                         }
@@ -49,7 +50,7 @@ void affichageRoute(Texture2D Routes, CASE** tabCase, int niveau){
                 }
                 if (niveau == 1) {
                     for(int i = 0; i<=15; i++) {
-                        if (tabCase[x][y].typeRoute == i) {
+                        if (TypeRoute == i) {
                             route.x = i * LARGEUR_TUILE_ISO + i;
                             route.y = HAUTEUR_TUILE_ISO;
                         }
@@ -58,7 +59,7 @@ void affichageRoute(Texture2D Routes, CASE** tabCase, int niveau){
                 }
                 if (niveau == 2) {
                     for(int i = 0; i<=15; i++) {
-                        if (tabCase[x][y].typeRoute == i) {
+                        if (TypeRoute == i) {
                             route.x = i * LARGEUR_TUILE_ISO + i;
                             route.y = 2*HAUTEUR_TUILE_ISO;
                         }
@@ -108,36 +109,51 @@ void affichageBattiment(Texture2D Battiment, CASE** tabCase){
             if (tabCase[x][y].construction.type == 3) {
                 DrawTextureRec(Battiment, battiment, positionSprite, WHITE);
             }
+            if (tabCase[x][y].construction.type == 2) {
+                DrawTextureRec(Battiment, battiment, positionSprite, WHITE);
+            }
         }
     }
 }
 
-void typeRoute(CASE **tabCase, int x, int y) {
-
-    if (x - 1 >= 0 && x + 1 < COLONNES && y - 1 >= 0 && y + 1 < LIGNES) {
-
-        if (tabCase[x - 1][y].construction.type == 1) {
-            tabCase[x - 1][y].route = 1;
-        } else {
-            tabCase[x - 1][y].route = 0;
-        }
-        if (tabCase[x][y + 1].construction.type == 1) {
-            tabCase[x][y + 1].route = 2;
-        } else {
-            tabCase[x][y + 1].route = 0;
-        }
-        if (tabCase[x + 1][y].construction.type == 1) {
-            tabCase[x + 1][y].route = 4;
-        } else {
-            tabCase[x + 1][y].route = 0;
-        }
-        if (tabCase[x][y - 1].construction.type == 1) {
-            tabCase[x][y - 1].route = 8;
-        } else {
-            tabCase[x][y - 1].route = 0;
-        }
-        tabCase[x][y].typeRoute = tabCase[x - 1][y].route + tabCase[x][y - 1].route + tabCase[x + 1][y].route + tabCase[x][y + 1].route;
+int typeRoute(CASE **tabCase, int x, int y) {
+    int compteurTypeRoute = 0;
+    if (x - 1 >= 0 && tabCase[x - 1][y].construction.type == 1) {
+        compteurTypeRoute = compteurTypeRoute + 1;
     }
+    if (y + 1 < LIGNES && tabCase[x][y + 1].construction.type == 1) {
+        compteurTypeRoute = compteurTypeRoute + 2;
+    }
+    if (x + 1 < COLONNES && tabCase[x + 1][y].construction.type == 1) {
+        compteurTypeRoute = compteurTypeRoute + 4;
+    }
+    if (y - 1 >= 0 && tabCase[x][y - 1].construction.type == 1) {
+        compteurTypeRoute = compteurTypeRoute + 8;
+    }
+    return compteurTypeRoute;
 }
 
 
+
+
+
+void enregistrerPartie(CASE** tabCase){
+    FILE * n = fopen("../map.txt","w+");
+    for (int y = 0; y < LIGNES; y++) {
+        for (int x = 0; x < COLONNES; x++) {
+            fprintf(n, "%d ",tabCase[x][y].construction.type);
+        }
+        fputs("\n",n);
+    }
+}
+
+void recommencerPartie(CASE** tabCase){
+    FILE * n = fopen("../map.txt","w+");
+    for (int y = 0; y < LIGNES; y++) {
+        for (int x = 0; x < COLONNES; x++) {
+            fprintf(n, "%d ",0);
+            tabCase[x][y].construction.type = 0;
+        }
+        fputs("\n",n);
+    }
+}
