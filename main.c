@@ -4,13 +4,18 @@
 int main() {
     int niveau = 0;
     int construction;
-    int NbrHabitant = 0;
+    int detruire = 0;
+    int rotationBattiment;
     COMPTEUR compteur;
+    compteur.nbChateauO=0;
+    compteur.nbHab=0;
+    compteur.nbRues=0;
+    compteur.nbUsines=0;
     int compteEnBanque = 999999999;
 
     FILE *ifs = fopen("../map.txt", "r");
     VECTEUR mouseIso;
-    VECTEUR mouseIsoClic;
+
     
     int categorieConstruction = 0; // 0:route 1:habitation 2:usine 3:chateauEau 4:caserne
    
@@ -24,7 +29,10 @@ int main() {
         for (int x = 0; x < COLONNES; x++) {
             fscanf(ifs, "%d", &construction);
             tabCase[x][y].construction.type = construction; // 0: rien 1:route 2:Usine 3:chateauEau 4:caserne 5:terrain vague
-
+            tabCase[x][y].construction.compteur.nbChateauO = 0;
+            tabCase[x][y].construction.compteur.nbUsines = 0;
+            tabCase[x][y].construction.compteur.nbHab = 0;
+            tabCase[x][y].construction.compteur.nbRues = 0;
         }
     }
 
@@ -39,6 +47,7 @@ int main() {
     while (!WindowShouldClose()) {
 
         BeginDrawing();
+        ClearBackground(BLACK);
 
         coordSourisIso(&mouseIso, img);
         affichageGrille(mouseIso, Tiles);
@@ -46,7 +55,7 @@ int main() {
         affichageTerrain(Tiles, tabCase);
         affichageBattiment(Tiles, tabCase);
 
-        ClearBackground(BLACK);
+
 
         if (IsKeyPressed(KEY_SPACE) == true) {
             if (niveau != 2) {
@@ -62,57 +71,36 @@ int main() {
                 categorieConstruction = 0;
             }
         }
-
-        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) == true) {
-            if(mouseIso.x>=0 && mouseIso.y>=0 && mouseIso.x<COLONNES && mouseIso.y<LIGNES) {
-                coordSourisIso(&mouseIsoClic, img);
-                niveau = 0;
-                if (categorieConstruction == 0 &&
-                    tabCase[mouseIso.x][mouseIso.y].construction.type == 0) {
-                    if (compteEnBanque >= COUT_ROUTE) {
-                        route(tabCase, mouseIsoClic.x, mouseIsoClic.y, &(compteur.nbRues));
-                        compteEnBanque = compteEnBanque - COUT_ROUTE;
-                    } else {
-                        printf("Vous n'avez pas assez d'argent\n");
-                    }
-                }
-
-
-                if (categorieConstruction == 1 &&
-                    tabCase[mouseIso.x][mouseIso.y].construction.type == 0) {
-                    if (compteEnBanque >= COUT_TERRAIN_VAGUE) {
-                        habitation(tabCase, mouseIso.x, mouseIso.y, &(compteur.nbHab));
-                        compteEnBanque = compteEnBanque - COUT_TERRAIN_VAGUE;
-                    } else {
-                        printf("Vous n'avez pas assez d'argent\n");
-                    }
-                }
-
-                if (categorieConstruction == 2 &&
-                    tabCase[mouseIso.x][mouseIso.y].construction.type == 0) {
-                    if (compteEnBanque >= COUT_CHATEAU_DEAU) {
-                        batiment(tabCase, mouseIso.x, mouseIso.y, &(compteur.nbUsines), 3);
-                        compteEnBanque = compteEnBanque - COUT_CHATEAU_DEAU;
-                    } else {
-                        printf("Vous n'avez pas assez d'argent\n");
-                    }
-                }
-
-                if (categorieConstruction == 3 &&
-                    tabCase[mouseIso.x][mouseIso.y].construction.type == 0) {
-                    if (compteEnBanque >= COUT_CENTRAL) {
-                        batiment(tabCase, mouseIso.x, mouseIso.y, &(compteur.nbChateauO), 2);
-                        compteEnBanque = compteEnBanque - COUT_CENTRAL;
-                    } else {
-                        printf("Vous n'avez pas assez d'argent\n");
-                    }
-                }
+        if (IsKeyPressed(KEY_UP) == true) {
+            if (rotationBattiment != 1) {
+                rotationBattiment++;
+            } else {
+                rotationBattiment = 0;
+            }
+        }
+        if (IsKeyPressed(KEY_KP_1) == true) {
+            if (detruire != 1) {
+                detruire++;
+            } else {
+                detruire = 0;
             }
         }
 
+        if ((IsKeyDown(KEY_LEFT_CONTROL)) && (IsKeyPressed(KEY_S))) {
+            enregistrerPartie(tabCase);
+        }
+        if ((IsKeyDown(KEY_LEFT_CONTROL)) && (IsKeyPressed(KEY_KP_0))) {
+            recommencerPartie(tabCase);
+        }
+        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) == true) {
+            constructionSouris(&mouseIso, categorieConstruction, &niveau, tabCase, &compteEnBanque, &compteur, rotationBattiment, detruire);
+            detruireConstruction(&mouseIso,tabCase,&compteur,rotationBattiment,detruire);
+            printf("nb route: %d\nnb hab: %d\nnb usine: %d\nnb chateauO: %d\n ", compteur.nbRues,compteur.nbHab, compteur.nbUsines, compteur.nbChateauO);
+        }
 
         EndDrawing();
 
     }
+
     return 0;
 }

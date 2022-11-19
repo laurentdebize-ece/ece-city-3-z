@@ -2,7 +2,7 @@
 // Created by Théophile Dutrey on 01/11/2022.
 //
 #define LARGEUR 1700
-#define HAUTEUR 768
+#define HAUTEUR 800
 #define LARGEUR_GRILLE 45*20
 #define HAUTEUR_GRILLE 35*20
 #define COLONNES 45
@@ -35,15 +35,19 @@
 #include <stdio.h>
 
 typedef struct{
-    int identite;
+
+    int nbRues, nbHab, nbChateauO, nbUsines;
+
+}COMPTEUR;
+
+typedef struct{
     int type;
     int apercu;
+    COMPTEUR compteur;
 }CONSTRUCTION;
 
 typedef struct{
     CONSTRUCTION construction;
-    int route;
-    int typeRoute;
 }CASE;
 
 ////////////////Les structures du graphe///////
@@ -97,11 +101,6 @@ typedef struct{
     ChateauO* tabO;//tableau repertoriant chaque Chateau d'eau
 }ECECITY;
 
-typedef struct{
-
-    int nbRues, nbHab, nbChateauO, nbUsines;
-
-}COMPTEUR;
 
 typedef struct{
    int x,y;
