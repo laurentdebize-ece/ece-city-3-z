@@ -54,10 +54,43 @@ typedef struct {
 }Niveau;
 
 //informations relatives aux sommets (chauque case du graphe)
+
+struct _cellule{
+    int element;
+    struct _cellule *suivant;
+};
+typedef struct _cellule* Cellule;
+
+struct _file{
+    int longueur;
+    Cellule tete;
+    Cellule queue;
+};
+typedef struct _file* File;
+
+/* Structure d'un arc*/
+struct Arc {
+    int sommetX;// numero de sommet d'un arc adjacent au sommet initial
+    int sommetY;
+    int valeur;
+    struct Arc* arc_suivant;
+};
+
+/* Alias de pointeur sur un Arc */
+typedef struct Arc* pArc;
+
 typedef struct {
+    struct Arc* arc;
     int EnCoursDeConstruction;  //1 si nla construction a debuté mais que les 15 sec ne sont pas encore terminé  // 2 si les 15 sec on ecoulé et que c'est construit
     int etat; //etat des constructions -> on utilisera l'enum "construction" pour que ce soit plus facile
     int valeur; //valeur de la case : ex tabSommet[21][12]
+    float x, y;
+    int identite;
+    int couleur;
+    int connexe;
+    int distance;
+    int predX;
+    int predY;
 }Sommet;
 
 
@@ -90,18 +123,19 @@ typedef struct{
 }ChateauO;
 
 typedef struct{
+
+    int nbRues, nbHab, nbChateauO, nbUsines;
+
+}COMPTEUR;
+
+typedef struct{
     Graphe G; //Graphe du jeu
-    //ilayda struct compteur;
+    COMPTEUR compteur;
     Habitations* tabHab; //tableau repertoriant chaque habitation
     Usines* tabE;//tableau repertoriant chaque Usine
     ChateauO* tabO;//tableau repertoriant chaque Chateau d'eau
 }ECECITY;
 
-typedef struct{
-
-    int nbRues, nbHab, nbChateauO, nbUsines;
-
-}COMPTEUR;
 
 typedef struct{
    int x,y;
