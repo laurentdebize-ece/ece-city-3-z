@@ -12,7 +12,7 @@ int main() {
     float rotationY = 1.5f;
     int compteEnBanque = 999999999;
     FILE * ifs = fopen("../map.txt","r");
-
+    int n;
     int categorieConstruction = 0; // 0:route 1:habitation 2:usine 3:chateauEau 4:caserne
 
     CASE ** tabCase = malloc((COLONNES)*sizeof(CASE*));
