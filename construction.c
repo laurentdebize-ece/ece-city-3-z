@@ -35,7 +35,7 @@ void habitation(CASE **tabCase, int x, int y, int *compteur, int detruire) {
         }
     } else {
         int caseIdentite = tabCase[x][y].construction.compteur.nbHab;
-        (*compteur)--;
+        //(*compteur)--;
         for (int b = 0; b < LIGNES; b++) {
             for (int a = 0; a < COLONNES; a++) {
 
@@ -87,7 +87,7 @@ void batiment (CASE** tabCase, int x, int y, int* compteur, int typeBatiment, in
         if(typeBatiment == 3) {
             caseIdentite = tabCase[x][y].construction.compteur.nbChateauO;
         }
-        (*compteur)--;
+        //(*compteur)--;
         for (int b = 0; b < LIGNES; b++) {
             for (int a = 0; a < COLONNES; a++) {
                 if(typeBatiment == 2) {
@@ -235,3 +235,36 @@ void batimentApercu(CASE** tabCase, int x, int y, int typeBatiment){
 
 }
 
+
+
+void evolutionBat (CASE** tabCase, float* tempsEcoule) {
+    compteurTempsDuBat(tabCase, 0, 0, tempsEcoule);
+    for (int y = 0; y < LIGNES; y++) {
+        for (int x = 0; x < COLONNES; x++){
+                if (tabCase[x][y].construction.type >= 5 && tabCase[x][y].construction.type <= 9){
+                    if (tabCase[x][y].construction.tic == 15){
+                        tabCase[x][y].construction.type ++;
+                        tabCase[x][y].construction.tic = 0;
+                    }
+                }
+        }
+    }
+}
+
+void compteurTempsDuBat (CASE** tabCase, int x, int y, float* tempsEcoule) {
+    float tempsActuel = GetTime();
+    float deltaTemps = tempsActuel - *tempsEcoule;
+
+    if (deltaTemps >= 1.0) {
+        //incremente les tics de chaque batiment
+        for (int y = 0; y < LIGNES; y++) {
+            for (int x = 0; x < COLONNES; x++) {
+                tabCase[x][y].construction.tic++;
+            }
+        }
+        printf("SS\n");
+        *tempsEcoule = tempsActuel;
+    }
+    DrawRectangle(200, 30, 180, 60, (Color){100, 190, 50, 200});
+    DrawText(TextFormat( "Temps : %.2f",tempsActuel) ,210, 40, 25, BLACK);
+}

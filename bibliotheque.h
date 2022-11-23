@@ -43,6 +43,7 @@ typedef struct{
 typedef struct{
     int type;
     int apercu;
+    int tic;
     COMPTEUR compteur;
 }CONSTRUCTION;
 
