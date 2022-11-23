@@ -262,6 +262,5 @@ void compteurTempsDuBat (CASE** tabCase, int x, int y, float* tempsEcoule) {
         *tempsEcoule = tempsActuel;
     }
     DrawRectangle(200, 30, 180, 60, (Color){100, 190, 50, 200});
-
-    DrawText(TextFormat( "Temps : %.2f",tempsActuel) ,210, 35, 5, BLACK);
+    DrawText(TextFormat( "Temps : %.2f",tempsActuel) ,210, 40, 25, BLACK);
 }
