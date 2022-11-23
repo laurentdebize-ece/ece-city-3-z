@@ -233,7 +233,7 @@ ECECITY *iniJeu() {
     JEU->compteur.nbHab = 0;
     JEU->compteur.nbUsines = 0;
     JEU->compteur.nbChateauO = 0;
-    Graphe *g = lire_graphe("graphe.txt", "id.txt", JEU); //penser a modifier le nom du txt
+    Graphe *g = lire_graphe("../map.txt", "../ordreConstruction.txt", JEU); //penser a modifier le nom du txt
     JEU->G = g;
 
     return JEU;
