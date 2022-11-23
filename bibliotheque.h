@@ -41,14 +41,22 @@ typedef struct{
 }COMPTEUR;
 
 typedef struct{
-    int type;
-    int apercu;
-    int tic;
-    COMPTEUR compteur;
+
 }CONSTRUCTION;
 
 typedef struct{
-    CONSTRUCTION construction;
+    struct Arc* arc;
+    int EnCoursDeConstruction;  //1 si nla construction a debuté mais que les 15 sec ne sont pas encore terminé  // 2 si les 15 sec on ecoulé et que c'est construit
+    int etat; //etat des constructions -> on utilisera l'enum "construction" pour que ce soit plus facile
+    int valeur; //valeur de la case : ex tabSommet[21][12]
+    float x, y;
+    int type;
+    int identite;
+    int couleur;
+    int connexe;
+    int distance;
+    int predX;
+    int predY;
 }CASE;
 
 ////////////////Les structures du graphe///////
@@ -85,26 +93,10 @@ struct Arc {
 typedef struct Arc* pArc;
 
 typedef struct {
-    struct Arc* arc;
-    int EnCoursDeConstruction;  //1 si nla construction a debuté mais que les 15 sec ne sont pas encore terminé  // 2 si les 15 sec on ecoulé et que c'est construit
-    int etat; //etat des constructions -> on utilisera l'enum "construction" pour que ce soit plus facile
-    int valeur; //valeur de la case : ex tabSommet[21][12]
-    float x, y;
-    int construction;
-    int identite;
-    int couleur;
-    int connexe;
-    int distance;
-    int predX;
-    int predY;
-}Sommet;
-
-
-typedef struct {
     Niveau mapAffiche;   // par exemple si on a case[0][5].mapAfficher.niveau == 1  ->  on affichera la canalisation
     int nbConnexe;
     int orientation;
-    Sommet** tabSommet;  //matrice du graphe (tab de 38x38 cases)
+    CASE** tabSommet;  //matrice du graphe (tab de 38x38 cases)
 }Graphe;  //chaque case correspond a un sommet de notre graphe
 
 
