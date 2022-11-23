@@ -231,6 +231,8 @@ void batimentApercu(CASE** tabCase, int x, int y, int typeBatiment){
 
 }
 
+
+
 void evolutionBat (CASE** tabCase, float* tempsEcoule) {
     compteurTempsDuBat(tabCase, 0, 0, tempsEcoule);
     for (int y = 0; y < LIGNES; y++) {
@@ -256,9 +258,10 @@ void compteurTempsDuBat (CASE** tabCase, int x, int y, float* tempsEcoule) {
                 tabCase[x][y].construction.tic++;
             }
         }
-        printf("SS");
+        printf("SS\n");
         *tempsEcoule = tempsActuel;
     }
     DrawRectangle(200, 30, 180, 60, (Color){100, 190, 50, 200});
-    //DrawText( ,210, 35, 5, BLACK);
+
+    DrawText(TextFormat( "Temps : %.2f",tempsActuel) ,210, 35, 5, BLACK);
 }
