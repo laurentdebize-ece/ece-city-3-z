@@ -255,7 +255,7 @@ void compteurTempsDuBat (CASE** tabCase, int x, int y, float* tempsEcoule) {
     float tempsActuel = GetTime();
     float deltaTemps = tempsActuel - *tempsEcoule;
 
-    if (deltaTemps >= 1.0) {
+    if (deltaTemps >= 1.0){
         //incremente les tics de chaque batiment
         for (int y = 0; y < LIGNES; y++) {
             for (int x = 0; x < COLONNES; x++) {
