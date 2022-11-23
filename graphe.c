@@ -618,3 +618,5 @@ int minimain() {
     CalculeO(JEU);
     return 0;
 }*/
+
+Jeu->tabHab[i].nbHabitant
