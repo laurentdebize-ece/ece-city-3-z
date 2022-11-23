@@ -7,17 +7,17 @@
 {
 
     Graphe* Newgraphe=malloc(sizeof(Graphe));
-    Newgraphe->tabSommet = malloc(ordre*sizeof(Sommet));
+    Newgraphe->tabCase = malloc(ordre*sizeof(Sommet));
 
     for(int i=0; i<ordre; i++){
-        Newgraphe->tabSommet[i]=malloc(sizeof(Sommet));
-        //Newgraphe->tabSommet[i]->valeur=i;
+        Newgraphe->tabCase[i]=malloc(sizeof(Sommet));
+        //Newgraphe->tabCase[i]->valeur=i;
     }
     for (int i=0; i<38; i++){
         for (int j=0; j<38; j++){
-            //fscanf(ifs, "%d", &Newgraphe->tabSommet[i][j].valeur);
-            Newgraphe->tabSommet[i][j].valeur = i*j;
-            Newgraphe->tabSommet[i][j].etat = 0;   //il n'y a aucune construction au debut
+            //fscanf(ifs, "%d", &Newgraphe->tabCase[i][j].valeur);
+            Newgraphe->tabCase[i][j].valeur = i*j;
+            Newgraphe->tabCase[i][j].etat = 0;   //il n'y a aucune construction au debut
         }
     }
     return Newgraphe;
@@ -76,18 +76,18 @@ CASE **CreerArete(CASE **sommet, int s1X, int s1Y, int s2X, int s2Y, int valeurs
     }
 }
 
-void CalculeConnexe(CASE **tabSommet, int i, int j, int *nbConnexe) {
-    pArc temp = tabSommet[i][j].arc;
+void CalculeConnexe(CASE **tabCase, int i, int j, int *nbConnexe) {
+    pArc temp = tabCase[i][j].arc;
     while (temp != NULL) {
-        int x = tabSommet[i][j].arc->sommetX;
-        int y = tabSommet[i][j].arc->sommetY;
-        if (tabSommet[x][y].connexe != 0) {
-            tabSommet[i][j].connexe = tabSommet[x][y].connexe;
+        int x = tabCase[i][j].arc->sommetX;
+        int y = tabCase[i][j].arc->sommetY;
+        if (tabCase[x][y].connexe != 0) {
+            tabCase[i][j].connexe = tabCase[x][y].connexe;
             return;
         }
         temp = temp->arc_suivant;
     }
-    tabSommet[i][j].connexe = *nbConnexe;
+    tabCase[i][j].connexe = *nbConnexe;
     (*nbConnexe)++;
 }
 
@@ -207,7 +207,7 @@ Graphe *CreerGraphe(FILE *ifs, FILE *ifsID, ECECITY *JEU) {
     }
     Graphe *Newgraphe = (Graphe *) malloc(sizeof(Graphe));
     Newgraphe->nbConnexe = nbConnexe;
-    Newgraphe->tabSommet = tabCase;
+    Newgraphe->tabCase = tabCase;
     return Newgraphe;
 }
 
@@ -261,7 +261,7 @@ void graphe_afficher(Graphe *graphe) {
 
     for (int i = 0; i < QUADRICOLONNE; i++) {
         for (int j = 0; j < QUADRILIGNE; j++) {
-            afficher_successeurs(graphe->tabSommet, i, j);
+            afficher_successeurs(graphe->tabCase, i, j);
             printf("\n");
         }
     }
@@ -328,7 +328,7 @@ void ecrireFile(File F) {
 
 int checkBlanc(Graphe *G, int num) {
     for (int i = 0; i < QUADRICOLONNE; i++) {
-        if (G->tabSommet[i]->couleur == 0) {
+        if (G->tabCase[i]->couleur == 0) {
             return i;
         }
     }
@@ -340,26 +340,26 @@ void BFS(Graphe *G, int SommetX, int SommetY, int *compte) {
     //printf("BFS à partir du sommet %d :\n",num);
     *compte = 0;
     File f = CreerFile();
-    pArc arc = G->tabSommet[SommetX][SommetY].arc;
-    G->tabSommet[SommetX][SommetY].couleur = 1;
+    pArc arc = G->tabCase[SommetX][SommetY].arc;
+    G->tabCase[SommetX][SommetY].couleur = 1;
     enfiler(f, SommetX * 100 + SommetY);
     ++(*compte);
     while (f->longueur != 0) {
         while (arc != NULL) {
-            if (G->tabSommet[arc->sommetX][arc->sommetY].couleur == 0) {
+            if (G->tabCase[arc->sommetX][arc->sommetY].couleur == 0) {
                 enfiler(f, arc->sommetX * 100 + arc->sommetY);
-                G->tabSommet[arc->sommetX][arc->sommetY].couleur = 1;
-                G->tabSommet[arc->sommetX][arc->sommetY].predX = arc->sommetX;//a potentiellement changé en SommetX
-                G->tabSommet[arc->sommetX][arc->sommetY].predY = arc->sommetY;// same
+                G->tabCase[arc->sommetX][arc->sommetY].couleur = 1;
+                G->tabCase[arc->sommetX][arc->sommetY].predX = arc->sommetX;//a potentiellement changé en SommetX
+                G->tabCase[arc->sommetX][arc->sommetY].predY = arc->sommetY;// same
             }
             arc = arc->arc_suivant;
         }
-        G->tabSommet[SommetX][SommetY].couleur = 2;
+        G->tabCase[SommetX][SommetY].couleur = 2;
         //on récupère
         float num = defilement(f);
         SommetX = num / 100;
         SommetY = num - SommetX;
-        arc = G->tabSommet[SommetX][SommetY].arc;
+        arc = G->tabCase[SommetX][SommetY].arc;
     }
 }
 
@@ -376,8 +376,8 @@ void afficheBFS(int tab[], int compte, int *c) {
 void touBlancs(Graphe *G) {
     for (int i = 0; i < QUADRICOLONNE; i++) {
         for (int j = 0; j < QUADRILIGNE; j++) {
-            G->tabSommet[i][j].couleur = 0;
-            G->tabSommet[i][j].distance = 0;
+            G->tabCase[i][j].couleur = 0;
+            G->tabCase[i][j].distance = 0;
         }
     }
 }
@@ -385,13 +385,13 @@ void touBlancs(Graphe *G) {
 void CalculDistance(Graphe *G, int SommetX, int SommetY, int con) {
     for (int i = 0; i < QUADRICOLONNE; i++) {
         for (int j = 0; j < QUADRILIGNE; j++) {
-            if (G->tabSommet[i][j].type >= 5 && G->tabSommet[i][j].connexe == con) {
+            if (G->tabCase[i][j].type >= 5 && G->tabCase[i][j].connexe == con) {
                 int tempX = i;
                 int tempY = j;
                 while (tempX != SommetX && tempY != SommetY) {
-                    G->tabSommet[i][j].distance++;
-                    tempX = G->tabSommet[tempX][tempY].predX;
-                    tempY = G->tabSommet[tempX][tempY].predY;
+                    G->tabCase[i][j].distance++;
+                    tempX = G->tabCase[tempX][tempY].predX;
+                    tempY = G->tabCase[tempX][tempY].predY;
                 }
             }
         }
@@ -405,9 +405,9 @@ void triDistance(int *ordre, ECECITY *JEU, int nbHabitationCon) {
         int id=0;
         for (int i = 0; i < QUADRICOLONNE; i++) {
             for (int j = 0; j < QUADRILIGNE; j++) {
-                if (JEU->G->tabSommet[i][j].distance!=0 && JEU->G->tabSommet[i][j].distance<distancemin) {
-                    distancemin = JEU->G->tabSommet[i][j].distance;
-                    id = JEU->G->tabSommet[i][j].identite;
+                if (JEU->G->tabCase[i][j].distance!=0 && JEU->G->tabCase[i][j].distance<distancemin) {
+                    distancemin = JEU->G->tabCase[i][j].distance;
+                    id = JEU->G->tabCase[i][j].identite;
                 }
             }
         }
@@ -445,7 +445,7 @@ void ECEBFS(int con, int id, ECECITY *JEU, int nbHabitationCon) {
 
     for (int i = 0; i < QUADRILIGNE; i++) {
         for (int j = 0; j < QUADRICOLONNE; j++) {
-            if (JEU->G->tabSommet[i][j].type == 3 && JEU->G->tabSommet[i][j].identite == id) {
+            if (JEU->G->tabCase[i][j].type == 3 && JEU->G->tabCase[i][j].identite == id) {
                 SommetX = i;
                 SommetY = j;
                 //on fait le BFS a partir du sommet trouver

@@ -41,10 +41,6 @@ typedef struct{
 }COMPTEUR;
 
 typedef struct{
-
-}CONSTRUCTION;
-
-typedef struct{
     struct Arc* arc;
     int EnCoursDeConstruction;  //1 si nla construction a debuté mais que les 15 sec ne sont pas encore terminé  // 2 si les 15 sec on ecoulé et que c'est construit
     int etat; //etat des constructions -> on utilisera l'enum "construction" pour que ce soit plus facile
@@ -92,11 +88,14 @@ struct Arc {
 /* Alias de pointeur sur un Arc */
 typedef struct Arc* pArc;
 
+
+
+
 typedef struct {
     Niveau mapAffiche;   // par exemple si on a case[0][5].mapAfficher.niveau == 1  ->  on affichera la canalisation
     int nbConnexe;
     int orientation;
-    CASE** tabSommet;  //matrice du graphe (tab de 38x38 cases)
+    CASE** tabCase;  //matrice du graphe (tab de 38x38 cases)
 }Graphe;  //chaque case correspond a un sommet de notre graphe
 
 

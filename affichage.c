@@ -37,7 +37,7 @@ void affichageRoute(Texture2D Routes, CASE** tabCase, int niveau){
         for (int x = 0; x < COLONNES; x++) {
             positionSprite.x = x * (LARGEUR_TUILE_ISO / 2) + y * (LARGEUR_TUILE_ISO / 2) + LARGEUR_TUILE_ISO * ISO_DECALAGE_X;
             positionSprite.y = x * (HAUTEUR_TUILE_ISO / 2) - y * (HAUTEUR_TUILE_ISO / 2) + HAUTEUR_TUILE_ISO * ISO_DECALAGE_Y;
-            if (tabCase[x][y].construction.type == 1) {
+            if (tabCase[x][y].type == 1) {
                 TypeRoute = typeRoute(tabCase,x,y);
                 if (niveau == 0) {
                     for(int i = 0; i<=15; i++) {
@@ -85,7 +85,7 @@ void affichageTerrain(Texture2D Terrain, CASE** tabCase){
                     x * (LARGEUR_TUILE_ISO / 2) + y * (LARGEUR_TUILE_ISO / 2) + LARGEUR_TUILE_ISO * ISO_DECALAGE_X;
             positionSprite.y =
                     x * (HAUTEUR_TUILE_ISO / 2) - y * (HAUTEUR_TUILE_ISO / 2) + HAUTEUR_TUILE_ISO * ISO_DECALAGE_Y;
-            if (tabCase[x][y].construction.type == 5) {
+            if (tabCase[x][y].type == 5) {
                 DrawTextureRec(Terrain, terrain, positionSprite, WHITE);
             }
         }
@@ -106,10 +106,10 @@ void affichageBattiment(Texture2D Battiment, CASE** tabCase){
                     x * (LARGEUR_TUILE_ISO / 2) + y * (LARGEUR_TUILE_ISO / 2) + LARGEUR_TUILE_ISO * ISO_DECALAGE_X;
             positionSprite.y =
                     x * (HAUTEUR_TUILE_ISO / 2) - y * (HAUTEUR_TUILE_ISO / 2) + HAUTEUR_TUILE_ISO * ISO_DECALAGE_Y;
-            if (tabCase[x][y].construction.type == 3) {
+            if (tabCase[x][y].type == 3) {
                 DrawTextureRec(Battiment, battiment, positionSprite, WHITE);
             }
-            if (tabCase[x][y].construction.type == 2) {
+            if (tabCase[x][y].type == 2) {
                 DrawTextureRec(Battiment, battiment, positionSprite, WHITE);
             }
         }
@@ -118,16 +118,16 @@ void affichageBattiment(Texture2D Battiment, CASE** tabCase){
 
 int typeRoute(CASE **tabCase, int x, int y) {
     int compteurTypeRoute = 0;
-    if (x - 1 >= 0 && tabCase[x - 1][y].construction.type == 1) {
+    if (x - 1 >= 0 && tabCase[x - 1][y].type == 1) {
         compteurTypeRoute = compteurTypeRoute + 1;
     }
-    if (y + 1 < LIGNES && tabCase[x][y + 1].construction.type == 1) {
+    if (y + 1 < LIGNES && tabCase[x][y + 1].type == 1) {
         compteurTypeRoute = compteurTypeRoute + 2;
     }
-    if (x + 1 < COLONNES && tabCase[x + 1][y].construction.type == 1) {
+    if (x + 1 < COLONNES && tabCase[x + 1][y].type == 1) {
         compteurTypeRoute = compteurTypeRoute + 4;
     }
-    if (y - 1 >= 0 && tabCase[x][y - 1].construction.type == 1) {
+    if (y - 1 >= 0 && tabCase[x][y - 1].type == 1) {
         compteurTypeRoute = compteurTypeRoute + 8;
     }
     return compteurTypeRoute;
@@ -142,23 +142,8 @@ void enregistrerPartie(CASE** tabCase){
     FILE * d = fopen("../ordreConstruction.txt","w+");
     for (int y = 0; y < LIGNES; y++) {
         for (int x = 0; x < COLONNES; x++) {
-            fprintf(n, "%d ",tabCase[x][y].construction.type);
-
-            if(tabCase[x][y].construction.compteur.nbChateauO != 0){
-                fprintf(d, "%d ", tabCase[x][y].construction.compteur.nbChateauO);
-            }
-            else if(tabCase[x][y].construction.compteur.nbUsines != 0){
-                fprintf(d, "%d ", tabCase[x][y].construction.compteur.nbUsines);
-            }
-            else if(tabCase[x][y].construction.compteur.nbHab != 0){
-                fprintf(d, "%d ", tabCase[x][y].construction.compteur.nbHab);
-            }
-            else if(tabCase[x][y].construction.compteur.nbRues != 0){
-                fprintf(d, "%d ", tabCase[x][y].construction.compteur.nbRues);
-            }
-            else{
-                fprintf(d, "%d ", 0);
-            }
+            fprintf(n, "%d ",tabCase[x][y].type);
+            fprintf(d, "%d ", tabCase[x][y].identite);
         }
         fputs("\n",n);
         fputs("\n",d);
@@ -174,11 +159,8 @@ void recommencerPartie(CASE** tabCase, COMPTEUR* compteur){
     for (int y = 0; y < LIGNES; y++) {
         for (int x = 0; x < COLONNES; x++) {
             fprintf(n, "%d ",0);
-            tabCase[x][y].construction.type = 0;
-            tabCase[x][y].construction.compteur.nbChateauO = 0;
-            tabCase[x][y].construction.compteur.nbUsines = 0;
-            tabCase[x][y].construction.compteur.nbHab = 0;
-            tabCase[x][y].construction.compteur.nbRues = 0;
+            tabCase[x][y].type = 0;
+            tabCase[x][y].identite = 0;
         }
         fputs("\n",n);
     }
@@ -186,27 +168,27 @@ void recommencerPartie(CASE** tabCase, COMPTEUR* compteur){
 
 void initialisationOrdre(CASE** tabCase, int ordre, int x, int y, COMPTEUR* compteur){
 
-    if(tabCase[x][y].construction.type == 1) {
-        tabCase[x][y].construction.compteur.nbRues = ordre;
+    if(tabCase[x][y].type == 1) {
+        tabCase[x][y].identite = ordre;
         if(ordre>compteur->nbRues){
             compteur->nbRues = ordre;
         }
     }
-    if(tabCase[x][y].construction.type == 2) {
-        tabCase[x][y].construction.compteur.nbUsines = ordre;
+    if(tabCase[x][y].type == 2) {
+        tabCase[x][y].identite = ordre;
         if(ordre>compteur->nbUsines){
             compteur->nbUsines = ordre;
         }
     }
-    if(tabCase[x][y].construction.type == 3) {
-        tabCase[x][y].construction.compteur.nbChateauO = ordre;
+    if(tabCase[x][y].type == 3) {
+        tabCase[x][y].identite = ordre;
         if(ordre>compteur->nbChateauO){
             compteur->nbChateauO = ordre;
         }
     }
 
-    if(tabCase[x][y].construction.type >= 5) {
-        tabCase[x][y].construction.compteur.nbHab = ordre;
+    if(tabCase[x][y].type >= 5) {
+        tabCase[x][y].identite = ordre;
         if(ordre>compteur->nbHab){
             compteur->nbHab = ordre;
         }
