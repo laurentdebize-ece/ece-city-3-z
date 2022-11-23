@@ -89,6 +89,7 @@ typedef struct {
     int etat; //etat des constructions -> on utilisera l'enum "construction" pour que ce soit plus facile
     int valeur; //valeur de la case : ex tabSommet[21][12]
     float x, y;
+    int construction;
     int identite;
     int couleur;
     int connexe;
@@ -100,8 +101,7 @@ typedef struct {
 
 typedef struct {
     Niveau mapAffiche;   // par exemple si on a case[0][5].mapAfficher.niveau == 1  ->  on affichera la canalisation
-    int taille;
-    int ordre;
+    int nbConnexe;
     int orientation;
     Sommet** tabSommet;  //matrice du graphe (tab de 38x38 cases)
 }Graphe;  //chaque case correspond a un sommet de notre graphe
@@ -127,13 +127,7 @@ typedef struct{
 }ChateauO;
 
 typedef struct{
-
-    int nbRues, nbHab, nbChateauO, nbUsines;
-
-}COMPTEUR;
-
-typedef struct{
-    Graphe G; //Graphe du jeu
+    Graphe *G; //Graphe du jeu
     COMPTEUR compteur;
     Habitations* tabHab; //tableau repertoriant chaque habitation
     Usines* tabE;//tableau repertoriant chaque Usine

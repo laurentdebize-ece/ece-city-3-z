@@ -39,7 +39,7 @@ Graphe * lire_graphe(char * nomFichier)
     return graphe;
 }*/
 
-CASE **CreerArete(CASE **sommet, int s1X, int s1Y, int s2X, int s2Y, int valeurs) {
+Sommet **CreerArete(Sommet **sommet, int s1X, int s1Y, int s2X, int s2Y, int valeurs) {
     if (sommet[s1X][s1Y].arc == NULL) {
         pArc Newarc = (pArc) malloc(sizeof(struct Arc));
         Newarc->sommetX = s2X;
@@ -75,7 +75,7 @@ CASE **CreerArete(CASE **sommet, int s1X, int s1Y, int s2X, int s2Y, int valeurs
     }
 }
 
-void CalculeConnexe(CASE **tabSommet, int i, int j, int *nbConnexe) {
+void CalculeConnexe(Sommet **tabSommet, int i, int j, int *nbConnexe) {
     pArc temp = tabSommet[i][j].arc;
     while (temp != NULL) {
         int x = tabSommet[i][j].arc->sommetX;
@@ -90,7 +90,8 @@ void CalculeConnexe(CASE **tabSommet, int i, int j, int *nbConnexe) {
     (*nbConnexe)++;
 }
 
-void iniTabHab(CASE **tabCase, int i, int j, ECECITY *JEU) {
+
+void iniTabHab(Sommet **tabCase, int i, int j, ECECITY *JEU) {
     if (JEU->tabHab[tabCase[i][j].identite].connexe == 0) {
         JEU->tabHab[tabCase[i][j].identite].connexe = tabCase[i][j].connexe;
         if (tabCase[i][j].construction == 5) {
@@ -115,7 +116,7 @@ void iniTabHab(CASE **tabCase, int i, int j, ECECITY *JEU) {
     }
 }
 
-void iniTabE(CASE **tabCase, int i, int j, ECECITY *JEU) {
+void iniTabE(Sommet **tabCase, int i, int j, ECECITY *JEU) {
     if (JEU->tabE[tabCase[i][j].identite].connexe == 0) {
         JEU->tabE[tabCase[i][j].identite].connexe = tabCase[i][j].connexe;
         JEU->tabE[tabCase[i][j].identite].QEmax = 5000;
@@ -125,7 +126,7 @@ void iniTabE(CASE **tabCase, int i, int j, ECECITY *JEU) {
     }
 }
 
-void iniTabO(CASE **tabCase, int i, int j, ECECITY *JEU) {
+void iniTabO(Sommet **tabCase, int i, int j, ECECITY *JEU) {
     if (JEU->tabO[tabCase[i][j].identite].connexe == 0) {
         JEU->tabO[tabCase[i][j].identite].connexe = tabCase[i][j].connexe;
         JEU->tabO[tabCase[i][j].identite].QOmax = 5000;
@@ -135,7 +136,7 @@ void iniTabO(CASE **tabCase, int i, int j, ECECITY *JEU) {
     }
 }
 
-void CalculeCompteurEtTab(CASE **tabCase, int i, int j, ECECITY *JEU) {
+void CalculeCompteurEtTab(Sommet **tabCase, int i, int j, ECECITY *JEU) {
     if (tabCase[i][j].construction == 1) {
         JEU->compteur.nbRues++;
     }
@@ -157,13 +158,13 @@ Graphe *CreerGraphe(FILE *ifs, FILE *ifsID, ECECITY *JEU) {
     int construction;
     int ID;
     int nbConnexe = 1;
-    CASE **tabCase = malloc((QUADRILIGNE) * sizeof(CASE *));
+    Sommet **tabCase = malloc((QUADRILIGNE) * sizeof(Sommet *));
     for (int i = 0; i < QUADRILIGNE; i++) {
-        tabCase[i] = malloc((QUADRICOLONNE) * sizeof(CASE));
+        tabCase[i] = malloc((QUADRICOLONNE) * sizeof(Sommet));
     }
     for (int i = 0; i < QUADRILIGNE; i++) {
         for (int j = 0; j < QUADRICOLONNE; j++) {
-            CASE *check = &tabCase[i][j];
+            Sommet *check = &tabCase[i][j];
             fscanf(ifs, "%d", &construction);
             fscanf(ifsID, "%d", &ID);
             tabCase[i][j].construction = construction;// 0: rien 1:route 2:habitation 3:usine 4:chateauEau 5:caserne
@@ -174,7 +175,7 @@ Graphe *CreerGraphe(FILE *ifs, FILE *ifsID, ECECITY *JEU) {
     }
     for (int i = 0; i < QUADRILIGNE; i++) {
         for (int j = 0; j < QUADRICOLONNE; j++) {
-            CASE *check = &tabCase[i][j];
+            Sommet *check = &tabCase[i][j];
             tabCase[i][j].x = TUILE / 2 + i * TUILE;
             tabCase[i][j].y = TUILE / 2 + j * TUILE;
             tabCase[i][j].etat = 0;
@@ -224,20 +225,20 @@ Graphe *lire_graphe(char *nomFichier, char *nomFichierid, ECECITY *JEU) {
 
 ECECITY *iniJeu() {
     ECECITY *JEU = malloc((QUADRILIGNE) * sizeof(JEU));
-    JEU->tabHab = malloc((QUADRILIGNE) * sizeof(Habitations));
-    JEU->tabE = malloc((QUADRILIGNE) * sizeof(Usines));
-    JEU->tabO = malloc((QUADRILIGNE) * sizeof(ChateauO));
+    JEU->tabHab = malloc((QUADRILIGNE*QUADRICOLONNE/9) * sizeof(Habitations));
+    JEU->tabE = malloc((QUADRILIGNE*QUADRICOLONNE/24) * sizeof(Usines));
+    JEU->tabO = malloc((QUADRILIGNE*QUADRICOLONNE/24) * sizeof(ChateauO));
     JEU->compteur.nbRues = 0;
     JEU->compteur.nbHab = 0;
     JEU->compteur.nbUsines = 0;
     JEU->compteur.nbChateauO = 0;
-    Graphe *g = lire_graphe("graphe.txt", "id.txt", JEU);
+    Graphe *g = lire_graphe("graphe.txt", "id.txt", JEU); //penser a modifier le nom du txt
     JEU->G = g;
 
     return JEU;
 }
 
-void afficher_successeurs(CASE **sommet, int i, int j) {
+void afficher_successeurs(Sommet **sommet, int i, int j) {
 
     printf("sommet %d:\n", i * 100 + j);
 
@@ -347,8 +348,8 @@ void BFS(Graphe *G, int SommetX, int SommetY, int *compte) {
             if (G->tabSommet[arc->sommetX][arc->sommetY].couleur == 0) {
                 enfiler(f, arc->sommetX * 100 + arc->sommetY);
                 G->tabSommet[arc->sommetX][arc->sommetY].couleur = 1;
-                G->tabSommet[arc->sommetX][arc->sommetY].predX = arc->sommetX;
-                G->tabSommet[arc->sommetX][arc->sommetY].predY = arc->sommetY;
+                G->tabSommet[arc->sommetX][arc->sommetY].predX = arc->sommetX;//a potentiellement changé en SommetX
+                G->tabSommet[arc->sommetX][arc->sommetY].predY = arc->sommetY;// same
             }
             arc = arc->arc_suivant;
         }
@@ -596,6 +597,14 @@ void CalculeElec(ECECITY *JEU) {
             }
         }
     }
+}
+
+void modifGraphe(VECTEUR *mouseIso, Sommet **tabCase){
+
+}
+
+void modifConnexe(){
+
 }
 
 int minimain() {

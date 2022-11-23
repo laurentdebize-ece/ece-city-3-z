@@ -191,6 +191,8 @@ void constructionSouris(VECTEUR* mouseIso, int categorieConstruction, int* nivea
             }
         }
     }
+    //modifGraphe();
+    //modidConnexe();
 }
 
 void detruireConstruction(VECTEUR *mouseIso, CASE **tabCase, COMPTEUR *compteur, int rotationBattiment, int detruire) {
@@ -219,6 +221,8 @@ void detruireConstruction(VECTEUR *mouseIso, CASE **tabCase, COMPTEUR *compteur,
             batiment(tabCase, mouseIso->x, mouseIso->y, &(compteur->nbChateauO), 3, rotationBattiment,detruire);
         }
     }
+    //modifGraphe(mouseIso, tabCase);
+    //modidConnexe();
 }
 void routeApercu (CASE** tabCase, int x, int y){
     tabCase[x][y].construction.apercu = 1;

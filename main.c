@@ -15,6 +15,7 @@ int main() {
 
     FILE *ifs = fopen("../map.txt", "r");
     VECTEUR mouseIso;
+    //ECECITY *JEU = iniJeu();
 
     
     int categorieConstruction = 0; // 0:route 1:habitation 2:usine 3:chateauEau 4:caserne
@@ -93,9 +94,11 @@ int main() {
             recommencerPartie(tabCase);
         }
         if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) == true) {
-            constructionSouris(&mouseIso, categorieConstruction, &niveau, tabCase, &compteEnBanque, &compteur, rotationBattiment, detruire);
+            constructionSouris(&mouseIso, categorieConstruction, &niveau, tabCase, &compteEnBanque, &compteur, rotationBattiment, detruire/*, JEU*/);
             detruireConstruction(&mouseIso,tabCase,&compteur,rotationBattiment,detruire);
             printf("nb route: %d\nnb hab: %d\nnb usine: %d\nnb chateauO: %d\n ", compteur.nbRues,compteur.nbHab, compteur.nbUsines, compteur.nbChateauO);
+            //CalculeElec(JEU);
+            //CalculeO(JEU);
         }
 
         EndDrawing();
