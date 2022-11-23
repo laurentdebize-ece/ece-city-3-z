@@ -39,6 +39,7 @@ Graphe * lire_graphe(char * nomFichier)
     return graphe;
 }*/
 
+
 Sommet **CreerArete(Sommet **sommet, int s1X, int s1Y, int s2X, int s2Y, int valeurs) {
     if (sommet[s1X][s1Y].arc == NULL) {
         pArc Newarc = (pArc) malloc(sizeof(struct Arc));
@@ -606,7 +607,7 @@ void modifGraphe(VECTEUR *mouseIso, Sommet **tabCase){
 void modifConnexe(){
 
 }
-
+/*
 int minimain() {
     printf("DEBUG 0\n");
     fflush(stdout);
@@ -616,4 +617,5 @@ int minimain() {
     CalculeElec(JEU);
     CalculeO(JEU);
     return 0;
-}
+}*/
+

@@ -237,8 +237,33 @@ void batimentApercu(CASE** tabCase, int x, int y, int typeBatiment){
 
 
 
-void evolutionBat (CASE** tabCase, float* tempsEcoule) {
+void evolutionBat (CASE** tabCase, float* tempsEcoule, ECECITY* JEU) {
     compteurTempsDuBat(tabCase, 0, 0, tempsEcoule);
+
+
+
+
+        for (int x = 0; x < COLONNES; x++){
+            if (JEU->tabHab[x].type >= 5 && JEU->tabHab[x].type <= 9){
+                if (JEU->tabHab[x].tic == 15){
+                    JEU->tabHab[x].type ++;
+                    JEU->tabHab[x].tic = 0;
+
+                    if (JEU->tabHab[x].type == 6){
+                        JEU->tabHab[x].nbHabitant = 10;
+                    } else if (JEU->tabHab[x].type == 7) {
+                        JEU->tabHab[x].nbHabitant = 50;
+                    } else if (JEU->tabHab[x].type == 8) {
+                        JEU->tabHab[x].nbHabitant = 100;
+                    } else if (JEU->tabHab[x].type == 9) {
+                        JEU->tabHab[x].nbHabitant = 1000;
+                    }
+                }
+            }
+        }
+
+
+/*
     for (int y = 0; y < LIGNES; y++) {
         for (int x = 0; x < COLONNES; x++){
                 if (tabCase[x][y].construction.type >= 5 && tabCase[x][y].construction.type <= 9){
@@ -248,7 +273,7 @@ void evolutionBat (CASE** tabCase, float* tempsEcoule) {
                     }
                 }
         }
-    }
+    }*/
 }
 
 void compteurTempsDuBat (CASE** tabCase, int x, int y, float* tempsEcoule) {

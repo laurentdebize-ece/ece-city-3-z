@@ -20,7 +20,7 @@ int main() {
     FILE *ifs = fopen("../map.txt", "r");
     FILE *ifs2 = fopen("../ordreConstruction.txt", "r");
     VECTEUR mouseIso;
-    //ECECITY *JEU = iniJeu();
+    ECECITY *JEU = iniJeu();
 
     
     int categorieConstruction = 0; // 0:route 1:habitation 2:usine 3:chateauEau 4:caserne
