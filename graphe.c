@@ -40,7 +40,7 @@ Graphe * lire_graphe(char * nomFichier)
 }*/
 
 
-Sommet **CreerArete(Sommet **sommet, int s1X, int s1Y, int s2X, int s2Y, int valeurs) {
+CASE **CreerArete(CASE **sommet, int s1X, int s1Y, int s2X, int s2Y, int valeurs) {
     if (sommet[s1X][s1Y].arc == NULL) {
         pArc Newarc = (pArc) malloc(sizeof(struct Arc));
         Newarc->sommetX = s2X;
@@ -76,7 +76,7 @@ Sommet **CreerArete(Sommet **sommet, int s1X, int s1Y, int s2X, int s2Y, int val
     }
 }
 
-void CalculeConnexe(Sommet **tabSommet, int i, int j, int *nbConnexe) {
+void CalculeConnexe(CASE **tabSommet, int i, int j, int *nbConnexe) {
     pArc temp = tabSommet[i][j].arc;
     while (temp != NULL) {
         int x = tabSommet[i][j].arc->sommetX;
@@ -92,22 +92,22 @@ void CalculeConnexe(Sommet **tabSommet, int i, int j, int *nbConnexe) {
 }
 
 
-void iniTabHab(Sommet **tabCase, int i, int j, ECECITY *JEU) {
+void iniTabHab(CASE **tabCase, int i, int j, ECECITY *JEU) {
     if (JEU->tabHab[tabCase[i][j].identite].connexe == 0) {
         JEU->tabHab[tabCase[i][j].identite].connexe = tabCase[i][j].connexe;
-        if (tabCase[i][j].construction == 5) {
+        if (tabCase[i][j].type == 5) {
             JEU->tabHab[tabCase[i][j].identite].nbHabitant = 0;
         }
-        if (tabCase[i][j].construction == 6) {
+        if (tabCase[i][j].type == 6) {
             JEU->tabHab[tabCase[i][j].identite].nbHabitant = 10;
         }
-        if (tabCase[i][j].construction == 7) {
+        if (tabCase[i][j].type == 7) {
             JEU->tabHab[tabCase[i][j].identite].nbHabitant = 50;
         }
-        if (tabCase[i][j].construction == 8) {
+        if (tabCase[i][j].type == 8) {
             JEU->tabHab[tabCase[i][j].identite].nbHabitant = 100;
         }
-        if (tabCase[i][j].construction == 9) {
+        if (tabCase[i][j].type == 9) {
             JEU->tabHab[tabCase[i][j].identite].nbHabitant = 1000;
         }
         JEU->tabHab[tabCase[i][j].identite].QO = 0;
@@ -117,7 +117,7 @@ void iniTabHab(Sommet **tabCase, int i, int j, ECECITY *JEU) {
     }
 }
 
-void iniTabE(Sommet **tabCase, int i, int j, ECECITY *JEU) {
+void iniTabE(CASE **tabCase, int i, int j, ECECITY *JEU) {
     if (JEU->tabE[tabCase[i][j].identite].connexe == 0) {
         JEU->tabE[tabCase[i][j].identite].connexe = tabCase[i][j].connexe;
         JEU->tabE[tabCase[i][j].identite].QEmax = 5000;
@@ -127,7 +127,7 @@ void iniTabE(Sommet **tabCase, int i, int j, ECECITY *JEU) {
     }
 }
 
-void iniTabO(Sommet **tabCase, int i, int j, ECECITY *JEU) {
+void iniTabO(CASE **tabCase, int i, int j, ECECITY *JEU) {
     if (JEU->tabO[tabCase[i][j].identite].connexe == 0) {
         JEU->tabO[tabCase[i][j].identite].connexe = tabCase[i][j].connexe;
         JEU->tabO[tabCase[i][j].identite].QOmax = 5000;
@@ -137,19 +137,19 @@ void iniTabO(Sommet **tabCase, int i, int j, ECECITY *JEU) {
     }
 }
 
-void CalculeCompteurEtTab(Sommet **tabCase, int i, int j, ECECITY *JEU) {
-    if (tabCase[i][j].construction == 1) {
+void CalculeCompteurEtTab(CASE **tabCase, int i, int j, ECECITY *JEU) {
+    if (tabCase[i][j].type == 1) {
         JEU->compteur.nbRues++;
     }
-    if (tabCase[i][j].construction == 2) {
+    if (tabCase[i][j].type == 2) {
         JEU->compteur.nbUsines++;
         iniTabE(tabCase, i, j, JEU);
     }
-    if (tabCase[i][j].construction == 3) {
+    if (tabCase[i][j].type == 3) {
         JEU->compteur.nbChateauO++;
         iniTabO(tabCase, i, j, JEU);
     }
-    if (tabCase[i][j].construction >= 5) {
+    if (tabCase[i][j].type >= 5) {
         JEU->compteur.nbHab++;
         iniTabHab(tabCase, i, j, JEU);
     }
@@ -159,16 +159,16 @@ Graphe *CreerGraphe(FILE *ifs, FILE *ifsID, ECECITY *JEU) {
     int construction;
     int ID;
     int nbConnexe = 1;
-    Sommet **tabCase = malloc((QUADRILIGNE) * sizeof(Sommet *));
+    CASE **tabCase = malloc((QUADRILIGNE) * sizeof(CASE *));
     for (int i = 0; i < QUADRILIGNE; i++) {
-        tabCase[i] = malloc((QUADRICOLONNE) * sizeof(Sommet));
+        tabCase[i] = malloc((QUADRICOLONNE) * sizeof(CASE));
     }
     for (int i = 0; i < QUADRILIGNE; i++) {
         for (int j = 0; j < QUADRICOLONNE; j++) {
-            Sommet *check = &tabCase[i][j];
+            CASE *check = &tabCase[i][j];
             fscanf(ifs, "%d", &construction);
             fscanf(ifsID, "%d", &ID);
-            tabCase[i][j].construction = construction;// 0: rien 1:route 2:habitation 3:usine 4:chateauEau 5:caserne
+            tabCase[i][j].type = construction;// 0: rien 1:route 2:habitation 3:usine 4:chateauEau 5:caserne
             tabCase[i][j].identite = ID;
             tabCase[i][j].connexe = 0;
             fflush(stdout);
@@ -176,26 +176,26 @@ Graphe *CreerGraphe(FILE *ifs, FILE *ifsID, ECECITY *JEU) {
     }
     for (int i = 0; i < QUADRILIGNE; i++) {
         for (int j = 0; j < QUADRICOLONNE; j++) {
-            Sommet *check = &tabCase[i][j];
+            CASE *check = &tabCase[i][j];
             tabCase[i][j].x = TUILE / 2 + i * TUILE;
             tabCase[i][j].y = TUILE / 2 + j * TUILE;
             tabCase[i][j].etat = 0;
             tabCase[i][j].arc = NULL;//il n'y a aucune construction au debut
             //on créer les arretes pour les 4cases adjacente de la case ij
-            if (tabCase[i][j].construction != 0) {
-                if (j != 0 && tabCase[i][j - 1].construction != 0) {
+            if (tabCase[i][j].type != 0) {
+                if (j != 0 && tabCase[i][j - 1].type != 0) {
                     tabCase = CreerArete(tabCase, i, j, i, j - 1, 1);
                 }
-                if (i != 0 && tabCase[i - 1][j].construction != 0) {
+                if (i != 0 && tabCase[i - 1][j].type != 0) {
                     tabCase = CreerArete(tabCase, i, j, i - 1, j, 1);
                 }
                 if (j != QUADRICOLONNE - 1) {
-                    if (tabCase[i][j + 1].construction != 0) {
+                    if (tabCase[i][j + 1].type != 0) {
                         tabCase = CreerArete(tabCase, i, j, i, j + 1, 1);
                     }
                 }
                 if (i != QUADRILIGNE - 1) {
-                    if (tabCase[i + 1][j].construction != 0) {
+                    if (tabCase[i + 1][j].type != 0) {
                         tabCase = CreerArete(tabCase, i, j, i + 1, j, 1);
                     }
                 }
@@ -239,7 +239,7 @@ ECECITY *iniJeu() {
     return JEU;
 }
 
-void afficher_successeurs(Sommet **sommet, int i, int j) {
+void afficher_successeurs(CASE **sommet, int i, int j) {
 
     printf("sommet %d:\n", i * 100 + j);
 
@@ -385,7 +385,7 @@ void touBlancs(Graphe *G) {
 void CalculDistance(Graphe *G, int SommetX, int SommetY, int con) {
     for (int i = 0; i < QUADRICOLONNE; i++) {
         for (int j = 0; j < QUADRILIGNE; j++) {
-            if (G->tabSommet[i][j].construction >= 5 && G->tabSommet[i][j].connexe == con) {
+            if (G->tabSommet[i][j].type >= 5 && G->tabSommet[i][j].connexe == con) {
                 int tempX = i;
                 int tempY = j;
                 while (tempX != SommetX && tempY != SommetY) {
@@ -445,7 +445,7 @@ void ECEBFS(int con, int id, ECECITY *JEU, int nbHabitationCon) {
 
     for (int i = 0; i < QUADRILIGNE; i++) {
         for (int j = 0; j < QUADRICOLONNE; j++) {
-            if (JEU->G->tabSommet[i][j].construction == 3 && JEU->G->tabSommet[i][j].identite == id) {
+            if (JEU->G->tabSommet[i][j].type == 3 && JEU->G->tabSommet[i][j].identite == id) {
                 SommetX = i;
                 SommetY = j;
                 //on fait le BFS a partir du sommet trouver
@@ -600,7 +600,7 @@ void CalculeElec(ECECITY *JEU) {
     }
 }
 
-void modifGraphe(VECTEUR *mouseIso, Sommet **tabCase){
+void modifGraphe(VECTEUR *mouseIso, CASE **tabCase){
 
 }
 
