@@ -109,6 +109,8 @@ typedef struct {
 
 
 typedef struct{
+    int tic;
+    int type;
     int connexe;
     int nbHabitant;
     int QE;
