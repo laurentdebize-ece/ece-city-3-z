@@ -231,3 +231,34 @@ void batimentApercu(CASE** tabCase, int x, int y, int typeBatiment){
 
 }
 
+void evolutionBat (CASE** tabCase, float* tempsEcoule) {
+    compteurTempsDuBat(tabCase, 0, 0, tempsEcoule);
+    for (int y = 0; y < LIGNES; y++) {
+        for (int x = 0; x < COLONNES; x++){
+                if (tabCase[x][y].construction.type >= 5 && tabCase[x][y].construction.type <= 9){
+                    if (tabCase[x][y].construction.tic == 15){
+                        tabCase[x][y].construction.type ++;
+                        tabCase[x][y].construction.tic = 0;
+                    }
+                }
+        }
+    }
+}
+
+void compteurTempsDuBat (CASE** tabCase, int x, int y, float* tempsEcoule) {
+    float tempsActuel = GetTime();
+    float deltaTemps = tempsActuel - *tempsEcoule;
+
+    if (deltaTemps >= 1.0) {
+        //incremente les tics de chaque batiment
+        for (int y = 0; y < LIGNES; y++) {
+            for (int x = 0; x < COLONNES; x++) {
+                tabCase[x][y].construction.tic++;
+            }
+        }
+        printf("SS");
+        *tempsEcoule = tempsActuel;
+    }
+    DrawRectangle(200, 30, 180, 60, (Color){100, 190, 50, 200});
+    //DrawText( ,210, 35, 5, BLACK);
+}

@@ -43,7 +43,9 @@ typedef struct{
 typedef struct{
     int type;
     int apercu;
+    int tic;
     COMPTEUR compteur;
+
 }CONSTRUCTION;
 
 typedef struct{
@@ -126,11 +128,6 @@ typedef struct{
     int QOrestant;
 }ChateauO;
 
-typedef struct{
-
-    int nbRues, nbHab, nbChateauO, nbUsines;
-
-}COMPTEUR;
 
 typedef struct{
     Graphe G; //Graphe du jeu

@@ -15,4 +15,6 @@ void habitationApercu (CASE** tabCase, int x, int y);
 void batimentApercu(CASE** tabCase, int x, int y, int typeBatiment);
 void constructionSouris(VECTEUR* mouseIso, int categorieConstruction, int* niveau, CASE** tabCase, int* CompteEnBanque, COMPTEUR* compteur, int rotationBattiment, int detruire);
 void detruireConstruction(VECTEUR* mouseIso, CASE** tabCase, COMPTEUR* compteur, int rotationBattiment, int detruire);
+void compteurTempsDuBat (CASE** tabCase, int x, int y, float* tempsEcoule) ;
+void evolutionBat (CASE** tabCase, float* tempsEcoule);
 #endif //ECE_CITY_3_Z_CONSTRUCTION_H

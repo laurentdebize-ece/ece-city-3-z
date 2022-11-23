@@ -12,6 +12,8 @@ int main() {
     compteur.nbRues=0;
     compteur.nbUsines=0;
     int compteEnBanque = 999999999;
+    float tempsEcoule = 0;
+
 
     FILE *ifs = fopen("../map.txt", "r");
     VECTEUR mouseIso;
@@ -33,6 +35,7 @@ int main() {
             tabCase[x][y].construction.compteur.nbUsines = 0;
             tabCase[x][y].construction.compteur.nbHab = 0;
             tabCase[x][y].construction.compteur.nbRues = 0;
+            tabCase[x][y].construction.tic = 0;
         }
     }
 
@@ -54,6 +57,7 @@ int main() {
         affichageRoute(Routes, tabCase, niveau);
         affichageTerrain(Tiles, tabCase);
         affichageBattiment(Tiles, tabCase);
+        evolutionBat(tabCase, &tempsEcoule);
 
 
 

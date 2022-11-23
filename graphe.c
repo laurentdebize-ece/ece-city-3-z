@@ -38,6 +38,7 @@ Graphe * lire_graphe(char * nomFichier)
     graphe->ordre=ordre;
     return graphe;
 }*/
+/*
 
 CASE **CreerArete(CASE **sommet, int s1X, int s1Y, int s2X, int s2Y, int valeurs) {
     if (sommet[s1X][s1Y].arc == NULL) {
@@ -607,4 +608,4 @@ int minimain() {
     CalculeElec(JEU);
     CalculeO(JEU);
     return 0;
-}
+}*/
