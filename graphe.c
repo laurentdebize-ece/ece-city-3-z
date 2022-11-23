@@ -38,7 +38,6 @@ Graphe * lire_graphe(char * nomFichier)
     graphe->ordre=ordre;
     return graphe;
 }*/
-/*
 
 Sommet **CreerArete(Sommet **sommet, int s1X, int s1Y, int s2X, int s2Y, int valeurs) {
     if (sommet[s1X][s1Y].arc == NULL) {
@@ -233,7 +232,7 @@ ECECITY *iniJeu() {
     JEU->compteur.nbHab = 0;
     JEU->compteur.nbUsines = 0;
     JEU->compteur.nbChateauO = 0;
-    Graphe *g = lire_graphe("graphe.txt", "id.txt", JEU); //penser a modifier le nom du txt
+    Graphe *g = lire_graphe("../map.txt", "../ordreConstruction.txt", JEU); //penser a modifier le nom du txt
     JEU->G = g;
 
     return JEU;
@@ -617,4 +616,4 @@ int minimain() {
     CalculeElec(JEU);
     CalculeO(JEU);
     return 0;
-}*/
+}
