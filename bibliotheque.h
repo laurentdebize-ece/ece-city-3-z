@@ -115,6 +115,8 @@ typedef struct{
     int nbHabitant;
     int QE;
     int QO;
+    int origineX;
+    int origineY
 }Habitations;
 
 typedef struct{
