@@ -35,7 +35,7 @@ void habitation(CASE **tabCase, int x, int y, int *compteur, int detruire) {
         }
     } else {
         int caseIdentite = tabCase[x][y].construction.compteur.nbHab;
-        (*compteur)--;
+        //(*compteur)--;
         for (int b = 0; b < LIGNES; b++) {
             for (int a = 0; a < COLONNES; a++) {
 
@@ -87,7 +87,7 @@ void batiment (CASE** tabCase, int x, int y, int* compteur, int typeBatiment, in
         if(typeBatiment == 3) {
             caseIdentite = tabCase[x][y].construction.compteur.nbChateauO;
         }
-        (*compteur)--;
+        //(*compteur)--;
         for (int b = 0; b < LIGNES; b++) {
             for (int a = 0; a < COLONNES; a++) {
                 if(typeBatiment == 2) {

@@ -4,9 +4,11 @@
 int main() {
     int niveau = 0;
     int construction;
+    int ordre;
     int detruire = 0;
     int rotationBattiment;
     COMPTEUR compteur;
+
     compteur.nbChateauO=0;
     compteur.nbHab=0;
     compteur.nbRues=0;
@@ -14,6 +16,7 @@ int main() {
     int compteEnBanque = 999999999;
 
     FILE *ifs = fopen("../map.txt", "r");
+    FILE *ifs2 = fopen("../ordreConstruction.txt", "r");
     VECTEUR mouseIso;
 
     
@@ -28,11 +31,13 @@ int main() {
     for (int y = 0; y < LIGNES; y++) {
         for (int x = 0; x < COLONNES; x++) {
             fscanf(ifs, "%d", &construction);
+            fscanf(ifs2, "%d", &ordre);
             tabCase[x][y].construction.type = construction; // 0: rien 1:route 2:Usine 3:chateauEau 4:caserne 5:terrain vague
             tabCase[x][y].construction.compteur.nbChateauO = 0;
             tabCase[x][y].construction.compteur.nbUsines = 0;
             tabCase[x][y].construction.compteur.nbHab = 0;
             tabCase[x][y].construction.compteur.nbRues = 0;
+            initialisationOrdre(tabCase, ordre, x, y,&compteur);
         }
     }
 
@@ -90,7 +95,7 @@ int main() {
             enregistrerPartie(tabCase);
         }
         if ((IsKeyDown(KEY_LEFT_CONTROL)) && (IsKeyPressed(KEY_KP_0))) {
-            recommencerPartie(tabCase);
+            recommencerPartie(tabCase,&compteur);
         }
         if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) == true) {
             constructionSouris(&mouseIso, categorieConstruction, &niveau, tabCase, &compteEnBanque, &compteur, rotationBattiment, detruire);
