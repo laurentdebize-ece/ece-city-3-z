@@ -63,7 +63,7 @@ int main() {
         affichageRoute(Routes, tabCase, niveau);
         affichageTerrain(Tiles, tabCase);
         affichageBattiment(Tiles, tabCase);
-        evolutionBat(tabCase, &tempsEcoule);
+        evolutionBat(tabCase, &tempsEcoule, JEU);
 
 
 

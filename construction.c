@@ -240,29 +240,23 @@ void batimentApercu(CASE** tabCase, int x, int y, int typeBatiment){
 void evolutionBat (CASE** tabCase, float* tempsEcoule, ECECITY* JEU) {
     compteurTempsDuBat(tabCase, 0, 0, tempsEcoule);
 
-
-
-
-        for (int x = 0; x < COLONNES; x++){
-            if (JEU->tabHab[x].type >= 5 && JEU->tabHab[x].type <= 9){
-                if (JEU->tabHab[x].tic == 15){
-                    JEU->tabHab[x].type ++;
-                    JEU->tabHab[x].tic = 0;
-
-                    if (JEU->tabHab[x].type == 6){
-                        JEU->tabHab[x].nbHabitant = 10;
-                    } else if (JEU->tabHab[x].type == 7) {
-                        JEU->tabHab[x].nbHabitant = 50;
-                    } else if (JEU->tabHab[x].type == 8) {
-                        JEU->tabHab[x].nbHabitant = 100;
-                    } else if (JEU->tabHab[x].type == 9) {
-                        JEU->tabHab[x].nbHabitant = 1000;
-                    }
+    for (int x = 1; x < 175; x++){
+        if (JEU->tabHab[x].type >= 5 && JEU->tabHab[x].type <= 9){
+            if (JEU->tabHab[x].tic == 15){
+                JEU->tabHab[x].type ++;
+                JEU->tabHab[x].tic = 0;
+                if (JEU->tabHab[x].type == 6){
+                    JEU->tabHab[x].nbHabitant = 10;
+                } else if (JEU->tabHab[x].type == 7) {
+                    JEU->tabHab[x].nbHabitant = 50;
+                } else if (JEU->tabHab[x].type == 8) {
+                    JEU->tabHab[x].nbHabitant = 100;
+                } else if (JEU->tabHab[x].type == 9) {
+                    JEU->tabHab[x].nbHabitant = 1000;
                 }
             }
         }
-
-
+    }
 /*
     for (int y = 0; y < LIGNES; y++) {
         for (int x = 0; x < COLONNES; x++){
@@ -274,6 +268,42 @@ void evolutionBat (CASE** tabCase, float* tempsEcoule, ECECITY* JEU) {
                 }
         }
     }*/
+}
+
+void demolitionBatCapitaliste (CASE** tabCase, float* tempsEcoule, ECECITY* JEU, int compteEnBanque){
+    for (int x = 1; x < 175; x++){
+            if (JEU->tabHab[x].type >= 5 && JEU->tabHab[x].type <= 9){
+                if (JEU->tabHab[x].tic == 15){
+                    if (JEU->tabHab[x].QO < 10 && JEU->tabHab[x].QE < 10) {
+                        JEU->tabHab[x].type --;
+                        if (JEU->tabHab[x].type == 5) {
+                            JEU->tabHab[x].nbHabitant = 0;
+                        }
+                    }
+                    else if (JEU->tabHab[x].QO < 50 && JEU->tabHab[x].QO > 10 &&  JEU->tabHab[x].QE < 50 && JEU->tabHab[x].QE >10) {
+                        JEU->tabHab[x].type --;
+                        if (JEU->tabHab[x].type == 6) {
+                            JEU->tabHab[x].nbHabitant = 10;
+                        }
+                    }
+                    else if (JEU->tabHab[x].QO < 100 && JEU->tabHab[x].QO > 50 && JEU->tabHab[x].QE < 100 && JEU->tabHab[x].QE > 50) {
+                        JEU->tabHab[x].type --;
+                        if (JEU->tabHab[x].type == 7) {
+                            JEU->tabHab[x].nbHabitant = 500;
+                        }
+                    }
+                    else if (JEU->tabHab[x].QO < 1000 && JEU->tabHab[x].QO > 100 && JEU->tabHab[x].QE < 1000 && JEU->tabHab[x].QE > 100) {
+                        JEU->tabHab[x].type --;
+                        if (JEU->tabHab[x].type == 8) {
+                            JEU->tabHab[x].nbHabitant = 100;
+                        }
+                    }
+                    JEU->tabHab[x].tic = 0;
+                }
+        }
+    }
+    for (int x = 1; x < 175; x++){
+    }
 }
 
 void compteurTempsDuBat (CASE** tabCase, int x, int y, float* tempsEcoule) {

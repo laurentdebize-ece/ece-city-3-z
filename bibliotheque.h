@@ -116,7 +116,7 @@ typedef struct{
     int QE;
     int QO;
     int origineX;
-    int origineY
+    int origineY;
 }Habitations;
 
 typedef struct{
