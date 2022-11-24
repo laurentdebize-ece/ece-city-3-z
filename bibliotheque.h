@@ -49,6 +49,7 @@ typedef struct{
     int type;
     int identite;
     int couleur;
+    int affichage;
     int connexe;
     int distance;
     int predX;

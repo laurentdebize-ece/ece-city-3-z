@@ -85,7 +85,7 @@ void affichageTerrain(Texture2D Terrain, CASE** tabCase){
                     x * (LARGEUR_TUILE_ISO / 2) + y * (LARGEUR_TUILE_ISO / 2) + LARGEUR_TUILE_ISO * ISO_DECALAGE_X;
             positionSprite.y =
                     x * (HAUTEUR_TUILE_ISO / 2) - y * (HAUTEUR_TUILE_ISO / 2) + HAUTEUR_TUILE_ISO * ISO_DECALAGE_Y;
-            if (tabCase[x][y].type == 5) {
+            if (tabCase[x][y].type == 5 && tabCase[x][y].affichage == 1) {
                 DrawTextureRec(Terrain, terrain, positionSprite, WHITE);
             }
         }

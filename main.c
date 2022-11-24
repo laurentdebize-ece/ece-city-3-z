@@ -35,6 +35,7 @@ int main() {
             fscanf(ifs2, "%d", &ordre);
             JEU->G->tabCase[x][y].type = construction; // 0: rien 1:route 2:Usine 3:chateauEau 4:caserne 5:terrain vague
             JEU->G->tabCase[x][y].identite = ordre;
+            JEU->G->tabCase[x][y].affichage = 0;
             initialisationOrdre(JEU->G->tabCase, ordre, x, y,&JEU->compteur);
         }
     }

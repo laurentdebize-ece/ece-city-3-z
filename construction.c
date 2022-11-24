@@ -26,7 +26,10 @@ void habitation(CASE **tabCase, int x, int y, int *compteur, int detruire,ECECIT
             if (presenceRoute(tabCase, x, y, LONGUEURE_TERRAIN_VAGUE, LARGEUR_TERRAIN_VAGUE) != 0) {
 
                 (*compteur)++;
-
+                JEU->tabHab[*compteur].type = 5;
+                tabCase[x][y].affichage = 1;
+                JEU->tabHab[*compteur].origineX = x;
+                JEU->tabHab[*compteur].origineY = y;
                 for (int a = 0; a < LONGUEURE_TERRAIN_VAGUE; a++) {
                     for (int b = 0; b < LARGEUR_TERRAIN_VAGUE; b++) {
                         tabCase[x + a][y + b].type = 5;
@@ -227,17 +230,21 @@ void batimentApercu(CASE** tabCase, int x, int y, int typeBatiment){
 
 
 void evolutionBat (CASE** tabCase, float* tempsEcoule, ECECITY* JEU) {
-    compteurTempsDuBat(tabCase, 0, 0, tempsEcoule);
+    compteurTempsDuBat(JEU, tempsEcoule);
 
 
 
 
         for (int x = 0; x < COLONNES; x++){
             if (JEU->tabHab[x].type >= 5 && JEU->tabHab[x].type <= 9){
-                if (JEU->tabHab[x].tic == 15){
+                if (JEU->tabHab[x].tic == 5){
                     JEU->tabHab[x].type ++;
                     JEU->tabHab[x].tic = 0;
-
+                    for (int a = 0; a < LONGUEURE_TERRAIN_VAGUE; a++) {
+                        for (int b = 0; b < LARGEUR_TERRAIN_VAGUE; b++) {
+                            tabCase[JEU->tabHab[x].origineX + a][JEU->tabHab[x].origineY + b].type++;
+                        }
+                    }
                     if (JEU->tabHab[x].type == 6){
                         JEU->tabHab[x].nbHabitant = 10;
                     } else if (JEU->tabHab[x].type == 7) {
@@ -265,16 +272,14 @@ void evolutionBat (CASE** tabCase, float* tempsEcoule, ECECITY* JEU) {
     }*/
 }
 
-void compteurTempsDuBat (CASE** tabCase, int x, int y, float* tempsEcoule) {
+void compteurTempsDuBat ( ECECITY* JEU, float* tempsEcoule) {
     float tempsActuel = GetTime();
     float deltaTemps = tempsActuel - *tempsEcoule;
 
     if (deltaTemps >= 1.0){
         //incremente les tics de chaque batiment
-        for (int y = 0; y < LIGNES; y++) {
-            for (int x = 0; x < COLONNES; x++) {
-                //tabCase[x][y].tic++;
-            }
+        for (int x = 0; x < COLONNES; x++){
+            JEU->tabHab[x].tic++;
         }
         printf("SS\n");
         *tempsEcoule = tempsActuel;
