@@ -17,4 +17,6 @@ void constructionSouris(VECTEUR* mouseIso, int categorieConstruction, int* nivea
 void detruireConstruction(VECTEUR* mouseIso, CASE** tabCase, COMPTEUR* compteur, int rotationBattiment, int detruire,ECECITY *JEU);
 void compteurTempsDuBat ( ECECITY* JEU, float* tempsEcoule);
 void evolutionBat (CASE** tabCase, float* tempsEcoule, ECECITY* JEU) ;
+void demolitionBatCapitaliste (CASE** tabCase, float* tempsEcoule, ECECITY* JEU, int compteEnBanque);
+
 #endif //ECE_CITY_3_Z_CONSTRUCTION_H
