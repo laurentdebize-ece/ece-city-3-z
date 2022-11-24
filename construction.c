@@ -302,8 +302,6 @@ void demolitionBatCapitaliste (CASE** tabCase, float* tempsEcoule, ECECITY* JEU,
                 }
         }
     }
-    for (int x = 1; x < 175; x++){
-    }
 }
 
 void compteurTempsDuBat (CASE** tabCase, int x, int y, float* tempsEcoule) {
