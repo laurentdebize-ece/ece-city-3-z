@@ -230,7 +230,7 @@ void batimentApercu(CASE** tabCase, int x, int y, int typeBatiment){
 
 
 void evolutionBat (CASE** tabCase, float* tempsEcoule, ECECITY* JEU) {
-    compteurTempsDuBat(JEU, tempsEcoule);
+    //compteurTempsDuBat(JEU, tempsEcoule);
 
     for (int x = 1; x < 175; x++){
         if (JEU->tabHab[x].type >= 5 && JEU->tabHab[x].type <= 9){
@@ -296,7 +296,7 @@ void demolitionBatCapitaliste (CASE** tabCase, float* tempsEcoule, ECECITY* JEU,
     }
 }
 
-void compteurTempsDuBat (CASE** tabCase, int x, int y, float* tempsEcoule) {
+/*void compteurTempsDuBat (CASE** tabCase, int x, int y, float* tempsEcoule) {
     float tempsActuel = GetTime();
     float deltaTemps = tempsActuel - *tempsEcoule;
 
@@ -310,4 +310,4 @@ void compteurTempsDuBat (CASE** tabCase, int x, int y, float* tempsEcoule) {
     }
     DrawRectangle(200, 30, 180, 60, (Color){100, 190, 50, 200});
     DrawText(TextFormat( "Temps : %.2f",tempsActuel) ,210, 40, 25, BLACK);
-}
+}*/
