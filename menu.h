@@ -7,32 +7,22 @@
 
 
 #include <stdio.h>
-#include <allegro5/allegro.h>
-#include <allegro5/allegro_primitives.h>
-#include <allegro5/allegro_font.h>
-#include <allegro5/allegro_ttf.h>
-#include <allegro5/allegro_image.h>
+
 #include <time.h>
-#include "jeu.h"
+
+
+///Déclaration importantes
+
+enum gameMode {PLAY, RULES, TEAM, MENU, END};
 
 #define PI 3.141592
+#define RULESPAGEMAX 10
 
-
-/// A METTRE DANS UN FICHIER .C/.H CAR GRANDE STRUCTURE
+///STRUCTURE QU'ON PEUT METTRE EN PARAMETRES DE FONCTION POUR EVITER TROP DE PARAMETRES
 typedef struct {
-    int playRect, rulesRect, teamRect, gameMode, persoRect;
-    ArcDeCercle arc ;
-    InfoEcran ecran ;
-} Menu;
-
-typedef struct {
-    int pages;
-    InfoEcran ecran ;
-} Rules;
-
-
-
-
+    int mouse_x, mouse_y ;
+    double height, width ;
+} InfoEcran;
 
 
 

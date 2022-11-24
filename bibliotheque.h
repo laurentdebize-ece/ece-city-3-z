@@ -1,8 +1,8 @@
 //
 // Created by Théophile Dutrey on 01/11/2022.
 //
-#define LARGEUR 1600
-#define HAUTEUR 768
+#define LARGEUR 1700
+#define HAUTEUR 800
 #define LARGEUR_GRILLE 45*20
 #define HAUTEUR_GRILLE 35*20
 #define COLONNES 45
@@ -35,15 +35,24 @@
 #include <stdio.h>
 
 typedef struct{
-    int identite;
-    int type;
-    int apercu;
-}CONSTRUCTION;
+
+    int nbRues, nbHab, nbChateauO, nbUsines;
+
+}COMPTEUR;
 
 typedef struct{
-    CONSTRUCTION construction;
-    int route;
-    int typeRoute;
+    struct Arc* arc;
+    int EnCoursDeConstruction;  //1 si nla construction a debuté mais que les 15 sec ne sont pas encore terminé  // 2 si les 15 sec on ecoulé et que c'est construit
+    int etat; //etat des constructions -> on utilisera l'enum "construction" pour que ce soit plus facile
+    int valeur; //valeur de la case : ex tabSommet[21][12]
+    float x, y;
+    int type;
+    int identite;
+    int couleur;
+    int connexe;
+    int distance;
+    int predX;
+    int predY;
 }CASE;
 
 ////////////////Les structures du graphe///////
@@ -54,27 +63,51 @@ typedef struct {
 }Niveau;
 
 //informations relatives aux sommets (chauque case du graphe)
-typedef struct {
-    int EnCoursDeConstruction;  //1 si nla construction a debuté mais que les 15 sec ne sont pas encore terminé  // 2 si les 15 sec on ecoulé et que c'est construit
-    int etat; //etat des constructions -> on utilisera l'enum "construction" pour que ce soit plus facile
-    int valeur; //valeur de la case : ex tabSommet[21][12]
-}Sommet;
+
+struct _cellule{
+    int element;
+    struct _cellule *suivant;
+};
+typedef struct _cellule* Cellule;
+
+struct _file{
+    int longueur;
+    Cellule tete;
+    Cellule queue;
+};
+typedef struct _file* File;
+
+/* Structure d'un arc*/
+struct Arc {
+    int sommetX;// numero de sommet d'un arc adjacent au sommet initial
+    int sommetY;
+    int valeur;
+    struct Arc* arc_suivant;
+};
+
+/* Alias de pointeur sur un Arc */
+typedef struct Arc* pArc;
+
+
 
 
 typedef struct {
     Niveau mapAffiche;   // par exemple si on a case[0][5].mapAfficher.niveau == 1  ->  on affichera la canalisation
-    int taille;
-    int ordre;
+    int nbConnexe;
     int orientation;
-    Sommet** tabSommet;  //matrice du graphe (tab de 38x38 cases)
+    CASE** tabCase;  //matrice du graphe (tab de 38x38 cases)
 }Graphe;  //chaque case correspond a un sommet de notre graphe
 
 
 typedef struct{
+    int tic;
+    int type;
     int connexe;
     int nbHabitant;
     int QE;
     int QO;
+    int origineX;
+    int origineY;
 }Habitations;
 
 typedef struct{
@@ -90,18 +123,13 @@ typedef struct{
 }ChateauO;
 
 typedef struct{
-    Graphe G; //Graphe du jeu
-    //ilayda struct compteur;
+    Graphe *G; //Graphe du jeu
+    COMPTEUR compteur;
     Habitations* tabHab; //tableau repertoriant chaque habitation
     Usines* tabE;//tableau repertoriant chaque Usine
     ChateauO* tabO;//tableau repertoriant chaque Chateau d'eau
 }ECECITY;
 
-typedef struct{
-
-    int nbRues, nbHab, nbChateauO, nbUsines;
-
-}COMPTEUR;
 
 typedef struct{
    int x,y;

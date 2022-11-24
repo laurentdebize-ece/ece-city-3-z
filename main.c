@@ -5,8 +5,15 @@
 int main() {
     int niveau = 0;
     int construction;
-    int NbrHabitant = 0;
+    int ordre;
+    int detruire = 0;
+    int rotationBattiment;
     COMPTEUR compteur;
+
+    compteur.nbChateauO=0;
+    compteur.nbHab=0;
+    compteur.nbRues=0;
+    compteur.nbUsines=0;
     int compteEnBanque = 999999999;
     int minute = 0;
     int seconde = 0;
@@ -19,10 +26,18 @@ int main() {
     int compteurAccele = 1;
     int batimentSurvole;
 
+    float tempsEcoule = 0;
+
 
     FILE *ifs = fopen("../map.txt", "r");
+    FILE *ifs2 = fopen("../ordreConstruction.txt", "r");
     VECTEUR mouseIso;
-    VECTEUR mouseIsoClic;
+    ECECITY *JEU = iniJeu();
+    JEU->compteur.nbChateauO=0;
+    JEU->compteur.nbHab=0;
+    JEU->compteur.nbRues=0;
+    JEU->compteur.nbUsines=0;
+
 
     int categorieConstruction = 0; // 0:route 1:habitation 2:usine 3:chateauEau 4:caserne
     animationBarre barre;
@@ -30,20 +45,25 @@ int main() {
     barre.temps = 0;
 
     CASE **tabCase = malloc((COLONNES) * sizeof(CASE *));
+
+
+    JEU->G->tabCase = malloc((COLONNES) * sizeof(CASE *));
     for (int i = 0; i < COLONNES; i++) {
-        tabCase[i] = malloc((LIGNES) * sizeof(CASE));
+        JEU->G->tabCase[i] = malloc((LIGNES) * sizeof(CASE));
     }
 
     for (int y = 0; y < LIGNES; y++) {
         for (int x = 0; x < COLONNES; x++) {
             fscanf(ifs, "%d", &construction);
-            tabCase[x][y].construction.type = construction; // 0: rien 1:route 2:Usine 3:chateauEau 4:caserne 5:terrain vague
-
+            fscanf(ifs2, "%d", &ordre);
+            JEU->G->tabCase[x][y].type = construction; // 0: rien 1:route 2:Usine 3:chateauEau 4:caserne 5:terrain vague
+            JEU->G->tabCase[x][y].identite = ordre;
+            initialisationOrdre(JEU->G->tabCase, ordre, x, y,&JEU->compteur);
         }
     }
 
     InitWindow(LARGEUR, HAUTEUR, "Projet");
-    //SetWindowState(FLAG_WINDOW_RESIZABLE);
+    SetWindowState(FLAG_WINDOW_RESIZABLE);
 
     Texture2D Tiles = LoadTexture("../tiles/tiles.png");
     Texture2D Routes = LoadTexture("../tiles/route.png");
@@ -73,6 +93,7 @@ Texture2D plusAccel = LoadTexture("../images/plusAccel.png");
     while (!WindowShouldClose()) {
 
         BeginDrawing();
+        ClearBackground(BLACK);
         if (GetTime() - lastT > accelerateurTemps) {
             tempsVirtuelle++;
             lastT = GetTime();
@@ -89,11 +110,12 @@ Texture2D plusAccel = LoadTexture("../images/plusAccel.png");
 
         coordSourisIso(&mouseIso, img);
         affichageGrille(mouseIso, Tiles);
-        affichageRoute(Routes, tabCase, niveau);
-        affichageTerrain(Tiles, tabCase);
-        affichageBattiment(Tiles, tabCase);
+        affichageRoute(Routes, JEU->G->tabCase, niveau);
+        affichageTerrain(Tiles, JEU->G->tabCase);
+        affichageBattiment(Tiles, JEU->G->tabCase);
+        evolutionBat(JEU->G->tabCase, &tempsEcoule, JEU);
 
-        ClearBackground(BLACK);
+
 
         GetMousePosition();
         int PosXMouse = GetMouseX();
@@ -106,14 +128,13 @@ Texture2D plusAccel = LoadTexture("../images/plusAccel.png");
                 niveau = 0;
             }
         }
-        /*if (IsKeyPressed(KEY_RIGHT) == true) {
-
+        if (IsKeyPressed(KEY_RIGHT) == true) {
             if (categorieConstruction != 4) {
                 categorieConstruction++;
             } else {
                 categorieConstruction = 0;
             }
-        }*/
+        }
         if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) == true) {
             if (PosXMouse >= 10 && PosXMouse <= 30 && PosYMouse >= 200 && PosYMouse <= 220) {
                 if (compteurAccele > 0) {
@@ -142,52 +163,33 @@ Texture2D plusAccel = LoadTexture("../images/plusAccel.png");
             }
 
         }
-
-        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) == true) {
-            if (mouseIso.x >= 0 && mouseIso.y >= 0 && mouseIso.x < COLONNES && mouseIso.y < LIGNES) {
-                coordSourisIso(&mouseIsoClic, img);
-                niveau = 0;
-                if (categorieConstruction == 0 &&
-                    tabCase[mouseIso.x][mouseIso.y].construction.type == 0) {
-                    if (compteEnBanque >= COUT_ROUTE) {
-                        route(tabCase, mouseIsoClic.x, mouseIsoClic.y, &(compteur.nbRues));
-                        compteEnBanque = compteEnBanque - COUT_ROUTE;
-                    } else {
-                        printf("Vous n'avez pas assez d'argent\n");
-                    }
-                }
-
-
-                if (categorieConstruction == 1 &&
-                    tabCase[mouseIso.x][mouseIso.y].construction.type == 0) {
-                    if (compteEnBanque >= COUT_TERRAIN_VAGUE) {
-                        habitation(tabCase, mouseIso.x, mouseIso.y, &(compteur.nbHab));
-                        compteEnBanque = compteEnBanque - COUT_TERRAIN_VAGUE;
-                    } else {
-                        printf("Vous n'avez pas assez d'argent\n");
-                    }
-                }
-
-                if (categorieConstruction == 2 &&
-                    tabCase[mouseIso.x][mouseIso.y].construction.type == 0) {
-                    if (compteEnBanque >= COUT_CHATEAU_DEAU) {
-                        batiment(tabCase, mouseIso.x, mouseIso.y, &(compteur.nbUsines), 3);
-                        compteEnBanque = compteEnBanque - COUT_CHATEAU_DEAU;
-                    } else {
-                        printf("Vous n'avez pas assez d'argent\n");
-                    }
-                }
-
-                if (categorieConstruction == 3 &&
-                    tabCase[mouseIso.x][mouseIso.y].construction.type == 0) {
-                    if (compteEnBanque >= COUT_CENTRAL) {
-                        batiment(tabCase, mouseIso.x, mouseIso.y, &(compteur.nbChateauO), 2);
-                        compteEnBanque = compteEnBanque - COUT_CENTRAL;
-                    } else {
-                        printf("Vous n'avez pas assez d'argent\n");
-                    }
-                }
+        if (IsKeyPressed(KEY_UP) == true) {
+            if (rotationBattiment != 1) {
+                rotationBattiment++;
+            } else {
+                rotationBattiment = 0;
             }
+        }
+        if (IsKeyPressed(KEY_KP_1) == true) {
+            if (detruire != 1) {
+                detruire++;
+            } else {
+                detruire = 0;
+            }
+        }
+
+        if ((IsKeyDown(KEY_LEFT_CONTROL)) && (IsKeyPressed(KEY_S))) {
+            enregistrerPartie(JEU->G->tabCase);
+        }
+        if ((IsKeyDown(KEY_LEFT_CONTROL)) && (IsKeyPressed(KEY_KP_0))) {
+            recommencerPartie(JEU->G->tabCase,&JEU->compteur);
+        }
+        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) == true) {
+            constructionSouris(&mouseIso, categorieConstruction, &niveau, JEU->G->tabCase, &compteEnBanque, &JEU->compteur, rotationBattiment, detruire, JEU);
+            detruireConstruction(&mouseIso,JEU->G->tabCase,&JEU->compteur,rotationBattiment,detruire,JEU);
+            printf("nb route: %d\nnb hab: %d\nnb usine: %d\nnb chateauO: %d\n ", JEU->compteur.nbRues,JEU->compteur.nbHab, JEU->compteur.nbUsines, JEU->compteur.nbChateauO);
+            //CalculeElec(JEU);
+            //CalculeO(JEU);
         }
         if (CheckCollisionPointRec(GetMousePosition(), (Rectangle){})){
 
@@ -220,10 +222,11 @@ Texture2D plusAccel = LoadTexture("../images/plusAccel.png");
                 DrawTexture(x30, 35, 190, BLUE);
                 break;
         }
-        construireBat(categorieConstruction, PosXMouse, PosYMouse, maison);
+
         EndDrawing();
 
     }
+
     UnloadTexture(maison);
     UnloadTexture(monnaie);
     UnloadTexture(temps);
