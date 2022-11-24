@@ -1,6 +1,3 @@
-//
-// Created by Théophile Dutrey on 03/11/2022.
-//
 
 #ifndef ECE_CITY_3_Z_CONSTRUCTION_H
 #define ECE_CITY_3_Z_CONSTRUCTION_H
@@ -17,6 +14,6 @@ void constructionSouris(VECTEUR* mouseIso, int categorieConstruction, int* nivea
 void detruireConstruction(VECTEUR* mouseIso, CASE** tabCase, COMPTEUR* compteur, int rotationBattiment, int detruire,ECECITY *JEU);
 void compteurTempsDuBat (CASE** tabCase, int x, int y, float* tempsEcoule) ;
 void evolutionBat (CASE** tabCase, float* tempsEcoule, ECECITY* JEU) ;
-void demolitionBatCapitaliste (CASE** tabCase, float* tempsEcoule, ECECITY* JEU, int compteEnBanque);
+void regfressionBatCapitaliste (CASE** tabCase, float* tempsEcoule, ECECITY* JEU, int compteEnBanque);
 
 #endif //ECE_CITY_3_Z_CONSTRUCTION_H

@@ -25,8 +25,4 @@ typedef struct {
 } InfoEcran;
 
 
-
-
-
-
 #endif //ECE_CITY_3_Z_MENU_H

@@ -236,7 +236,7 @@ void evolutionBat (CASE** tabCase, float* tempsEcoule, ECECITY* JEU) {
                 JEU->tabHab[x].tic = 0;
                 if (JEU->tabHab[x].type == 6){
                     JEU->tabHab[x].nbHabitant = 10;
-                } else if (JEU->tabHab[x].type == 7) {
+                } else if (JEU->tabHab[x].type == 7){
                     JEU->tabHab[x].nbHabitant = 50;
                 } else if (JEU->tabHab[x].type == 8) {
                     JEU->tabHab[x].nbHabitant = 100;
@@ -259,7 +259,7 @@ void evolutionBat (CASE** tabCase, float* tempsEcoule, ECECITY* JEU) {
     }*/
 }
 
-void demolitionBatCapitaliste (CASE** tabCase, float* tempsEcoule, ECECITY* JEU, int compteEnBanque){
+void regfressionBatCapitaliste (CASE** tabCase, float* tempsEcoule, ECECITY* JEU, int compteEnBanque){
     for (int x = 1; x < 175; x++){
             if (JEU->tabHab[x].type >= 5 && JEU->tabHab[x].type <= 9){
                 if (JEU->tabHab[x].tic == 15){

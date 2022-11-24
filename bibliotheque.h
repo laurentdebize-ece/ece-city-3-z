@@ -1,6 +1,4 @@
-//
-// Created by Théophile Dutrey on 01/11/2022.
-//
+
 #define LARGEUR 1700
 #define HAUTEUR 800
 #define LARGEUR_GRILLE 45*20
@@ -141,5 +139,6 @@ typedef struct{
 #include "banque.h"
 #include "affichage.h"
 #include "isoConfig.h"
+#include "menu.h"
 
 #endif //ECE_CITY_3_Z_BIBLIOTHEQUE_H
