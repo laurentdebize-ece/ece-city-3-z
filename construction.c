@@ -184,7 +184,7 @@ void constructionSouris(VECTEUR* mouseIso, int categorieConstruction, int* nivea
         }
     }
     //modifGraphe();
-    //modidConnexe();
+    //modidConnexe(JEU, mouse->x, mouse->y, categorieConstruction, rotation);
 }
 
 void detruireConstruction(VECTEUR *mouseIso, CASE **tabCase, COMPTEUR *compteur, int rotationBattiment, int detruire,ECECITY *JEU) {
@@ -214,7 +214,7 @@ void detruireConstruction(VECTEUR *mouseIso, CASE **tabCase, COMPTEUR *compteur,
         }
     }
     //modifGraphe(mouseIso, tabCase);
-    //modidConnexe();
+    //modidConnexe(JEU, );
 }
 void routeApercu (CASE** tabCase, int x, int y){
 
