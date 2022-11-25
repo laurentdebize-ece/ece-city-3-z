@@ -142,5 +142,6 @@ typedef struct{
 #include "banque.h"
 #include "affichage.h"
 #include "isoConfig.h"
+#include "barreOutil.h"
 
 #endif //ECE_CITY_3_Z_BIBLIOTHEQUE_H

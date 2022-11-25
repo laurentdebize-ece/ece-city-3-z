@@ -7,7 +7,7 @@ int main() {
     int construction;
     int ordre;
     int detruire = 0;
-    int rotationBattiment;
+    int rotationBattiment = 0;
     COMPTEUR compteur;
 
     compteur.nbChateauO=0;
@@ -43,8 +43,6 @@ int main() {
     animationBarre barre;
     barre.etat = FERME;
     barre.temps = 0;
-
-    CASE **tabCase = malloc((COLONNES) * sizeof(CASE *));
 
 
     JEU->G->tabCase = malloc((COLONNES) * sizeof(CASE *));
@@ -149,21 +147,6 @@ Texture2D plusAccel = LoadTexture("../images/plusAccel.png");
             }
         }
 
-        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) == true) {
-            if (barre.etat == FERME && PosXMouse > 1520 && PosXMouse < 1600 && PosYMouse > 340 && PosYMouse < 400) {
-                barre.etat = OUVERT;
-            }
-            if (barre.etat == OUVERT && PosXMouse > 1300 && PosXMouse < 1370 && PosYMouse > 340 && PosYMouse < 400) {
-                barre.etat = FERME;
-            }
-            if (barre.etat == OUVERT && PosXMouse > 1380 && PosXMouse < 1480 && PosYMouse > 40 && PosYMouse < 140) {
-                categorieConstruction = 0;
-            }
-            if (barre.etat == OUVERT && PosXMouse > 1380 && PosXMouse < 1480 && PosYMouse > 190 && PosYMouse < 290) {
-                categorieConstruction = 1;
-            }
-
-        }
         if (IsKeyPressed(KEY_UP) == true) {
             if (rotationBattiment != 1) {
                 rotationBattiment++;
@@ -188,6 +171,7 @@ Texture2D plusAccel = LoadTexture("../images/plusAccel.png");
         if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) == true) {
             constructionSouris(&mouseIso, categorieConstruction, &niveau, JEU->G->tabCase, &compteEnBanque, &JEU->compteur, rotationBattiment, detruire, JEU);
             detruireConstruction(&mouseIso,JEU->G->tabCase,&JEU->compteur,rotationBattiment,detruire,JEU);
+            barreOutilSouris(PosXMouse, PosYMouse, &barre, &categorieConstruction);
             printf("nb route: %d\nnb hab: %d\nnb usine: %d\nnb chateauO: %d\n ", JEU->compteur.nbRues,JEU->compteur.nbHab, JEU->compteur.nbUsines, JEU->compteur.nbChateauO);
             //CalculeElec(JEU);
             //CalculeO(JEU);
