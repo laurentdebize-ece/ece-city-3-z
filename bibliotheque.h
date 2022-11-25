@@ -17,7 +17,7 @@
 #define COUT_ROUTE 50
 #define COUT_TERRAIN_VAGUE 1000
 #define COUT_CASERNE 10000
-
+ //170
 
 #define TAXE 50
 #define NBRHABITANT_CABANE 10
