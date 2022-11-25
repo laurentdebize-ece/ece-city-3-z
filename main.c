@@ -172,9 +172,12 @@ Texture2D plusAccel = LoadTexture("../images/plusAccel.png");
             constructionSouris(&mouseIso, categorieConstruction, &niveau, JEU->G->tabCase, &compteEnBanque, &JEU->compteur, rotationBattiment, detruire, JEU);
             detruireConstruction(&mouseIso,JEU->G->tabCase,&JEU->compteur,rotationBattiment,detruire,JEU);
             barreOutilSouris(PosXMouse, PosYMouse, &barre, &categorieConstruction);
-            printf("nb route: %d\nnb hab: %d\nnb usine: %d\nnb chateauO: %d\n ", JEU->compteur.nbRues,JEU->compteur.nbHab, JEU->compteur.nbUsines, JEU->compteur.nbChateauO);
-            //CalculeElec(JEU);
+            //printf("nb route: %d\nnb hab: %d\nnb usine: %d\nnb chateauO: %d\n ", JEU->compteur.nbRues,JEU->compteur.nbHab, JEU->compteur.nbUsines, JEU->compteur.nbChateauO);
+            CalculeElec(JEU);
             //CalculeO(JEU);
+            printf("%d\n", JEU->tabHab[1].nbHabitant);
+            printf("%d\n", JEU->tabHab[1].QE);
+            printf("%d\n", JEU->tabHab[1].connexe);
         }
         if (CheckCollisionPointRec(GetMousePosition(), (Rectangle){})){
 

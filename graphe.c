@@ -39,17 +39,19 @@ CASE **CreerArete(CASE **sommet, int s1X, int s1Y, int s2X, int s2Y, int valeurs
 
 void CalculeConnexe(CASE **tabCase, int i, int j, int *nbConnexe) {
     pArc temp = tabCase[i][j].arc;
+    int x = tabCase[i][j].arc->sommetX;
+    int y = tabCase[i][j].arc->sommetY;
     while (temp != NULL) {
-        int x = tabCase[i][j].arc->sommetX;
-        int y = tabCase[i][j].arc->sommetY;
         if (tabCase[x][y].connexe != 0) {
             tabCase[i][j].connexe = tabCase[x][y].connexe;
             return;
         }
         temp = temp->arc_suivant;
     }
-    tabCase[i][j].connexe = *nbConnexe;
-    (*nbConnexe)++;
+    if (tabCase[x][y].type>0) {
+        tabCase[i][j].connexe = *nbConnexe;
+        (*nbConnexe)++;
+    }
 }
 
 
@@ -143,26 +145,24 @@ Graphe *CreerGraphe(FILE *ifs, FILE *ifsID, ECECITY *JEU) {
             tabCase[i][j].etat = 0;
             tabCase[i][j].arc = NULL;//il n'y a aucune construction au debut
             //on créer les arretes pour les 4cases adjacente de la case ij
-            if (tabCase[i][j].type != 0) {
-                if (j != 0 && tabCase[i][j - 1].type != 0) {
-                    tabCase = CreerArete(tabCase, i, j, i, j - 1, 1);
-                }
-                if (i != 0 && tabCase[i - 1][j].type != 0) {
-                    tabCase = CreerArete(tabCase, i, j, i - 1, j, 1);
-                }
-                if (j != QUADRICOLONNE - 1) {
-                    if (tabCase[i][j + 1].type != 0) {
-                        tabCase = CreerArete(tabCase, i, j, i, j + 1, 1);
-                    }
-                }
-                if (i != QUADRILIGNE - 1) {
-                    if (tabCase[i + 1][j].type != 0) {
-                        tabCase = CreerArete(tabCase, i, j, i + 1, j, 1);
-                    }
-                }
-                CalculeConnexe(tabCase, i, j, &nbConnexe);
-                CalculeCompteurEtTab(tabCase, i, j, JEU);
+            if (j != 0 && tabCase[i][j - 1].type != 0) {
+                tabCase = CreerArete(tabCase, i, j, i, j - 1, 1);
             }
+            if (i != 0 && tabCase[i - 1][j].type != 0) {
+                tabCase = CreerArete(tabCase, i, j, i - 1, j, 1);
+            }
+            if (j != QUADRICOLONNE - 1) {
+                if (tabCase[i][j + 1].type != 0) {
+                    tabCase = CreerArete(tabCase, i, j, i, j + 1, 1);
+                }
+            }
+            if (i != QUADRILIGNE - 1) {
+                if (tabCase[i + 1][j].type != 0) {
+                    tabCase = CreerArete(tabCase, i, j, i + 1, j, 1);
+                }
+            }
+            //CalculeConnexe(tabCase, i, j, &nbConnexe);
+            CalculeCompteurEtTab(tabCase, i, j, JEU);
         }
 
     }
