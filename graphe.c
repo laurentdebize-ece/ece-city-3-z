@@ -39,17 +39,19 @@ CASE **CreerArete(CASE **sommet, int s1X, int s1Y, int s2X, int s2Y, int valeurs
 
 void CalculeConnexe(CASE **tabCase, int i, int j, int *nbConnexe) {
     pArc temp = tabCase[i][j].arc;
+    int x = tabCase[i][j].arc->sommetX;
+    int y = tabCase[i][j].arc->sommetY;
     while (temp != NULL) {
-        int x = tabCase[i][j].arc->sommetX;
-        int y = tabCase[i][j].arc->sommetY;
         if (tabCase[x][y].connexe != 0) {
             tabCase[i][j].connexe = tabCase[x][y].connexe;
             return;
         }
         temp = temp->arc_suivant;
     }
-    tabCase[i][j].connexe = *nbConnexe;
-    (*nbConnexe)++;
+    if (tabCase[x][y].type>0) {
+        tabCase[i][j].connexe = *nbConnexe;
+        (*nbConnexe)++;
+    }
 }
 
 
@@ -143,26 +145,24 @@ Graphe *CreerGraphe(FILE *ifs, FILE *ifsID, ECECITY *JEU) {
             tabCase[i][j].etat = 0;
             tabCase[i][j].arc = NULL;//il n'y a aucune construction au debut
             //on créer les arretes pour les 4cases adjacente de la case ij
-            if (tabCase[i][j].type != 0) {
-                if (j != 0 && tabCase[i][j - 1].type != 0) {
-                    tabCase = CreerArete(tabCase, i, j, i, j - 1, 1);
-                }
-                if (i != 0 && tabCase[i - 1][j].type != 0) {
-                    tabCase = CreerArete(tabCase, i, j, i - 1, j, 1);
-                }
-                if (j != QUADRICOLONNE - 1) {
-                    if (tabCase[i][j + 1].type != 0) {
-                        tabCase = CreerArete(tabCase, i, j, i, j + 1, 1);
-                    }
-                }
-                if (i != QUADRILIGNE - 1) {
-                    if (tabCase[i + 1][j].type != 0) {
-                        tabCase = CreerArete(tabCase, i, j, i + 1, j, 1);
-                    }
-                }
-                CalculeConnexe(tabCase, i, j, &nbConnexe);
-                CalculeCompteurEtTab(tabCase, i, j, JEU);
+            if (j != 0 && tabCase[i][j - 1].type != 0) {
+                tabCase = CreerArete(tabCase, i, j, i, j - 1, 1);
             }
+            if (i != 0 && tabCase[i - 1][j].type != 0) {
+                tabCase = CreerArete(tabCase, i, j, i - 1, j, 1);
+            }
+            if (j != QUADRICOLONNE - 1) {
+                if (tabCase[i][j + 1].type != 0) {
+                    tabCase = CreerArete(tabCase, i, j, i, j + 1, 1);
+                }
+            }
+            if (i != QUADRILIGNE - 1) {
+                if (tabCase[i + 1][j].type != 0) {
+                    tabCase = CreerArete(tabCase, i, j, i + 1, j, 1);
+                }
+            }
+            //CalculeConnexe(tabCase, i, j, &nbConnexe);
+            CalculeCompteurEtTab(tabCase, i, j, JEU);
         }
 
     }
@@ -501,6 +501,8 @@ void CalculeO(ECECITY *JEU) {
 
 }
 
+//changer nb connexe
+
 void CalculeElec(ECECITY *JEU) {
     //int QE = JEU->compteur.nbUsines*5000;
     //int QErestant= 0;
@@ -509,7 +511,7 @@ void CalculeElec(ECECITY *JEU) {
         int QEcon = 0;
         int nbHabitantCon = 0;
 
-        //P1 on calcule la quantité d'élec disponible dans la composante connexe et son nobre d'habitant.
+        //P1 on calcule la quantité d'élec disponible dans la composante connexe et son nombre d'habitant.
         for (int j = 1; j < JEU->compteur.nbUsines; ++j) {
             if (JEU->tabE[j].connexe == i) {
                 QEcon = QEcon + 5000;
@@ -609,6 +611,8 @@ void modifConnexe(ECECITY* JEU, int X, int Y, int categorieConstruction, int rot
             }
             temp = temp->arc_suivant;
         }
+        JEU->G->tabCase[X][Y].connexe=JEU->G->nbConnexe;
+        JEU->G->nbConnexe++;
     }
     if(categorieConstruction==1) {
         for (int i = 0; i < LONGUEURE_TERRAIN_VAGUE; i++) {
@@ -629,6 +633,12 @@ void modifConnexe(ECECITY* JEU, int X, int Y, int categorieConstruction, int rot
                 }
             }
         }
+        for (int a = 0; a < LONGUEURE_TERRAIN_VAGUE; a++) {
+            for (int b = 0; b < LARGEUR_TERRAIN_VAGUE; b++) {
+                JEU->G->tabCase[X + a][Y + b].connexe = JEU->G->nbConnexe;
+            }
+        }
+        JEU->G->nbConnexe++;
     }
     if(categorieConstruction==2 ||categorieConstruction==3) {
         int longueureBatX;
@@ -659,7 +669,14 @@ void modifConnexe(ECECITY* JEU, int X, int Y, int categorieConstruction, int rot
                 }
             }
         }
+        for (int a = 0; a < LONGUEURE_TERRAIN_VAGUE; a++) {
+            for (int b = 0; b < LARGEUR_TERRAIN_VAGUE; b++) {
+                JEU->G->tabCase[X + a][Y + b].connexe = JEU->G->nbConnexe;
+            }
+        }
+        JEU->G->nbConnexe++;
     }
+
 }
 /*
 int minimain() {

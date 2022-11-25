@@ -1,7 +1,7 @@
 //
 // Created by Théophile Dutrey on 01/11/2022.
 //
-#define LARGEUR 1700
+#define LARGEUR 1600
 #define HAUTEUR 800
 #define LARGEUR_GRILLE 45*20
 #define HAUTEUR_GRILLE 35*20
