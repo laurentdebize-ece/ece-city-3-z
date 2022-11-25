@@ -140,5 +140,6 @@ typedef struct{
 #include "affichage.h"
 #include "isoConfig.h"
 #include "menu.h"
+#include "jeu.h"
 
 #endif //ECE_CITY_3_Z_BIBLIOTHEQUE_H

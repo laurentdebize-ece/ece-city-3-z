@@ -226,8 +226,8 @@ void batimentApercu(CASE** tabCase, int x, int y, int typeBatiment){
 
 
 
-void evolutionBat (CASE** tabCase, float* tempsEcoule, ECECITY* JEU) {
-    compteurTempsDuBat(tabCase, 0, 0, tempsEcoule);
+void evolutionBat (CASE** tabCase, float* tempsEcoule, float tempsDepart, ECECITY* JEU) {
+    compteurTempsDuBat(tabCase, 0, 0, tempsEcoule, tempsDepart);
 
     for (int x = 1; x < 175; x++){
         if (JEU->tabHab[x].type >= 5 && JEU->tabHab[x].type <= 9){
@@ -293,8 +293,8 @@ void regfressionBatCapitaliste (CASE** tabCase, float* tempsEcoule, ECECITY* JEU
     }
 }
 
-void compteurTempsDuBat (CASE** tabCase, int x, int y, float* tempsEcoule) {
-    float tempsActuel = GetTime();
+void compteurTempsDuBat (CASE** tabCase, int x, int y, float* tempsEcoule, float tempsDepart) {
+    float tempsActuel = GetTime() - tempsDepart;
     float deltaTemps = tempsActuel - *tempsEcoule;
 
     if (deltaTemps >= 1.0){

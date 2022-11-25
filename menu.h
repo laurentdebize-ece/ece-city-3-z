@@ -13,7 +13,7 @@
 
 ///Déclaration importantes
 
-enum gameMode {PLAY, RULES, TEAM, MENU, END};
+enum gameMode {PLAY, RULES, TEAM, MENU, MODE, CAPITALISTE, COMMUNISTE};
 
 #define PI 3.141592
 #define RULESPAGEMAX 10
