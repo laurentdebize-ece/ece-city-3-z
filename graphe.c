@@ -1,44 +1,5 @@
-
 #include "bibliotheque.h"
 #include "graphe.h"
-
-//possiblement a supp
-/*Graphe* CreerGraphe(int ordre)
-{
-
-    Graphe* Newgraphe=malloc(sizeof(Graphe));
-    Newgraphe->tabCase = malloc(ordre*sizeof(Sommet));
-
-    for(int i=0; i<ordre; i++){
-        Newgraphe->tabCase[i]=malloc(sizeof(Sommet));
-        //Newgraphe->tabCase[i]->valeur=i;
-    }
-    for (int i=0; i<38; i++){
-        for (int j=0; j<38; j++){
-            //fscanf(ifs, "%d", &Newgraphe->tabCase[i][j].valeur);
-            Newgraphe->tabCase[i][j].valeur = i*j;
-            Newgraphe->tabCase[i][j].etat = 0;   //il n'y a aucune construction au debut
-        }
-    }
-    return Newgraphe;
-}
-
-Graphe * lire_graphe(char * nomFichier)
-{
-    Graphe* graphe;
-    FILE * ifs = fopen(nomFichier,"r+");   //r+ pour lecture ET ecriture dans un fichier texte déjà crée
-    int taille, ordre;
-    if (!ifs){
-        printf("Erreur de lecture fichier\n");
-        exit(-1);
-    }
-
-    fscanf(ifs,"%d",&ordre);
-    graphe=CreerGraphe(ordre); // pn creer un graphe de 1444 sommets (38*38)
-    graphe->ordre=ordre;
-    return graphe;
-}*/
-
 
 CASE **CreerArete(CASE **sommet, int s1X, int s1Y, int s2X, int s2Y, int valeurs) {
     if (sommet[s1X][s1Y].arc == NULL) {
@@ -78,17 +39,19 @@ CASE **CreerArete(CASE **sommet, int s1X, int s1Y, int s2X, int s2Y, int valeurs
 
 void CalculeConnexe(CASE **tabCase, int i, int j, int *nbConnexe) {
     pArc temp = tabCase[i][j].arc;
+    int x = tabCase[i][j].arc->sommetX;
+    int y = tabCase[i][j].arc->sommetY;
     while (temp != NULL) {
-        int x = tabCase[i][j].arc->sommetX;
-        int y = tabCase[i][j].arc->sommetY;
         if (tabCase[x][y].connexe != 0) {
             tabCase[i][j].connexe = tabCase[x][y].connexe;
             return;
         }
         temp = temp->arc_suivant;
     }
-    tabCase[i][j].connexe = *nbConnexe;
-    (*nbConnexe)++;
+    if (tabCase[x][y].type>0) {
+        tabCase[i][j].connexe = *nbConnexe;
+        (*nbConnexe)++;
+    }
 }
 
 
@@ -182,26 +145,24 @@ Graphe *CreerGraphe(FILE *ifs, FILE *ifsID, ECECITY *JEU) {
             tabCase[i][j].etat = 0;
             tabCase[i][j].arc = NULL;//il n'y a aucune construction au debut
             //on créer les arretes pour les 4cases adjacente de la case ij
-            if (tabCase[i][j].type != 0) {
-                if (j != 0 && tabCase[i][j - 1].type != 0) {
-                    tabCase = CreerArete(tabCase, i, j, i, j - 1, 1);
-                }
-                if (i != 0 && tabCase[i - 1][j].type != 0) {
-                    tabCase = CreerArete(tabCase, i, j, i - 1, j, 1);
-                }
-                if (j != QUADRICOLONNE - 1) {
-                    if (tabCase[i][j + 1].type != 0) {
-                        tabCase = CreerArete(tabCase, i, j, i, j + 1, 1);
-                    }
-                }
-                if (i != QUADRILIGNE - 1) {
-                    if (tabCase[i + 1][j].type != 0) {
-                        tabCase = CreerArete(tabCase, i, j, i + 1, j, 1);
-                    }
-                }
-                CalculeConnexe(tabCase, i, j, &nbConnexe);
-                CalculeCompteurEtTab(tabCase, i, j, JEU);
+            if (j != 0 && tabCase[i][j - 1].type != 0) {
+                tabCase = CreerArete(tabCase, i, j, i, j - 1, 1);
             }
+            if (i != 0 && tabCase[i - 1][j].type != 0) {
+                tabCase = CreerArete(tabCase, i, j, i - 1, j, 1);
+            }
+            if (j != QUADRICOLONNE - 1) {
+                if (tabCase[i][j + 1].type != 0) {
+                    tabCase = CreerArete(tabCase, i, j, i, j + 1, 1);
+                }
+            }
+            if (i != QUADRILIGNE - 1) {
+                if (tabCase[i + 1][j].type != 0) {
+                    tabCase = CreerArete(tabCase, i, j, i + 1, j, 1);
+                }
+            }
+            //CalculeConnexe(tabCase, i, j, &nbConnexe);
+            CalculeCompteurEtTab(tabCase, i, j, JEU);
         }
 
     }
@@ -336,8 +297,6 @@ int checkBlanc(Graphe *G, int num) {
 }
 
 void BFS(Graphe *G, int SommetX, int SommetY, int *compte) {
-    //printf("***BFS***\n");
-    //printf("BFS à partir du sommet %d :\n",num);
     *compte = 0;
     File f = CreerFile();
     pArc arc = G->tabCase[SommetX][SommetY].arc;
@@ -346,7 +305,7 @@ void BFS(Graphe *G, int SommetX, int SommetY, int *compte) {
     ++(*compte);
     while (f->longueur != 0) {
         while (arc != NULL) {
-            if (G->tabCase[arc->sommetX][arc->sommetY].couleur == 0) {
+            if (G->tabCase[arc->sommetX][arc->sommetY].couleur == 0 && G->tabCase[arc->sommetX][arc->sommetY].type >0) {
                 enfiler(f, arc->sommetX * 100 + arc->sommetY);
                 G->tabCase[arc->sommetX][arc->sommetY].couleur = 1;
                 G->tabCase[arc->sommetX][arc->sommetY].predX = arc->sommetX;//a potentiellement changé en SommetX
@@ -398,6 +357,15 @@ void CalculDistance(Graphe *G, int SommetX, int SommetY, int con) {
     }
 }
 
+bool checkIdO(int *ordre, int nbHabitationCon, int id){
+    for (int i=0; i<nbHabitationCon; i++){
+        if(id==ordre[i]){
+            return false;
+        }
+    }
+    return true;
+}
+
 void triDistance(int *ordre, ECECITY *JEU, int nbHabitationCon) {
     int a = 0;
     while (a != nbHabitationCon) {
@@ -411,8 +379,10 @@ void triDistance(int *ordre, ECECITY *JEU, int nbHabitationCon) {
                 }
             }
         }
-        ordre[a]=id;
-        a++;
+        if(checkIdO(ordre, nbHabitationCon, id)) {
+            ordre[a] = id;
+            a++;
+        }
     }
 }
 
@@ -531,6 +501,8 @@ void CalculeO(ECECITY *JEU) {
 
 }
 
+//changer nb connexe
+
 void CalculeElec(ECECITY *JEU) {
     //int QE = JEU->compteur.nbUsines*5000;
     //int QErestant= 0;
@@ -539,7 +511,7 @@ void CalculeElec(ECECITY *JEU) {
         int QEcon = 0;
         int nbHabitantCon = 0;
 
-        //P1 on calcule la quantité d'élec disponible dans la composante connexe et son nobre d'habitant.
+        //P1 on calcule la quantité d'élec disponible dans la composante connexe et son nombre d'habitant.
         for (int j = 1; j < JEU->compteur.nbUsines; ++j) {
             if (JEU->tabE[j].connexe == i) {
                 QEcon = QEcon + 5000;
@@ -601,10 +573,109 @@ void CalculeElec(ECECITY *JEU) {
 }
 
 void modifGraphe(VECTEUR *mouseIso, CASE **tabCase){
-
+    //A faire
+    //mettre absolument la nouvelles constru en connexe 0
+}
+void eraseSupp(ECECITY* JEU, int erase){
+    for(int i=1; i<175; i++){
+        if(JEU->tabHab[i].connexe>erase){
+            JEU->tabHab[i].connexe--;
+        }
+    }for(int i=1; i<(QUADRILIGNE*QUADRICOLONNE/24); i++){
+        if(JEU->tabE[i].connexe>erase){
+            JEU->tabE[i].connexe--;
+        }
+        if(JEU->tabO[i].connexe>erase){
+            JEU->tabO[i].connexe--;
+        }
+    }
 }
 
-void modifConnexe(){
+void modifConnexe(ECECITY* JEU, int X, int Y, int categorieConstruction, int rotation){
+    pArc temp = JEU->G->tabCase[X][Y].arc;
+    if (categorieConstruction==0) {
+        while (temp != NULL) {
+            if (JEU->G->tabCase[temp->sommetX][temp->sommetY].type == 1 && JEU->G->tabCase[X][Y].connexe == 0) {
+                JEU->G->tabCase[X][Y].connexe = JEU->G->tabCase[temp->sommetX][temp->sommetY].connexe;
+            }
+            else if(JEU->G->tabCase[temp->sommetX][temp->sommetY].type == 1 && JEU->G->tabCase[temp->sommetX][temp->sommetY]
+            .connexe >0 && JEU->G->tabCase[X][Y].connexe!=JEU->G->tabCase[temp->sommetX][temp->sommetY].connexe){
+                if(JEU->G->tabCase[X][Y].connexe > JEU->G->tabCase[temp->sommetX][temp->sommetY].connexe){
+                    int erase=JEU->G->tabCase[X][Y].connexe;
+                    eraseSupp(JEU, erase);
+                }
+                if(JEU->G->tabCase[X][Y].connexe < JEU->G->tabCase[temp->sommetX][temp->sommetY].connexe){
+                    int erase=JEU->G->tabCase[temp->sommetX][temp->sommetY].connexe;
+                    eraseSupp(JEU, erase);
+                }
+            }
+            temp = temp->arc_suivant;
+        }
+        JEU->G->tabCase[X][Y].connexe=JEU->G->nbConnexe;
+        JEU->G->nbConnexe++;
+    }
+    if(categorieConstruction==1) {
+        for (int i = 0; i < LONGUEURE_TERRAIN_VAGUE; i++) {
+            for (int j = 0; j < LARGEUR_TERRAIN_VAGUE; j++) {
+                if(i==0 || i==LONGUEURE_TERRAIN_VAGUE || j==0 || j==LARGEUR_TERRAIN_VAGUE) {
+                    while (temp != NULL) {
+                        if (JEU->G->tabCase[temp->sommetX][temp->sommetY].type == 1 && JEU->G->tabCase[X][Y].connexe == 0) {
+                            for (int a = 0; a < LONGUEURE_TERRAIN_VAGUE; a++) {
+                                for (int b = 0; b < LARGEUR_TERRAIN_VAGUE; b++) {
+                                    JEU->G->tabCase[X + a][Y + b].connexe = JEU->G->tabCase[temp->sommetX][temp->sommetY].connexe;
+                                }
+                            }
+                            return;
+                        }
+                        temp = temp->arc_suivant;
+                    }
+                    temp = JEU->G->tabCase[X][Y].arc;
+                }
+            }
+        }
+        for (int a = 0; a < LONGUEURE_TERRAIN_VAGUE; a++) {
+            for (int b = 0; b < LARGEUR_TERRAIN_VAGUE; b++) {
+                JEU->G->tabCase[X + a][Y + b].connexe = JEU->G->nbConnexe;
+            }
+        }
+        JEU->G->nbConnexe++;
+    }
+    if(categorieConstruction==2 ||categorieConstruction==3) {
+        int longueureBatX;
+        int longueureBatY;
+        if(rotation==0){
+            longueureBatX=LONGUEURE_BATTIMENT;
+            longueureBatY=LARGEUR_BATTIMENT;
+        }
+        else{
+            longueureBatX=LARGEUR_BATTIMENT;
+            longueureBatY=LONGUEURE_BATTIMENT;
+        }
+        for (int i = 0; i < longueureBatX; i++) {
+            for (int j = 0; j < longueureBatY; j++) {
+                if(i==0 || i==longueureBatX || j==0 || j==longueureBatY) {
+                    while (temp != NULL) {
+                        if (JEU->G->tabCase[temp->sommetX][temp->sommetY].type == 1 && JEU->G->tabCase[X][Y].connexe == 0) {
+                            for (int a = 0; a < longueureBatX; a++) {
+                                for (int b = 0; b < longueureBatY; b++) {
+                                    JEU->G->tabCase[X + a][Y + b].connexe = JEU->G->tabCase[temp->sommetX][temp->sommetY].connexe;
+                                }
+                            }
+                            return;
+                        }
+                        temp = temp->arc_suivant;
+                    }
+                    temp = JEU->G->tabCase[X][Y].arc;
+                }
+            }
+        }
+        for (int a = 0; a < LONGUEURE_TERRAIN_VAGUE; a++) {
+            for (int b = 0; b < LARGEUR_TERRAIN_VAGUE; b++) {
+                JEU->G->tabCase[X + a][Y + b].connexe = JEU->G->nbConnexe;
+            }
+        }
+        JEU->G->nbConnexe++;
+    }
 
 }
 /*

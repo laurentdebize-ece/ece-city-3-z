@@ -1,6 +1,4 @@
-//
-// Created by Théophile Dutrey on 03/11/2022.
-//
+
 
 #include "bibliotheque.h"
 void route (CASE** tabCase, int x, int y, int* compteur, int detruire,ECECITY *JEU){
@@ -26,7 +24,17 @@ void habitation(CASE **tabCase, int x, int y, int *compteur, int detruire,ECECIT
             if (presenceRoute(tabCase, x, y, LONGUEURE_TERRAIN_VAGUE, LARGEUR_TERRAIN_VAGUE) != 0) {
 
                 (*compteur)++;
+                JEU->tabHab[*compteur].type = 5;
+                tabCase[x][y].affichage = 1;
+                JEU->tabHab[*compteur].origineX = x;
+                JEU->tabHab[*compteur].origineY = y;
+                // Remettre à 0
+                JEU->tabHab[*compteur].nbHabitant = 5;
+                JEU->tabHab[*compteur].QO = 0;
+                JEU->tabHab[*compteur].QE = 0;
 
+
+                //JEU->tabHab[*compteur].tic = 0;
                 for (int a = 0; a < LONGUEURE_TERRAIN_VAGUE; a++) {
                     for (int b = 0; b < LARGEUR_TERRAIN_VAGUE; b++) {
                         tabCase[x + a][y + b].type = 5;
@@ -38,6 +46,7 @@ void habitation(CASE **tabCase, int x, int y, int *compteur, int detruire,ECECIT
     } else {
         int caseIdentite = tabCase[x][y].identite;
         //(*compteur)--;
+        tabCase[x][y].affichage = 0;
         for (int b = 0; b < LIGNES; b++) {
             for (int a = 0; a < COLONNES; a++) {
 
@@ -66,6 +75,7 @@ void batiment (CASE** tabCase, int x, int y, int* compteur, int typeBatiment, in
         if (x + longueureBatX <= COLONNES && y + longueureBatY <= LIGNES &&
             possibiliteDeConstruire(tabCase, x, y, longueureBatX, longueureBatY) == 0) {
             if (presenceRoute(tabCase, x, y, longueureBatX, longueureBatY) != 0) {
+                tabCase[x][y].affichage = 1;
                 (*compteur)++;
                 for (int a = 0; a < longueureBatX; a++) {
                     for (int b = 0; b < longueureBatY; b++) {
@@ -80,8 +90,8 @@ void batiment (CASE** tabCase, int x, int y, int* compteur, int typeBatiment, in
     }
     else {
         int caseIdentite;
-
-        caseIdentite = tabCase[x][y].identite;;
+        tabCase[x][y].affichage = 0;
+        caseIdentite = tabCase[x][y].identite;
 
 
         //(*compteur)--;
@@ -180,8 +190,7 @@ void constructionSouris(VECTEUR* mouseIso, int categorieConstruction, int* nivea
             }
         }
     }
-    //modifGraphe();
-    //modidConnexe();
+    //modifConnexe(JEU, mouseIso->x, mouseIso->y, categorieConstruction, rotationBattiment);
 }
 
 void detruireConstruction(VECTEUR *mouseIso, CASE **tabCase, COMPTEUR *compteur, int rotationBattiment, int detruire,ECECITY *JEU) {
@@ -210,8 +219,8 @@ void detruireConstruction(VECTEUR *mouseIso, CASE **tabCase, COMPTEUR *compteur,
             batiment(tabCase, mouseIso->x, mouseIso->y, &(compteur->nbChateauO), 3, rotationBattiment,detruire,JEU);
         }
     }
-    //modifGraphe(mouseIso, tabCase);
-    //modidConnexe();
+
+    //modifConnexe(JEU, mouseIso->x, mouseIso->y, categorieConstruction, rotationBattiment);
 }
 void routeApercu (CASE** tabCase, int x, int y){
 
@@ -226,8 +235,8 @@ void batimentApercu(CASE** tabCase, int x, int y, int typeBatiment){
 
 
 
-void evolutionBat (CASE** tabCase, float* tempsEcoule, float tempsDepart, ECECITY* JEU) {
-    compteurTempsDuBat(tabCase, 0, 0, tempsEcoule, tempsDepart);
+void evolutionBat (CASE** tabCase, float* tempsEcoule, ECECITY* JEU) {
+    compteurTempsDuBat(tempsEcoule, JEU);
 
     for (int x = 1; x < 175; x++){
         if (JEU->tabHab[x].type >= 5 && JEU->tabHab[x].type <= 9){
@@ -236,7 +245,7 @@ void evolutionBat (CASE** tabCase, float* tempsEcoule, float tempsDepart, ECECIT
                 JEU->tabHab[x].tic = 0;
                 if (JEU->tabHab[x].type == 6){
                     JEU->tabHab[x].nbHabitant = 10;
-                } else if (JEU->tabHab[x].type == 7){
+                } else if (JEU->tabHab[x].type == 7) {
                     JEU->tabHab[x].nbHabitant = 50;
                 } else if (JEU->tabHab[x].type == 8) {
                     JEU->tabHab[x].nbHabitant = 100;
@@ -310,3 +319,19 @@ void compteurTempsDuBat (CASE** tabCase, int x, int y, float* tempsEcoule, float
     DrawRectangle(200, 30, 180, 60, (Color){100, 190, 50, 200});
     DrawText(TextFormat( "Temps : %.2f",tempsActuel) ,210, 40, 25, BLACK);
 }
+/*
+void compteurTempsDuBat (float* tempsEcoule, ECECITY* JEU) {
+    float tempsActuel = GetTime();
+    float deltaTemps = tempsActuel - *tempsEcoule;
+
+    if (deltaTemps >= 1.0){
+        //incremente les tics de chaque batiment
+        for (int x = 0; x < COLONNES; x++){
+            JEU->tabHab[x].tic++;
+        }
+        printf("SS\n");
+        *tempsEcoule = tempsActuel;
+    }
+    DrawRectangle(200, 30, 180, 60, (Color){100, 190, 50, 200});
+    DrawText(TextFormat( "Temps : %.2f",tempsActuel) ,210, 40, 25, BLACK);
+}*/

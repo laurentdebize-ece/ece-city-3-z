@@ -1,4 +1,6 @@
-
+//
+// Created by Théophile Dutrey on 01/11/2022.
+//
 #define LARGEUR 1700
 #define HAUTEUR 800
 #define LARGEUR_GRILLE 45*20
@@ -47,6 +49,7 @@ typedef struct{
     int type;
     int identite;
     int couleur;
+    int affichage;
     int connexe;
     int distance;
     int predX;
@@ -139,6 +142,7 @@ typedef struct{
 #include "banque.h"
 #include "affichage.h"
 #include "isoConfig.h"
+#include "barreOutil.h"
 #include "menu.h"
 #include "jeu.h"
 

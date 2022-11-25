@@ -52,6 +52,8 @@ void ECEBFS(int con, int id, ECECITY *JEU, int nbHabitationCon);
 bool checkApproO(int i, ECECITY *JEU);
 void CalculeO(ECECITY *JEU);
 void CalculeElec(ECECITY *JEU);
+void modifConnexe(ECECITY* JEU, int X, int Y, int categorieConstruction, int rotation);
+
 int minimain();
 
 

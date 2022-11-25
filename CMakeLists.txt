@@ -5,7 +5,7 @@ set(CMAKE_C_STANDARD 99)
 
 add_subdirectory(raylib)
 
-add_executable(ece_city_3_z main.c bibliotheque.c bibliotheque.h graphe.c graphe.h construction.c construction.h banque.c banque.h affichage.c affichage.h isoConfig.c isoConfig.h menu.h jeu.c jeu.h)
+add_executable(ece_city_3_z main.c bibliotheque.c bibliotheque.h graphe.c graphe.h construction.c construction.h banque.c banque.h affichage.c affichage.h isoConfig.c isoConfig.h menu.h jeu.c jeu.h barreOutil.c barreOutil.h )
 
 target_link_libraries(ece_city_3_z raylib)
 
