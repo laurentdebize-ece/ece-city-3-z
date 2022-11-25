@@ -32,7 +32,7 @@ int main() {
     FILE *ifs = fopen("../map.txt", "r");
     FILE *ifs2 = fopen("../ordreConstruction.txt", "r");
     VECTEUR mouseIso;
-    ECECITY *JEU = iniJeu();
+    ECECITY *JEU = iniJeu(); //structure principal du jeu
     JEU->compteur.nbChateauO=0;
     JEU->compteur.nbHab=0;
     JEU->compteur.nbRues=0;
@@ -44,7 +44,7 @@ int main() {
     barre.etat = FERME;
     barre.temps = 0;
 
-    CASE **tabCase = malloc((COLONNES) * sizeof(CASE *));
+    //CASE **tabCase = malloc((COLONNES) * sizeof(CASE *)); plus necessaire car initialisé dans iniJeu()
 
 
     JEU->G->tabCase = malloc((COLONNES) * sizeof(CASE *));

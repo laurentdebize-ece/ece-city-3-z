@@ -84,7 +84,7 @@ void batiment (CASE** tabCase, int x, int y, int* compteur, int typeBatiment, in
     else {
         int caseIdentite;
 
-        caseIdentite = tabCase[x][y].identite;;
+        caseIdentite = tabCase[x][y].identite;
 
 
         //(*compteur)--;
@@ -183,8 +183,7 @@ void constructionSouris(VECTEUR* mouseIso, int categorieConstruction, int* nivea
             }
         }
     }
-    //modifGraphe();
-    //modidConnexe(JEU, mouse->x, mouse->y, categorieConstruction, rotation);
+    //modifConnexe(JEU, mouse->x, mouse->y, categorieConstruction, rotation);
 }
 
 void detruireConstruction(VECTEUR *mouseIso, CASE **tabCase, COMPTEUR *compteur, int rotationBattiment, int detruire,ECECITY *JEU) {

@@ -297,8 +297,6 @@ int checkBlanc(Graphe *G, int num) {
 }
 
 void BFS(Graphe *G, int SommetX, int SommetY, int *compte) {
-    //printf("***BFS***\n");
-    //printf("BFS à partir du sommet %d :\n",num);
     *compte = 0;
     File f = CreerFile();
     pArc arc = G->tabCase[SommetX][SommetY].arc;
@@ -307,7 +305,7 @@ void BFS(Graphe *G, int SommetX, int SommetY, int *compte) {
     ++(*compte);
     while (f->longueur != 0) {
         while (arc != NULL) {
-            if (G->tabCase[arc->sommetX][arc->sommetY].couleur == 0) {
+            if (G->tabCase[arc->sommetX][arc->sommetY].couleur == 0 && G->tabCase[arc->sommetX][arc->sommetY].type >0) {
                 enfiler(f, arc->sommetX * 100 + arc->sommetY);
                 G->tabCase[arc->sommetX][arc->sommetY].couleur = 1;
                 G->tabCase[arc->sommetX][arc->sommetY].predX = arc->sommetX;//a potentiellement changé en SommetX
@@ -359,6 +357,15 @@ void CalculDistance(Graphe *G, int SommetX, int SommetY, int con) {
     }
 }
 
+bool checkIdO(int *ordre, int nbHabitationCon, int id){
+    for (int i=0; i<nbHabitationCon; i++){
+        if(id==ordre[i]){
+            return false;
+        }
+    }
+    return true;
+}
+
 void triDistance(int *ordre, ECECITY *JEU, int nbHabitationCon) {
     int a = 0;
     while (a != nbHabitationCon) {
@@ -372,8 +379,10 @@ void triDistance(int *ordre, ECECITY *JEU, int nbHabitationCon) {
                 }
             }
         }
-        ordre[a]=id;
-        a++;
+        if(checkIdO(ordre, nbHabitationCon, id)) {
+            ordre[a] = id;
+            a++;
+        }
     }
 }
 
