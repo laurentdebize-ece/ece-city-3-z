@@ -501,6 +501,8 @@ void CalculeO(ECECITY *JEU) {
 
 }
 
+//changer nb connexe
+
 void CalculeElec(ECECITY *JEU) {
     //int QE = JEU->compteur.nbUsines*5000;
     //int QErestant= 0;
@@ -509,7 +511,7 @@ void CalculeElec(ECECITY *JEU) {
         int QEcon = 0;
         int nbHabitantCon = 0;
 
-        //P1 on calcule la quantité d'élec disponible dans la composante connexe et son nobre d'habitant.
+        //P1 on calcule la quantité d'élec disponible dans la composante connexe et son nombre d'habitant.
         for (int j = 1; j < JEU->compteur.nbUsines; ++j) {
             if (JEU->tabE[j].connexe == i) {
                 QEcon = QEcon + 5000;
@@ -609,6 +611,8 @@ void modifConnexe(ECECITY* JEU, int X, int Y, int categorieConstruction, int rot
             }
             temp = temp->arc_suivant;
         }
+        JEU->G->tabCase[X][Y].connexe=JEU->G->nbConnexe;
+        JEU->G->nbConnexe++;
     }
     if(categorieConstruction==1) {
         for (int i = 0; i < LONGUEURE_TERRAIN_VAGUE; i++) {
@@ -629,6 +633,12 @@ void modifConnexe(ECECITY* JEU, int X, int Y, int categorieConstruction, int rot
                 }
             }
         }
+        for (int a = 0; a < LONGUEURE_TERRAIN_VAGUE; a++) {
+            for (int b = 0; b < LARGEUR_TERRAIN_VAGUE; b++) {
+                JEU->G->tabCase[X + a][Y + b].connexe = JEU->G->nbConnexe;
+            }
+        }
+        JEU->G->nbConnexe++;
     }
     if(categorieConstruction==2 ||categorieConstruction==3) {
         int longueureBatX;
@@ -659,7 +669,14 @@ void modifConnexe(ECECITY* JEU, int X, int Y, int categorieConstruction, int rot
                 }
             }
         }
+        for (int a = 0; a < LONGUEURE_TERRAIN_VAGUE; a++) {
+            for (int b = 0; b < LARGEUR_TERRAIN_VAGUE; b++) {
+                JEU->G->tabCase[X + a][Y + b].connexe = JEU->G->nbConnexe;
+            }
+        }
+        JEU->G->nbConnexe++;
     }
+
 }
 /*
 int minimain() {
