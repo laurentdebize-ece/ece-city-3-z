@@ -1,6 +1,4 @@
-//
-// Created by Théophile Dutrey on 03/11/2022.
-//
+
 #include <raylib.h>
 #include "bibliotheque.h"
 

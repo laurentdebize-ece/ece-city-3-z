@@ -42,7 +42,6 @@ int main() {
     JEU->compteur.nbRues=0;
     JEU->compteur.nbUsines=0;
 
-
     int categorieConstruction = 0; // 0:route 1:habitation 2:usine 3:chateauEau 4:caserne
     animationBarre barre;
     barre.etat = FERME;
@@ -113,7 +112,7 @@ int main() {
         ClearBackground(BLACK);
 
 
-        switch (modeActuel){
+        switch (modeActuel) {
             case MENU : {
                 DrawTexturePro(fontMenu,
                                (Rectangle) {.x = 0, .y = 0, .width = fontMenu.width, .height =  fontMenu.height},
@@ -133,13 +132,13 @@ int main() {
 
 
                 ///On fait surbriller le rectangle sur lequelle se trouve la souris
-                if (GetMouseX() > 556 && GetMouseY > 300 && GetMouseX() < 778 && GetMouseY() < 380) {
+                if (GetMouseX() > 556 && GetMouseY() > 300 && GetMouseX() < 778 && GetMouseY() < 380) {
                     DrawRectangle(556, 300, 512, 80, (Color) {150, 150, 150, 115});
-                } else if (GetMouseX() > 556 && GetMouseY > 420 && GetMouseX() < 778 && GetMouseY() < 480) {
+                } else if (GetMouseX() > 556 && GetMouseY() > 420 && GetMouseX() < 778 && GetMouseY() < 480) {
                     DrawRectangle(556, 400, 512, 80, (Color) {150, 150, 150, 115});
-                } else if (GetMouseX() > 556 && GetMouseY > 500 && GetMouseX() < 778 && GetMouseY() < 580) {
+                } else if (GetMouseX() > 556 && GetMouseY() > 500 && GetMouseX() < 778 && GetMouseY() < 580) {
                     DrawRectangle(556, 500, 512, 80, (Color) {150, 150, 150, 115});
-                } else if (GetMouseX() > 556 && GetMouseY > 600 && GetMouseX() < 778 && GetMouseY() < 680) {
+                } else if (GetMouseX() > 556 && GetMouseY() > 600 && GetMouseX() < 778 && GetMouseY() < 680) {
                     DrawRectangle(556, 600, 512, 80, (Color) {150, 150, 150, 115});
                 }
                 break;
@@ -166,11 +165,11 @@ int main() {
                                (Rectangle) {260, 0, .width = 1000, .height = 800}, (Vector2) {0, 0}, 0, WHITE);
 
                 ///FLECHES RETOUR
-                DrawRectangle(50, 50, 140, 90, (Color){87, 213, 241, 180});
-                DrawText("RETURN", 55, 75, 30, (Color){0, 0, 0, 255});
+                DrawRectangle(50, 50, 140, 90, (Color) {87, 213, 241, 180});
+                DrawText("RETURN", 55, 75, 30, (Color) {0, 0, 0, 255});
 
                 ///On fait surbriller le rectangle sur lequelle se trouve la souris
-                if (GetMouseX()>50 && GetMouseY()>50 && GetMouseX()< 200 && GetMouseY()<150) {
+                if (GetMouseX() > 50 && GetMouseY() > 50 && GetMouseX() < 200 && GetMouseY() < 150) {
                     DrawRectangle(50, 50, 140, 90, (Color) {162, 213, 268, 50});
                 }
                 break;
@@ -181,7 +180,7 @@ int main() {
                 DrawTexturePro(capitaliste,
                                (Rectangle) {.x = 0, .y = 0, .width = capitaliste.width, .height =  capitaliste.height},
                                (Rectangle) {300, 300, .width = 300, .height = 300}, (Vector2) {0, 0}, 0, WHITE);
-                if (GetMouseX() > 300 && GetMouseY()>300 && GetMouseX()<700 && GetMouseY()<600){
+                if (GetMouseX() > 300 && GetMouseY() > 300 && GetMouseX() < 700 && GetMouseY() < 600) {
                     DrawTexturePro(capitaliste,
                                    (Rectangle) {.x = 0, .y = 0, .width = capitaliste.width, .height =  capitaliste.height},
                                    (Rectangle) {300, 300, .width = 400, .height = 400}, (Vector2) {0, 0}, 0, WHITE);
@@ -189,14 +188,14 @@ int main() {
                 DrawTexturePro(communiste,
                                (Rectangle) {.x = 0, .y = 0, .width = communiste.width, .height =  communiste.height},
                                (Rectangle) {800, 300, .width = 300, .height = 300}, (Vector2) {0, 0}, 0, WHITE);
-                if (GetMouseX() >800 && GetMouseY()>300 && GetMouseX()<1200 && GetMouseY()<600){
+                if (GetMouseX() > 800 && GetMouseY() > 300 && GetMouseX() < 1200 && GetMouseY() < 600) {
                     DrawTexturePro(communiste,
                                    (Rectangle) {.x = 0, .y = 0, .width = communiste.width, .height =  communiste.height},
                                    (Rectangle) {800, 300, .width = 400, .height = 400}, (Vector2) {0, 0}, 0, WHITE);
                 }
-                DrawText("CHOISISSEZ UN MODE DE JEU :", 400, 50, 40, BLACK);
-                DrawText("MODE CAPITALISTE", 290, 150, 30, BLACK);
-                DrawText("MODE COMMUNISTE", 790, 150, 30, BLACK);
+                DrawText("CHOISISSEZ UN MODE DE JEU :", 400, 50, 40, YELLOW);
+                DrawText("MODE CAPITALISTE", 290, 150, 30, YELLOW);
+                DrawText("MODE COMMUNISTE", 790, 150, 30, YELLOW);
 
 
                 ///FLECHES RETOUR
@@ -211,27 +210,26 @@ int main() {
                 break;
             }
             case PLAY:
-                if (GetTime() - lastT > accelerateurTemps) {
-                    tempsVirtuelle++;
-                    lastT = GetTime();
-                }
-                mois = (tempsVirtuelle / 15) % 12;
-                annee = 2022 + (tempsVirtuelle / 15) / 12;
-                if (mois > 12) {
-                    mois = 1;
-                }
-                minute = tempsVirtuelle / 60 %60;
-                seconde = tempsVirtuelle % 60;
-                //heure = tempsVirtuelle%3600;
-
+                /* if (GetTime() - lastT > accelerateurTemps) {
+                     tempsVirtuelle++;
+                     lastT = GetTime();
+                 }
+                 mois = (tempsVirtuelle / 15) % 12;
+                 annee = 2022 + (tempsVirtuelle / 15) / 12;
+                 if (mois > 12) {
+                     mois = 1;
+                 }
+                 minute = tempsVirtuelle / 60 %60;
+                 seconde = tempsVirtuelle % 60;
+                 //heure = tempsVirtuelle%3600;
+ */
 
                 coordSourisIso(&mouseIso, img);
                 affichageGrille(mouseIso, Tiles);
                 affichageRoute(Routes, JEU->G->tabCase, niveau);
                 affichageTerrain(Tiles, JEU->G->tabCase, terrainVague, cabane, maison, hotel, gratteCiel);
                 affichageBattiment(Tiles, JEU->G->tabCase);
-                evolutionBat(JEU->G->tabCase, &tempsEcoule, JEU);
-
+                //evolutionBat(JEU->G->tabCase, &tempsEcoule, JEU);
 
 
                 GetMousePosition();
@@ -284,11 +282,12 @@ int main() {
                     enregistrerPartie(JEU->G->tabCase);
                 }
                 if ((IsKeyDown(KEY_LEFT_CONTROL)) && (IsKeyPressed(KEY_KP_0))) {
-                    recommencerPartie(JEU->G->tabCase,&JEU->compteur);
+                    recommencerPartie(JEU->G->tabCase, &JEU->compteur);
                 }
                 if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) == true) {
-                    constructionSouris(&mouseIso, categorieConstruction, &niveau, JEU->G->tabCase, &compteEnBanque, &JEU->compteur, rotationBattiment, detruire, JEU);
-                    detruireConstruction(&mouseIso,JEU->G->tabCase,&JEU->compteur,rotationBattiment,detruire,JEU);
+                    constructionSouris(&mouseIso, categorieConstruction, &niveau, JEU->G->tabCase, &compteEnBanque,
+                                       &JEU->compteur, rotationBattiment, detruire, JEU);
+                    detruireConstruction(&mouseIso, JEU->G->tabCase, &JEU->compteur, rotationBattiment, detruire, JEU);
                     barreOutilSouris(PosXMouse, PosYMouse, &barre, &categorieConstruction);
                     //printf("nb route: %d\nnb hab: %d\nnb usine: %d\nnb chateauO: %d\n ", JEU->compteur.nbRues,JEU->compteur.nbHab, JEU->compteur.nbUsines, JEU->compteur.nbChateauO);
                     CalculeElec(JEU);
@@ -297,12 +296,14 @@ int main() {
                     printf("%d\n", JEU->tabHab[1].QE);
                     printf("%d\n", JEU->tabHab[1].connexe);
                 }
-                if (CheckCollisionPointRec(GetMousePosition(), (Rectangle){})){
+                if (CheckCollisionPointRec(GetMousePosition(), (Rectangle) {})) {
 
                 }
-                afficherBarreOutils(&barre, seconde, monnaie, temps, eau, elec, souris, calendrier, minute, compteEnBanque,
-                                    heure, mois, annee, moinsAccel, plusAccel, routeImage, maisonImage, centraleImage, puitImage, caserneImage);
-                switch (compteurAccele) {
+                afficherBarreOutils(&barre, seconde, monnaie, temps, eau, elec, souris, calendrier, minute,
+                                    compteEnBanque,
+                                    heure, mois, annee, moinsAccel, plusAccel, routeImage, maisonImage, centraleImage,
+                                    puitImage, caserneImage);
+                /*switch (compteurAccele) {
                     case 1 :
                         accelerateurTemps = 1.00;
                         DrawTexture(x1, 35, 190, BLUE);
@@ -327,11 +328,9 @@ int main() {
                         accelerateurTemps = 0.03;
                         DrawTexture(x30, 35, 190, BLUE);
                         break;
-                }
+                }*/
                 construireBat(categorieConstruction, PosXMouse, PosYMouse, terrainVague, Routes);
-
-
-
+                break;
         }
 
 

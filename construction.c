@@ -234,10 +234,9 @@ void batimentApercu(CASE** tabCase, int x, int y, int typeBatiment){
 }
 
 
-
-void evolutionBat (CASE** tabCase, float* tempsEcoule, ECECITY* JEU) {
-    compteurTempsDuBat(tempsEcoule, JEU);
-
+/*
+void evolutionBat (CASE** tabCase, float* tempsEcoule, float tempsDepart, ECECITY* JEU) {
+    compteurTempsDuBat(tabCase, tempsEcoule, JEU);
     for (int x = 1; x < 175; x++){
         if (JEU->tabHab[x].type >= 5 && JEU->tabHab[x].type <= 9){
             if (JEU->tabHab[x].tic == 15){
@@ -254,7 +253,7 @@ void evolutionBat (CASE** tabCase, float* tempsEcoule, ECECITY* JEU) {
                 }
             }
         }
-    }
+    }*/
 /*
     for (int y = 0; y < LIGNES; y++) {
         for (int x = 0; x < COLONNES; x++){
@@ -265,8 +264,8 @@ void evolutionBat (CASE** tabCase, float* tempsEcoule, ECECITY* JEU) {
                     }
                 }
         }
-    }*/
-}
+    }
+}*/
 
 void regfressionBatCapitaliste (CASE** tabCase, float* tempsEcoule, ECECITY* JEU, int compteEnBanque){
     for (int x = 1; x < 175; x++){
