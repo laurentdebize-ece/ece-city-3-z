@@ -11,7 +11,7 @@ typedef struct {
 }animationBarre;
 void affichageGrille(VECTEUR mouseIso, Texture2D texture);
 void affichageRoute(Texture2D Routes, CASE** tabCase, int niveau);
-void affichageTerrain(Texture2D Terrain, CASE** tabCase);
+void affichageTerrain(Texture2D Terrain, CASE** tabCase, Texture2D terrainVague, Texture2D cabane, Texture2D maison, Texture2D hotel, Texture2D gratteCiel);
 int typeRoute( CASE** tabCase, int x, int y);
 void affichageBattiment(Texture2D Battiment, CASE** tabCase);
 void enregistrerPartie(CASE** tabCase, int temps);

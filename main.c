@@ -74,7 +74,7 @@ int main() {
     Texture2D elec = LoadTexture("../images/elec.png");
     Texture2D souris = LoadTexture("../images/souris.png");
     Texture2D calendrier = LoadTexture("../images/calendrier.png");
-Texture2D plusAccel = LoadTexture("../images/plusAccel.png");
+    Texture2D plusAccel = LoadTexture("../images/plusAccel.png");
     Texture2D moinsAccel = LoadTexture("../images/moinsAccel.png");
     Texture2D x1 = LoadTexture("../images/x1.png");
     Texture2D x2 = LoadTexture("../images/x2.png");
@@ -83,13 +83,19 @@ Texture2D plusAccel = LoadTexture("../images/plusAccel.png");
     Texture2D x15 = LoadTexture("../images/x15.png");
     Texture2D x30 = LoadTexture("../images/x30.png");
     Texture2D routeImage = LoadTexture("../images/route.png");
-    Texture2D maisonImage = LoadTexture("../images/maison.png");
+    Texture2D maisonImage = LoadTexture("../images/maisonImage.png");
     Texture2D caserneImage = LoadTexture("../images/caserne.png");
     Texture2D puitImage = LoadTexture("../images/puit.png");
     Texture2D centraleImage = LoadTexture("../images/centrale.png");
+    Texture2D testFond = LoadTexture("../images/fondtest.png");
+    Texture2D Evolution = LoadTexture("../images/évolution_maison2.png");
+    Texture2D cabane = LoadTexture("../images/cabane.png");
+    Texture2D maison = LoadTexture("../images/maison.png");
+    Texture2D hotel = LoadTexture("../images/hotel.png");
+    Texture2D gratteCiel = LoadTexture("../images/gratte-ciel.png");
 
     Image img = LoadImage("../tilesTest.png");
-    Texture2D maison = LoadTexture("../images/terrain_vague.png");
+    Texture2D terrainVague = LoadTexture("../images/terrain_vague.png");
 
     while (!WindowShouldClose()) {
 
@@ -101,7 +107,7 @@ Texture2D plusAccel = LoadTexture("../images/plusAccel.png");
         coordSourisIso(&mouseIso, img);
         affichageGrille(mouseIso, Tiles);
         affichageRoute(Routes, JEU->G->tabCase, niveau);
-        affichageTerrain(Tiles, JEU->G->tabCase);
+        affichageTerrain(Tiles, JEU->G->tabCase, terrainVague, cabane, maison, hotel, gratteCiel);
         affichageBattiment(Tiles, JEU->G->tabCase);
         evolutionBat(JEU->G->tabCase, &tempsEcoule, JEU,&cycle);
 
@@ -199,12 +205,13 @@ Texture2D plusAccel = LoadTexture("../images/plusAccel.png");
                 DrawTexture(x30, 35, 190, BLUE);
                 break;
         }
+        construireBat(categorieConstruction, PosXMouse, PosYMouse, terrainVague, Routes);
 
         EndDrawing();
 
     }
 
-    UnloadTexture(maison);
+    UnloadTexture(terrainVague);
     UnloadTexture(monnaie);
     UnloadTexture(temps);
     UnloadTexture(eau);
@@ -224,5 +231,11 @@ Texture2D plusAccel = LoadTexture("../images/plusAccel.png");
     UnloadTexture(caserneImage);
     UnloadTexture(puitImage);
     UnloadTexture(centraleImage);
+    UnloadTexture(testFond);
+    UnloadTexture(Evolution);
+    UnloadTexture(cabane);
+    UnloadTexture(maison);
+    UnloadTexture(hotel);
+    UnloadTexture(gratteCiel);
     return 0;
 }
