@@ -149,9 +149,10 @@ int typeRoute(CASE **tabCase, int x, int y) {
 
 
 
-void enregistrerPartie(CASE** tabCase){
+void enregistrerPartie(CASE** tabCase, int temps){
     FILE * n = fopen("../map.txt","w+");
     FILE * d = fopen("../ordreConstruction.txt","w+");
+    fprintf(n, "%d ",temps);
     for (int y = 0; y < LIGNES; y++) {
         for (int x = 0; x < COLONNES; x++) {
             fprintf(n, "%d ",tabCase[x][y].type);
@@ -162,12 +163,15 @@ void enregistrerPartie(CASE** tabCase){
     }
 }
 
-void recommencerPartie(CASE** tabCase, COMPTEUR* compteur){
+void recommencerPartie(CASE** tabCase, COMPTEUR* compteur, int* temps, int* cycle){
     FILE * n = fopen("../map.txt","w+");
     compteur->nbChateauO=0;
     compteur->nbHab=0;
     compteur->nbRues=0;
     compteur->nbUsines=0;
+    *temps = 0;
+    *cycle = 0;
+    fprintf(n, "%d ",0);
     for (int y = 0; y < LIGNES; y++) {
         for (int x = 0; x < COLONNES; x++) {
             fprintf(n, "%d ",0);
@@ -178,7 +182,7 @@ void recommencerPartie(CASE** tabCase, COMPTEUR* compteur){
     }
 }
 
-void initialisationOrdre(CASE** tabCase, int ordre, int x, int y, COMPTEUR* compteur){
+void initialisationOrdre(CASE** tabCase, int ordre, int x, int y, COMPTEUR* compteur, ECECITY* JEU){
 
     if(tabCase[x][y].type == 1) {
         tabCase[x][y].identite = ordre;
@@ -201,9 +205,27 @@ void initialisationOrdre(CASE** tabCase, int ordre, int x, int y, COMPTEUR* comp
 
     if(tabCase[x][y].type >= 5) {
         tabCase[x][y].identite = ordre;
+        JEU->tabHab[ordre].type = tabCase[x][y].type;
         if(ordre>compteur->nbHab){
             compteur->nbHab = ordre;
         }
     }
 
+}
+
+void tempsJeu(float* lastT, int* tempsVirtuelle, int* cycle, float accelerateurTemps, int* seconde, int* minute, int* mois, int* annee){
+    if (GetTime() - *lastT > accelerateurTemps) {
+        (*tempsVirtuelle)++;
+        (*cycle)++;
+        *lastT = GetTime();
+    }
+    //printf("%d", cycle);
+    *mois = (*tempsVirtuelle / 15) % 12;
+    *annee = 2022 + (*tempsVirtuelle / 15) / 12;
+    if (*mois > 12) {
+        *mois = 1;
+    }
+    *minute = *tempsVirtuelle / 60 %60;
+    *seconde = *tempsVirtuelle % 60;
+    //heure = tempsVirtuelle%3600;
 }

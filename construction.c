@@ -30,10 +30,10 @@ void habitation(CASE **tabCase, int x, int y, int *compteur, int detruire,ECECIT
                 tabCase[x][y].affichage = 1;
                 JEU->tabHab[*compteur].origineX = x;
                 JEU->tabHab[*compteur].origineY = y;
-                // Remettre à 0
-                JEU->tabHab[*compteur].nbHabitant = 5;
+                JEU->tabHab[*compteur].nbHabitant = 0;
                 JEU->tabHab[*compteur].QO = 0;
                 JEU->tabHab[*compteur].QE = 0;
+                JEU->tabHab[*compteur].tic = 0;
 
 
                 //JEU->tabHab[*compteur].tic = 0;
@@ -52,7 +52,7 @@ void habitation(CASE **tabCase, int x, int y, int *compteur, int detruire,ECECIT
         for (int b = 0; b < LIGNES; b++) {
             for (int a = 0; a < COLONNES; a++) {
 
-                if (tabCase[a][b].identite == caseIdentite && tabCase[a][b].type == 5) {
+                if (tabCase[a][b].identite == caseIdentite && tabCase[a][b].type >= 5) {
                     tabCase[a][b].type = 0;
                     tabCase[a][b].identite = 0;
                 }
@@ -237,15 +237,17 @@ void batimentApercu(CASE** tabCase, int x, int y, int typeBatiment){
 
 
 
-void evolutionBat (CASE** tabCase, float* tempsEcoule, ECECITY* JEU) {
-    compteurTempsDuBat(tempsEcoule, JEU);
+void evolutionBat (CASE** tabCase, float* tempsEcoule, ECECITY* JEU, int* cycle) {
 
-    for (int x = 1; x < 175; x++){
-        if (JEU->tabHab[x].type >= 5 && JEU->tabHab[x].type <= 9){
-            if (JEU->tabHab[x].tic == 15){
-                JEU->tabHab[x].type ++;
-                JEU->tabHab[x].tic = 0;
-                if (JEU->tabHab[x].type == 6){
+
+
+    //printf("%d\n", cycle);
+    if (*cycle == TEMPS_CYCLE) {
+        *cycle = 0;
+        for (int x = 1; x < 175; x++) {
+            if (JEU->tabHab[x].type >= 5 && JEU->tabHab[x].type < 9) {
+                JEU->tabHab[x].type++;
+                if (JEU->tabHab[x].type == 6) {
                     JEU->tabHab[x].nbHabitant = 10;
                 } else if (JEU->tabHab[x].type == 7) {
                     JEU->tabHab[x].nbHabitant = 50;
@@ -254,21 +256,21 @@ void evolutionBat (CASE** tabCase, float* tempsEcoule, ECECITY* JEU) {
                 } else if (JEU->tabHab[x].type == 9) {
                     JEU->tabHab[x].nbHabitant = 1000;
                 }
-            }
-        }
-    }
-/*
-    for (int y = 0; y < LIGNES; y++) {
-        for (int x = 0; x < COLONNES; x++){
-                if (tabCase[x][y].type >= 5 && tabCase[x][y].type <= 9){
-                    if (tabCase[x][y].tic == 15){
-                        tabCase[x][y].type ++;
-                        tabCase[x][y].tic = 0;
+
+                for (int y = 0; y < LIGNES; y++) {
+                    for (int i = 0; i < COLONNES; i++) {
+                        if (tabCase[i][y].identite == x && tabCase[i][y].type >= 5 && tabCase[i][y].type <= 9) {
+                            tabCase[i][y].type++;
+                        }
                     }
                 }
+            }
         }
-    }*/
+        printf("%d %d\n", JEU->tabHab[1].type, JEU->tabHab[2].type);
+    }
+
 }
+
 
 void demolitionBatCapitaliste (CASE** tabCase, float* tempsEcoule, ECECITY* JEU, int compteEnBanque){
     for (int x = 1; x < 175; x++){
@@ -304,18 +306,3 @@ void demolitionBatCapitaliste (CASE** tabCase, float* tempsEcoule, ECECITY* JEU,
     }
 }
 
-void compteurTempsDuBat (float* tempsEcoule, ECECITY* JEU) {
-    float tempsActuel = GetTime();
-    float deltaTemps = tempsActuel - *tempsEcoule;
-
-    if (deltaTemps >= 1.0){
-        //incremente les tics de chaque batiment
-        for (int x = 0; x < COLONNES; x++){
-            JEU->tabHab[x].tic++;
-        }
-        printf("SS\n");
-        *tempsEcoule = tempsActuel;
-    }
-    DrawRectangle(200, 30, 180, 60, (Color){100, 190, 50, 200});
-    DrawText(TextFormat( "Temps : %.2f",tempsActuel) ,210, 40, 25, BLACK);
-}

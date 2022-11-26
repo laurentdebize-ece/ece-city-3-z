@@ -20,7 +20,8 @@ int main() {
     int heure = 0;
     int mois = 11;
     int annee = 2022;
-    int tempsVirtuelle = 0;
+    int tempsVirtuelle;
+    int cycle;
     float lastT = 0.0f;
     float accelerateurTemps = 1.00f;
     int compteurAccele = 1;
@@ -49,7 +50,8 @@ int main() {
     for (int i = 0; i < COLONNES; i++) {
         JEU->G->tabCase[i] = malloc((LIGNES) * sizeof(CASE));
     }
-
+    fscanf(ifs, "%d", &tempsVirtuelle);
+    cycle = tempsVirtuelle%TEMPS_CYCLE;
     for (int y = 0; y < LIGNES; y++) {
         for (int x = 0; x < COLONNES; x++) {
             fscanf(ifs, "%d", &construction);
@@ -57,7 +59,7 @@ int main() {
             JEU->G->tabCase[x][y].type = construction; // 0: rien 1:route 2:Usine 3:chateauEau 4:caserne 5:terrain vague
             JEU->G->tabCase[x][y].identite = ordre;
             JEU->G->tabCase[x][y].affichage = 0;
-            initialisationOrdre(JEU->G->tabCase, ordre, x, y,&JEU->compteur);
+            initialisationOrdre(JEU->G->tabCase, ordre, x, y,&JEU->compteur, JEU);
         }
     }
 
@@ -93,26 +95,15 @@ Texture2D plusAccel = LoadTexture("../images/plusAccel.png");
 
         BeginDrawing();
         ClearBackground(BLACK);
-        if (GetTime() - lastT > accelerateurTemps) {
-            tempsVirtuelle++;
-            lastT = GetTime();
-        }
-        mois = (tempsVirtuelle / 15) % 12;
-        annee = 2022 + (tempsVirtuelle / 15) / 12;
-        if (mois > 12) {
-            mois = 1;
-        }
-        minute = tempsVirtuelle / 60 %60;
-        seconde = tempsVirtuelle % 60;
-        //heure = tempsVirtuelle%3600;
 
 
+        tempsJeu(&lastT, &tempsVirtuelle, &cycle, accelerateurTemps, &seconde, &minute, &mois, &annee);
         coordSourisIso(&mouseIso, img);
         affichageGrille(mouseIso, Tiles);
         affichageRoute(Routes, JEU->G->tabCase, niveau);
         affichageTerrain(Tiles, JEU->G->tabCase);
         affichageBattiment(Tiles, JEU->G->tabCase);
-        evolutionBat(JEU->G->tabCase, &tempsEcoule, JEU);
+        evolutionBat(JEU->G->tabCase, &tempsEcoule, JEU,&cycle);
 
 
 
@@ -163,10 +154,10 @@ Texture2D plusAccel = LoadTexture("../images/plusAccel.png");
         }
 
         if ((IsKeyDown(KEY_LEFT_CONTROL)) && (IsKeyPressed(KEY_S))) {
-            enregistrerPartie(JEU->G->tabCase);
+            enregistrerPartie(JEU->G->tabCase, tempsVirtuelle);
         }
         if ((IsKeyDown(KEY_LEFT_CONTROL)) && (IsKeyPressed(KEY_KP_0))) {
-            recommencerPartie(JEU->G->tabCase,&JEU->compteur);
+            recommencerPartie(JEU->G->tabCase,&JEU->compteur, &tempsVirtuelle, &cycle);
         }
         if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) == true) {
             constructionSouris(&mouseIso, categorieConstruction, &niveau, JEU->G->tabCase, &compteEnBanque, &JEU->compteur, rotationBattiment, detruire, JEU);
@@ -175,9 +166,7 @@ Texture2D plusAccel = LoadTexture("../images/plusAccel.png");
             //printf("nb route: %d\nnb hab: %d\nnb usine: %d\nnb chateauO: %d\n ", JEU->compteur.nbRues,JEU->compteur.nbHab, JEU->compteur.nbUsines, JEU->compteur.nbChateauO);
             CalculeElec(JEU);
             //CalculeO(JEU);
-            printf("%d\n", JEU->tabHab[1].nbHabitant);
-            printf("%d\n", JEU->tabHab[1].QE);
-            printf("%d\n", JEU->tabHab[1].connexe);
+
         }
         if (CheckCollisionPointRec(GetMousePosition(), (Rectangle){})){
 
