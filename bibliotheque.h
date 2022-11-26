@@ -8,6 +8,7 @@
 #define COLONNES 45
 #define LIGNES 35
 #define TUILE 20
+#define TEMPS_CYCLE 5
 #define LARGEUR_TUILE_ISO 34
 #define HAUTEUR_TUILE_ISO 18
 #define ISO_DECALAGE_X 2

@@ -1,4 +1,5 @@
 
+#include <math.h>
 #include "bibliotheque.h"
 
 int main() {
@@ -20,7 +21,8 @@ int main() {
     int heure = 0;
     int mois = 11;
     int annee = 2022;
-    int tempsVirtuelle = 0;
+    int tempsVirtuelle;
+    int cycle;
     float lastT = 0.0f;
     float accelerateurTemps = 1.00f;
     int compteurAccele = 1;
@@ -42,6 +44,7 @@ int main() {
     JEU->compteur.nbRues=0;
     JEU->compteur.nbUsines=0;
 
+
     int categorieConstruction = 0; // 0:route 1:habitation 2:usine 3:chateauEau 4:caserne
     animationBarre barre;
     barre.etat = FERME;
@@ -52,7 +55,8 @@ int main() {
     for (int i = 0; i < COLONNES; i++) {
         JEU->G->tabCase[i] = malloc((LIGNES) * sizeof(CASE));
     }
-
+    fscanf(ifs, "%d", &tempsVirtuelle);
+    cycle = tempsVirtuelle%TEMPS_CYCLE;
     for (int y = 0; y < LIGNES; y++) {
         for (int x = 0; x < COLONNES; x++) {
             fscanf(ifs, "%d", &construction);
@@ -60,7 +64,7 @@ int main() {
             JEU->G->tabCase[x][y].type = construction; // 0: rien 1:route 2:Usine 3:chateauEau 4:caserne 5:terrain vague
             JEU->G->tabCase[x][y].identite = ordre;
             JEU->G->tabCase[x][y].affichage = 0;
-            initialisationOrdre(JEU->G->tabCase, ordre, x, y,&JEU->compteur);
+            initialisationOrdre(JEU->G->tabCase, ordre, x, y,&JEU->compteur, JEU);
         }
     }
 
@@ -110,6 +114,7 @@ int main() {
 
         BeginDrawing();
         ClearBackground(BLACK);
+
 
 
         switch (modeActuel) {
@@ -206,7 +211,6 @@ int main() {
                 if (GetMouseX() > 50 && GetMouseY() > 50 && GetMouseX() < 200 && GetMouseY() < 150) {
                     DrawRectangle(50, 50, 140, 90, (Color) {162, 213, 268, 50});
                 }
-
                 break;
             }
             case PLAY:
@@ -224,119 +228,111 @@ int main() {
                  //heure = tempsVirtuelle%3600;
  */
 
-                coordSourisIso(&mouseIso, img);
-                affichageGrille(mouseIso, Tiles);
-                affichageRoute(Routes, JEU->G->tabCase, niveau);
-                affichageTerrain(Tiles, JEU->G->tabCase, terrainVague, cabane, maison, hotel, gratteCiel);
-                affichageBattiment(Tiles, JEU->G->tabCase);
-                //evolutionBat(JEU->G->tabCase, &tempsEcoule, JEU);
+        tempsJeu(&lastT, &tempsVirtuelle, &cycle, accelerateurTemps, &seconde, &minute, &mois, &annee);
+        coordSourisIso(&mouseIso, img);
+        affichageGrille(mouseIso, Tiles);
+        affichageRoute(Routes, JEU->G->tabCase, niveau);
+        affichageTerrain(Tiles, JEU->G->tabCase, terrainVague, cabane, maison, hotel, gratteCiel);
+        affichageBattiment(Tiles, JEU->G->tabCase);
+        evolutionBat(JEU->G->tabCase, &tempsEcoule, JEU,&cycle);
 
 
-                GetMousePosition();
-                int PosXMouse = GetMouseX();
-                int PosYMouse = GetMouseY();
 
-                if (IsKeyPressed(KEY_SPACE) == true) {
-                    if (niveau != 2) {
-                        niveau++;
-                    } else {
-                        niveau = 0;
-                    }
-                }
-                if (IsKeyPressed(KEY_RIGHT) == true) {
-                    if (categorieConstruction != 4) {
-                        categorieConstruction++;
-                    } else {
-                        categorieConstruction = 0;
-                    }
-                }
-                if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) == true) {
-                    if (PosXMouse >= 10 && PosXMouse <= 30 && PosYMouse >= 200 && PosYMouse <= 220) {
-                        if (compteurAccele > 0) {
-                            compteurAccele--;
-                        }
-                    }
-                    if (PosXMouse >= 80 && PosXMouse <= 100 && PosYMouse >= 200 && PosYMouse <= 220) {
-                        if (compteurAccele < 7) {
-                            compteurAccele++;
-                        }
-                    }
-                }
+        GetMousePosition();
+        int PosXMouse = GetMouseX();
+        int PosYMouse = GetMouseY();
 
-                if (IsKeyPressed(KEY_UP) == true) {
-                    if (rotationBattiment != 1) {
-                        rotationBattiment++;
-                    } else {
-                        rotationBattiment = 0;
-                    }
+        if (IsKeyPressed(KEY_SPACE) == true) {
+            if (niveau != 2) {
+                niveau++;
+            } else {
+                niveau = 0;
+            }
+        }
+        if (IsKeyPressed(KEY_RIGHT) == true) {
+            if (categorieConstruction != 4) {
+                categorieConstruction++;
+            } else {
+                categorieConstruction = 0;
+            }
+        }
+        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) == true) {
+            if (PosXMouse >= 10 && PosXMouse <= 30 && PosYMouse >= 200 && PosYMouse <= 220) {
+                if (compteurAccele > 0) {
+                    compteurAccele--;
                 }
-                if (IsKeyPressed(KEY_KP_1) == true) {
-                    if (detruire != 1) {
-                        detruire++;
-                    } else {
-                        detruire = 0;
-                    }
+            }
+            if (PosXMouse >= 80 && PosXMouse <= 100 && PosYMouse >= 200 && PosYMouse <= 220) {
+                if (compteurAccele < 7) {
+                    compteurAccele++;
                 }
-
-                if ((IsKeyDown(KEY_LEFT_CONTROL)) && (IsKeyPressed(KEY_S))) {
-                    enregistrerPartie(JEU->G->tabCase);
-                }
-                if ((IsKeyDown(KEY_LEFT_CONTROL)) && (IsKeyPressed(KEY_KP_0))) {
-                    recommencerPartie(JEU->G->tabCase, &JEU->compteur);
-                }
-                if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) == true) {
-                    constructionSouris(&mouseIso, categorieConstruction, &niveau, JEU->G->tabCase, &compteEnBanque,
-                                       &JEU->compteur, rotationBattiment, detruire, JEU);
-                    detruireConstruction(&mouseIso, JEU->G->tabCase, &JEU->compteur, rotationBattiment, detruire, JEU);
-                    barreOutilSouris(PosXMouse, PosYMouse, &barre, &categorieConstruction);
-                    //printf("nb route: %d\nnb hab: %d\nnb usine: %d\nnb chateauO: %d\n ", JEU->compteur.nbRues,JEU->compteur.nbHab, JEU->compteur.nbUsines, JEU->compteur.nbChateauO);
-                    CalculeElec(JEU);
-                    //CalculeO(JEU);
-                    printf("%d\n", JEU->tabHab[1].nbHabitant);
-                    printf("%d\n", JEU->tabHab[1].QE);
-                    printf("%d\n", JEU->tabHab[1].connexe);
-                }
-                if (CheckCollisionPointRec(GetMousePosition(), (Rectangle) {})) {
-
-                }
-                afficherBarreOutils(&barre, seconde, monnaie, temps, eau, elec, souris, calendrier, minute,
-                                    compteEnBanque,
-                                    heure, mois, annee, moinsAccel, plusAccel, routeImage, maisonImage, centraleImage,
-                                    puitImage, caserneImage);
-                /*switch (compteurAccele) {
-                    case 1 :
-                        accelerateurTemps = 1.00;
-                        DrawTexture(x1, 35, 190, BLUE);
-                        break;
-                    case 2 :
-                        accelerateurTemps = 0.50;
-                        DrawTexture(x2, 35, 190, BLUE);
-                        break;
-                    case 3 :
-                        accelerateurTemps = 0.20;
-                        DrawTexture(x5, 35, 190, BLUE);
-                        break;
-                    case 4 :
-                        accelerateurTemps = 0.10;
-                        DrawTexture(x10, 35, 190, BLUE);
-                        break;
-                    case 5 :
-                        accelerateurTemps = 0.06;
-                        DrawTexture(x15, 35, 190, BLUE);
-                        break;
-                    case 6 :
-                        accelerateurTemps = 0.03;
-                        DrawTexture(x30, 35, 190, BLUE);
-                        break;
-                }*/
-                construireBat(categorieConstruction, PosXMouse, PosYMouse, terrainVague, Routes);
-                break;
+            }
         }
 
+        if (IsKeyPressed(KEY_UP) == true) {
+            if (rotationBattiment != 1) {
+                rotationBattiment++;
+            } else {
+                rotationBattiment = 0;
+            }
+        }
+        if (IsKeyPressed(KEY_KP_1) == true) {
+            if (detruire != 1) {
+                detruire++;
+            } else {
+                detruire = 0;
+            }
+        }
+
+        if ((IsKeyDown(KEY_LEFT_CONTROL)) && (IsKeyPressed(KEY_S))) {
+            enregistrerPartie(JEU->G->tabCase, tempsVirtuelle);
+        }
+        if ((IsKeyDown(KEY_LEFT_CONTROL)) && (IsKeyPressed(KEY_KP_0))) {
+            recommencerPartie(JEU->G->tabCase,&JEU->compteur, &tempsVirtuelle, &cycle);
+        }
+        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) == true) {
+            constructionSouris(&mouseIso, categorieConstruction, &niveau, JEU->G->tabCase, &compteEnBanque, &JEU->compteur, rotationBattiment, detruire, JEU);
+            detruireConstruction(&mouseIso,JEU->G->tabCase,&JEU->compteur,rotationBattiment,detruire,JEU);
+            barreOutilSouris(PosXMouse, PosYMouse, &barre, &categorieConstruction);
+            //printf("nb route: %d\nnb hab: %d\nnb usine: %d\nnb chateauO: %d\n ", JEU->compteur.nbRues,JEU->compteur.nbHab, JEU->compteur.nbUsines, JEU->compteur.nbChateauO);
+            CalculeElec(JEU);
+            //CalculeO(JEU);
+
+        }
+        if (CheckCollisionPointRec(GetMousePosition(), (Rectangle){})){
+
+        }
+        afficherBarreOutils(&barre, seconde, monnaie, temps, eau, elec, souris, calendrier, minute, compteEnBanque,
+                            heure, mois, annee, moinsAccel, plusAccel, routeImage, maisonImage, centraleImage, puitImage, caserneImage);
+        switch (compteurAccele) {
+            case 1 :
+                accelerateurTemps = 1.00;
+                DrawTexture(x1, 35, 190, BLUE);
+                break;
+            case 2 :
+                accelerateurTemps = 0.50;
+                DrawTexture(x2, 35, 190, BLUE);
+                break;
+            case 3 :
+                accelerateurTemps = 0.20;
+                DrawTexture(x5, 35, 190, BLUE);
+                break;
+            case 4 :
+                accelerateurTemps = 0.10;
+                DrawTexture(x10, 35, 190, BLUE);
+                break;
+            case 5 :
+                accelerateurTemps = 0.06;
+                DrawTexture(x15, 35, 190, BLUE);
+                break;
+            case 6 :
+                accelerateurTemps = 0.03;
+                DrawTexture(x30, 35, 190, BLUE);
+                break;
+        }
+        construireBat(categorieConstruction, PosXMouse, PosYMouse, terrainVague, Routes);
 
         if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) == true) {
-            //Rectangle rectangle = {256, 300, 512, 80};
-            //if (CheckCollisionPointRec(GetMousePosition(), rectangle)) {}
 
             switch (modeActuel) {
                 case RULES : {
@@ -371,7 +367,6 @@ int main() {
                         jeuEnCour = 1;
                     } else if (GetMouseX() > 256 && GetMouseY > 420 && GetMouseX() < 778 && GetMouseY() < 480) {
                         modeActuel = RULES;
-
                     } else if (GetMouseX() > 256 && GetMouseY > 500 && GetMouseX() < 778 && GetMouseY() < 580) {
                         modeActuel = TEAM;
                     } else if (GetMouseX() > 256 && GetMouseY > 620 && GetMouseX() < 778 && GetMouseY() < 680) {
@@ -379,7 +374,6 @@ int main() {
                     }
                     break;
                 }
-
             }
         }
         EndDrawing();
