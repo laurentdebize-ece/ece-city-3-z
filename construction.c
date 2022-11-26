@@ -338,4 +338,4 @@ void compteurTempsDuBat (float* tempsEcoule, ECECITY* JEU) {
     }
     DrawRectangle(200, 30, 180, 60, (Color){100, 190, 50, 200});
     DrawText(TextFormat( "Temps : %.2f",tempsActuel) ,210, 40, 25, BLACK);
-}
+}*/

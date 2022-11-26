@@ -115,8 +115,6 @@ int main() {
         BeginDrawing();
         ClearBackground(BLACK);
 
-
-
         switch (modeActuel) {
             case MENU : {
                 DrawTexturePro(fontMenu,
@@ -180,8 +178,7 @@ int main() {
                 break;
             }
             case MODE : {
-                //DrawTexture(capitaliste, 100, 100, WHITE);
-                //DrawTexture(communiste, 600, 100, WHITE);
+
                 DrawTexturePro(capitaliste,
                                (Rectangle) {.x = 0, .y = 0, .width = capitaliste.width, .height =  capitaliste.height},
                                (Rectangle) {300, 300, .width = 300, .height = 300}, (Vector2) {0, 0}, 0, WHITE);
@@ -213,7 +210,7 @@ int main() {
                 }
                 break;
             }
-            case PLAY:
+            case PLAY : {
                 /* if (GetTime() - lastT > accelerateurTemps) {
                      tempsVirtuelle++;
                      lastT = GetTime();
@@ -225,154 +222,157 @@ int main() {
                  }
                  minute = tempsVirtuelle / 60 %60;
                  seconde = tempsVirtuelle % 60;
-                 //heure = tempsVirtuelle%3600;
- */
+                 //heure = tempsVirtuelle%3600; */
 
-        tempsJeu(&lastT, &tempsVirtuelle, &cycle, accelerateurTemps, &seconde, &minute, &mois, &annee);
-        coordSourisIso(&mouseIso, img);
-        affichageGrille(mouseIso, Tiles);
-        affichageRoute(Routes, JEU->G->tabCase, niveau);
-        affichageTerrain(Tiles, JEU->G->tabCase, terrainVague, cabane, maison, hotel, gratteCiel);
-        affichageBattiment(Tiles, JEU->G->tabCase);
-        evolutionBat(JEU->G->tabCase, &tempsEcoule, JEU,&cycle);
-
+                tempsJeu(&lastT, &tempsVirtuelle, &cycle, accelerateurTemps, &seconde, &minute, &mois, &annee);
+                coordSourisIso(&mouseIso, img);
+                affichageGrille(mouseIso, Tiles);
+                affichageRoute(Routes, JEU->G->tabCase, niveau);
+                affichageTerrain(Tiles, JEU->G->tabCase, terrainVague, cabane, maison, hotel, gratteCiel);
+                affichageBattiment(Tiles, JEU->G->tabCase);
+                evolutionBat(JEU->G->tabCase, &tempsEcoule, JEU,&cycle);
 
 
-        GetMousePosition();
-        int PosXMouse = GetMouseX();
-        int PosYMouse = GetMouseY();
+                GetMousePosition();
+                int PosXMouse = GetMouseX();
+                int PosYMouse = GetMouseY();
 
-        if (IsKeyPressed(KEY_SPACE) == true) {
-            if (niveau != 2) {
-                niveau++;
-            } else {
-                niveau = 0;
-            }
-        }
-        if (IsKeyPressed(KEY_RIGHT) == true) {
-            if (categorieConstruction != 4) {
-                categorieConstruction++;
-            } else {
-                categorieConstruction = 0;
-            }
-        }
-        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) == true) {
-            if (PosXMouse >= 10 && PosXMouse <= 30 && PosYMouse >= 200 && PosYMouse <= 220) {
-                if (compteurAccele > 0) {
-                    compteurAccele--;
-                }
-            }
-            if (PosXMouse >= 80 && PosXMouse <= 100 && PosYMouse >= 200 && PosYMouse <= 220) {
-                if (compteurAccele < 7) {
-                    compteurAccele++;
-                }
-            }
-        }
-
-        if (IsKeyPressed(KEY_UP) == true) {
-            if (rotationBattiment != 1) {
-                rotationBattiment++;
-            } else {
-                rotationBattiment = 0;
-            }
-        }
-        if (IsKeyPressed(KEY_KP_1) == true) {
-            if (detruire != 1) {
-                detruire++;
-            } else {
-                detruire = 0;
-            }
-        }
-
-        if ((IsKeyDown(KEY_LEFT_CONTROL)) && (IsKeyPressed(KEY_S))) {
-            enregistrerPartie(JEU->G->tabCase, tempsVirtuelle);
-        }
-        if ((IsKeyDown(KEY_LEFT_CONTROL)) && (IsKeyPressed(KEY_KP_0))) {
-            recommencerPartie(JEU->G->tabCase,&JEU->compteur, &tempsVirtuelle, &cycle);
-        }
-        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) == true) {
-            constructionSouris(&mouseIso, categorieConstruction, &niveau, JEU->G->tabCase, &compteEnBanque, &JEU->compteur, rotationBattiment, detruire, JEU);
-            detruireConstruction(&mouseIso,JEU->G->tabCase,&JEU->compteur,rotationBattiment,detruire,JEU);
-            barreOutilSouris(PosXMouse, PosYMouse, &barre, &categorieConstruction);
-            //printf("nb route: %d\nnb hab: %d\nnb usine: %d\nnb chateauO: %d\n ", JEU->compteur.nbRues,JEU->compteur.nbHab, JEU->compteur.nbUsines, JEU->compteur.nbChateauO);
-            CalculeElec(JEU);
-            //CalculeO(JEU);
-
-        }
-        if (CheckCollisionPointRec(GetMousePosition(), (Rectangle){})){
-
-        }
-        afficherBarreOutils(&barre, seconde, monnaie, temps, eau, elec, souris, calendrier, minute, compteEnBanque,
-                            heure, mois, annee, moinsAccel, plusAccel, routeImage, maisonImage, centraleImage, puitImage, caserneImage);
-        switch (compteurAccele) {
-            case 1 :
-                accelerateurTemps = 1.00;
-                DrawTexture(x1, 35, 190, BLUE);
-                break;
-            case 2 :
-                accelerateurTemps = 0.50;
-                DrawTexture(x2, 35, 190, BLUE);
-                break;
-            case 3 :
-                accelerateurTemps = 0.20;
-                DrawTexture(x5, 35, 190, BLUE);
-                break;
-            case 4 :
-                accelerateurTemps = 0.10;
-                DrawTexture(x10, 35, 190, BLUE);
-                break;
-            case 5 :
-                accelerateurTemps = 0.06;
-                DrawTexture(x15, 35, 190, BLUE);
-                break;
-            case 6 :
-                accelerateurTemps = 0.03;
-                DrawTexture(x30, 35, 190, BLUE);
-                break;
-        }
-        construireBat(categorieConstruction, PosXMouse, PosYMouse, terrainVague, Routes);
-
-        if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) == true) {
-
-            switch (modeActuel) {
-                case RULES : {
-                    if (GetMouseX() > 50 && GetMouseY() > 50 && GetMouseX() < 200 && GetMouseY() < 150) {
-                        modeActuel = MENU;
+                if (IsKeyPressed(KEY_SPACE) == true) {
+                    if (niveau != 2) {
+                        niveau++;
+                    } else {
+                        niveau = 0;
                     }
-                    break;
                 }
-                case TEAM : {
-                    if (GetMouseX() > 50 && GetMouseY() > 50 && GetMouseX() < 200 && GetMouseY() < 150) {
-                        modeActuel = MENU;
+                if (IsKeyPressed(KEY_RIGHT) == true) {
+                    if (categorieConstruction != 4) {
+                        categorieConstruction++;
+                    } else {
+                        categorieConstruction = 0;
                     }
-                    break;
                 }
-                case MODE : {
-                    if (GetMouseX() > 300 && GetMouseY()>300 && GetMouseX()<700 && GetMouseY()<600){
-                        mode = 1;  ///MODE CAPITALISTE
-                        DrawText("MODE CHOISI : CAPITALISTE", 400, 400,30,  BLACK);
-                    }else if (GetMouseX() >800 && GetMouseY()>300 && GetMouseX()<1200 && GetMouseY()<600){
-                        mode = 2;  ///MODE COMMUNISTE
-                        DrawText("MODE CHOISI : COMMUNISTE", 400, 400,30,  BLACK);
+                if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) == true) {
+                    if (PosXMouse >= 10 && PosXMouse <= 30 && PosYMouse >= 200 && PosYMouse <= 220) {
+                        if (compteurAccele > 0) {
+                            compteurAccele--;
+                        }
                     }
-                    if (GetMouseX() > 50 && GetMouseY() > 50 && GetMouseX() < 200 && GetMouseY() < 150) {
-                        modeActuel = MENU;
-                    }
-                    break;
                 }
-                case MENU : {
-                    if (GetMouseX() > 256 && GetMouseY > 300 && GetMouseX() < 778 && GetMouseY() < 380) {
-                        modeActuel = PLAY;
-                        tempsDepart = GetTime();
-                        jeuEnCour = 1;
-                    } else if (GetMouseX() > 256 && GetMouseY > 420 && GetMouseX() < 778 && GetMouseY() < 480) {
-                        modeActuel = RULES;
-                    } else if (GetMouseX() > 256 && GetMouseY > 500 && GetMouseX() < 778 && GetMouseY() < 580) {
-                        modeActuel = TEAM;
-                    } else if (GetMouseX() > 256 && GetMouseY > 620 && GetMouseX() < 778 && GetMouseY() < 680) {
-                        modeActuel = MODE;
+                if (PosXMouse >= 80 && PosXMouse <= 100 && PosYMouse >= 200 && PosYMouse <= 220) {
+                    if (compteurAccele < 7) {
+                        compteurAccele++;
                     }
-                    break;
+                }
+
+
+                if (IsKeyPressed(KEY_UP) == true) {
+                    if (rotationBattiment != 1) {
+                        rotationBattiment++;
+                    } else {
+                        rotationBattiment = 0;
+                    }
+                }
+                if (IsKeyPressed(KEY_KP_1) == true) {
+                    if (detruire != 1) {
+                        detruire++;
+                    } else {
+                        detruire = 0;
+                    }
+                }
+
+                if ((IsKeyDown(KEY_LEFT_CONTROL)) && (IsKeyPressed(KEY_S))) {
+                    enregistrerPartie(JEU->G->tabCase, tempsVirtuelle);
+                }
+                if ((IsKeyDown(KEY_LEFT_CONTROL)) && (IsKeyPressed(KEY_KP_0))) {
+                    recommencerPartie(JEU->G->tabCase, &JEU->compteur, &tempsVirtuelle, &cycle);
+                }
+                if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) == true) {
+                    constructionSouris(&mouseIso, categorieConstruction, &niveau, JEU->G->tabCase, &compteEnBanque,
+                                       &JEU->compteur, rotationBattiment, detruire, JEU);
+                    detruireConstruction(&mouseIso, JEU->G->tabCase, &JEU->compteur, rotationBattiment, detruire, JEU);
+                    barreOutilSouris(PosXMouse, PosYMouse, &barre, &categorieConstruction);
+                    //printf("nb route: %d\nnb hab: %d\nnb usine: %d\nnb chateauO: %d\n ", JEU->compteur.nbRues,JEU->compteur.nbHab, JEU->compteur.nbUsines, JEU->compteur.nbChateauO);
+                    CalculeElec(JEU);
+                    //CalculeO(JEU);
+                }
+                if (CheckCollisionPointRec(GetMousePosition(), (Rectangle) {})) {
+
+                }
+                afficherBarreOutils(&barre, seconde, monnaie, temps, eau, elec, souris, calendrier, minute,
+                                    compteEnBanque,
+                                    heure, mois, annee, moinsAccel, plusAccel, routeImage, maisonImage, centraleImage,
+                                    puitImage, caserneImage);
+                /*switch (compteurAccele) {
+                    case 1 :
+                        accelerateurTemps = 1.00;
+                        DrawTexture(x1, 35, 190, BLUE);
+                        break;
+                    case 2 :
+                        accelerateurTemps = 0.50;
+                        DrawTexture(x2, 35, 190, BLUE);
+                        break;
+                    case 3 :
+                        accelerateurTemps = 0.20;
+                        DrawTexture(x5, 35, 190, BLUE);
+                        break;
+                    case 4 :
+                        accelerateurTemps = 0.10;
+                        DrawTexture(x10, 35, 190, BLUE);
+                        break;
+                    case 5 :
+                        accelerateurTemps = 0.06;
+                        DrawTexture(x15, 35, 190, BLUE);
+                        break;
+                    case 6 :
+                        accelerateurTemps = 0.03;
+                        DrawTexture(x30, 35, 190, BLUE);
+                        break;
+                }*/
+                construireBat(categorieConstruction, PosXMouse, PosYMouse, terrainVague, Routes);
+
+                if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) == true) {
+
+                    switch (modeActuel) {
+                        case RULES : {
+                            if (GetMouseX() > 50 && GetMouseY() > 50 && GetMouseX() < 200 && GetMouseY() < 150) {
+                                modeActuel = MENU;
+                            }
+                            break;
+                        }
+                        case TEAM : {
+                            if (GetMouseX() > 50 && GetMouseY() > 50 && GetMouseX() < 200 && GetMouseY() < 150) {
+                                modeActuel = MENU;
+                            }
+                            break;
+                        }
+                        case MODE : {
+                            if (GetMouseX() > 300 && GetMouseY() > 300 && GetMouseX() < 700 && GetMouseY() < 600) {
+                                mode = 1;  ///MODE CAPITALISTE
+                                DrawText("MODE CHOISI : CAPITALISTE", 400, 400, 30, BLACK);
+                            } else if (GetMouseX() > 800 && GetMouseY() > 300 && GetMouseX() < 1200 &&
+                                       GetMouseY() < 600) {
+                                mode = 2;  ///MODE COMMUNISTE
+                                DrawText("MODE CHOISI : COMMUNISTE", 400, 400, 30, BLACK);
+                            } else if (GetMouseX() > 50 && GetMouseY() > 50 && GetMouseX() < 200 && GetMouseY() < 150) {
+                                modeActuel = MENU;
+                            }
+                            break;
+                        }
+                        case MENU : {
+                            if (GetMouseX() > 256 && GetMouseY > 300 && GetMouseX() < 778 && GetMouseY() < 380) {
+                                modeActuel = PLAY;
+                                tempsDepart = GetTime();
+                                jeuEnCour = 1;
+                            } else if (GetMouseX() > 256 && GetMouseY > 420 && GetMouseX() < 778 && GetMouseY() < 480) {
+                                modeActuel = RULES;
+                            } else if (GetMouseX() > 256 && GetMouseY > 500 && GetMouseX() < 778 && GetMouseY() < 580) {
+                                modeActuel = TEAM;
+                            } else if (GetMouseX() > 256 && GetMouseY > 620 && GetMouseX() < 778 && GetMouseY() < 680) {
+                                modeActuel = MODE;
+                            }
+                            break;
+                        }
+                    }
                 }
             }
         }
@@ -399,6 +399,7 @@ int main() {
     UnloadTexture(x10);
     UnloadTexture(x15);
     UnloadTexture(x30);
+    UnloadTexture(Routes);
     UnloadTexture(routeImage);
     UnloadTexture(maisonImage);
     UnloadTexture(caserneImage);
