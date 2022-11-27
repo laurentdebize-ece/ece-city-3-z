@@ -23,4 +23,6 @@ void demolitionBatCapitaliste (CASE** tabCase, float* tempsEcoule, ECECITY* JEU,
 void evolutionBatCapitaliste (CASE** tabCase, float* tempsEcoule, ECECITY* JEU, int* cycle) ;
 void demolitionBatiment (CASE** tabCase, float* tempsEcoule, ECECITY* JEU,  int* cycle);
 void evolutionCommuniste (CASE** tabCase, float* tempsEcoule, ECECITY* JEU, int* cycle);
+bool checkcontactEO(ECECITY * JEU, int id);
+void chgmtType(ECECITY * JEU,int id);
 #endif //ECE_CITY_3_Z_CONSTRUCTION_H

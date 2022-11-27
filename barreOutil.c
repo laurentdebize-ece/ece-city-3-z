@@ -175,7 +175,7 @@ void clicGaucheBarreOutil(int PosXMouse, int PosYMouse, int* compteurAccele, int
         enregistrerPartie(JEU->G->tabCase, *tempsVirtuelle);
     }
     if (PosXMouse >= 1000 && PosXMouse <= 1200 && PosYMouse >= 80 && PosYMouse <= 104) {
-        recommencerPartie(JEU->G->tabCase, &JEU->compteur, tempsVirtuelle, cycle);
+        recommencerPartie(JEU->G->tabCase, &JEU->compteur, tempsVirtuelle, cycle, JEU);
     }
     if (PosXMouse >= 1000 && PosXMouse <= 1250 && PosYMouse >= 50 && PosYMouse <= 74) {
         *quitter = 1;

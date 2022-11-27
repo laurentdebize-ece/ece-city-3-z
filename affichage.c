@@ -3,7 +3,7 @@
 #include "bibliotheque.h"
 
 
-void construireBat(int categorieConstruction, int posXMouse, int posYMouse, Texture2D building, Texture2D Routes,
+void construireBat(int categorieConstruction, int posXMouse, int posYMouse, Texture2D building, Texture2D Routes,           // Fonction qui permet d'afficher la construction sur le plateau avant d'être posé ( elle apparait en rouge si on ne peut pas la poser et en vert si on peut)
                    VECTEUR mouseIso, CASE **tabCase, Texture2D centralEau, Texture2D centralEauBis,
                    Texture2D centralElec, Texture2D centralElecBis, int rotation, int construire, ECECITY* JEU) {
     Vector2 positionSprite;
@@ -88,7 +88,7 @@ void construireBat(int categorieConstruction, int posXMouse, int posYMouse, Text
 
 }
 
-void affichageGrille(VECTEUR mouseIso, Texture2D texture) {
+void affichageGrille(VECTEUR mouseIso, Texture2D texture) { // Fonction qui permet d'afficher la grille
 
     Vector2 positionSprite;
     Rectangle sprite;
@@ -111,7 +111,7 @@ void affichageGrille(VECTEUR mouseIso, Texture2D texture) {
     }
 }
 
-void affichageRoute(Texture2D Routes, CASE **tabCase, int niveau) {
+void affichageRoute(Texture2D Routes, CASE **tabCase, int niveau) { // Fonction qui permet d'afficher les routes
     Vector2 positionSprite;
     Rectangle route;
     route.width = LARGEUR_TUILE_ISO;
@@ -158,7 +158,7 @@ void affichageRoute(Texture2D Routes, CASE **tabCase, int niveau) {
     }
 }
 
-void affichageTerrain(Texture2D Terrain, CASE **tabCase, Texture2D terrainVague, Texture2D cabane, Texture2D maison, Texture2D hotel, Texture2D gratteCiel) {
+void affichageTerrain(Texture2D Terrain, CASE **tabCase, Texture2D terrainVague, Texture2D cabane, Texture2D maison, Texture2D hotel, Texture2D gratteCiel) { // Fonction qui permet d'afficher les constructions habitables
     Vector2 positionSprite;
     Rectangle terrain;
     terrain.width = LARGEUR_TUILE_ISO;
@@ -169,6 +169,7 @@ void affichageTerrain(Texture2D Terrain, CASE **tabCase, Texture2D terrainVague,
 
     for (int y = 0; y < LIGNES; y++) {
         for (int x = 0; x < COLONNES; x++) {
+
             positionSprite.x =
                     x * (LARGEUR_TUILE_ISO / 2) + y * (LARGEUR_TUILE_ISO / 2) + LARGEUR_TUILE_ISO * ISO_DECALAGE_X;
             positionSprite.y =
@@ -197,7 +198,7 @@ void affichageTerrain(Texture2D Terrain, CASE **tabCase, Texture2D terrainVague,
     }
 }
 
-void affichageBattiment(Texture2D Battiment, CASE **tabCase, Texture2D centralEau, Texture2D centralEauBis,
+void affichageBattiment(Texture2D Battiment, CASE **tabCase, Texture2D centralEau, Texture2D centralEauBis,             // Fonction qui permet d'afficher les battiments de type chateau d'eau et usine
                         Texture2D centralElec, Texture2D centralElecBis, int rotation) {
     Vector2 positionSprite;
     Rectangle battiment;
@@ -237,7 +238,7 @@ void affichageBattiment(Texture2D Battiment, CASE **tabCase, Texture2D centralEa
     }
 }
 
-int typeRoute(CASE **tabCase, int x, int y) {
+int typeRoute(CASE **tabCase, int x, int y) {  // Fonction qui permet de choisir le type de route qu'on va poser en fonction des routes qui sont autour
     int compteurTypeRoute = 0;
     if (x - 1 >= 0 && tabCase[x - 1][y].type == 1) {
         compteurTypeRoute = compteurTypeRoute + 1;
@@ -255,7 +256,7 @@ int typeRoute(CASE **tabCase, int x, int y) {
 }
 
 
-void enregistrerPartie(CASE **tabCase, int temps) {
+void enregistrerPartie(CASE **tabCase, int temps) { // Fonction qui permet d'enregistrer la partie
     FILE *n = fopen("../map.txt", "w+");
     FILE *d = fopen("../ordreConstruction.txt", "w+");
     FILE *p = fopen("../affichage.txt", "w+");
@@ -273,27 +274,30 @@ void enregistrerPartie(CASE **tabCase, int temps) {
     }
 }
 
-void recommencerPartie(CASE **tabCase, COMPTEUR *compteur, int *temps, int *cycle) {
+void recommencerPartie(CASE **tabCase, COMPTEUR *compteur, int *temps, int *cycle, ECECITY* JEU) {   // Fonction qui permet de recommencer une partie en renitialisant ttes les valeurs
     FILE *n = fopen("../map.txt", "w+");
-    compteur->nbChateauO = 0;
-    compteur->nbHab = 0;
-    compteur->nbRues = 0;
-    compteur->nbUsines = 0;
+    FILE *d = fopen("../ordreConstruction.txt", "w+");
+    FILE *p = fopen("../affichage.txt", "w+");
+
     *temps = 0;
     *cycle = 0;
-    fprintf(n, "%d ", 0);
+    fprintf(n, "%d\n", 0);
+
     for (int y = 0; y < LIGNES; y++) {
         for (int x = 0; x < COLONNES; x++) {
             fprintf(n, "%d ", 0);
+            fprintf(d, "%d ", 0);
+            fprintf(p, "%d ", 0);
             tabCase[x][y].type = 0;
-            tabCase[x][y].identite = 0;
             tabCase[x][y].affichage = 0;
         }
         fputs("\n", n);
+        fputs("\n", d);
+        fputs("\n", p);
     }
 }
 
-void initialisationOrdre(CASE **tabCase, int ordre, int x, int y, COMPTEUR *compteur, ECECITY *JEU) {
+void initialisationOrdre(CASE **tabCase, int ordre, int x, int y, COMPTEUR *compteur, ECECITY *JEU) {  // qui permet de retrouver l'ordre et les identités des battiments après avoir sauvegardé une partie
 
     if (tabCase[x][y].type == 1) {
         tabCase[x][y].identite = ordre;
@@ -325,7 +329,7 @@ void initialisationOrdre(CASE **tabCase, int ordre, int x, int y, COMPTEUR *comp
 }
 
 void
-tempsJeu(float *lastT, int *tempsVirtuelle, int *cycle, float accelerateurTemps, int *seconde, int *minute, int *mois,
+tempsJeu(float *lastT, int *tempsVirtuelle, int *cycle, float accelerateurTemps, int *seconde, int *minute, int *mois,   // Fonction qui permet de creer un temps virtuel dans le jeu
          int *annee) {
     if (GetTime() - *lastT > accelerateurTemps) {
         (*tempsVirtuelle)++;
