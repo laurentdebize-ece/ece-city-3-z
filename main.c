@@ -6,6 +6,7 @@ int main() {
     int niveau = 0;
     int construction;
     int ordre;
+    int affichage;
     int mode = 0;
     int detruire = 0;
     int rotationBattiment = 0;
@@ -37,6 +38,7 @@ int main() {
 
     FILE *ifs = fopen("../map.txt", "r");
     FILE *ifs2 = fopen("../ordreConstruction.txt", "r");
+    FILE *ifs3 = fopen("../affichage.txt", "r");
     VECTEUR mouseIso;
     ECECITY *JEU = iniJeu(); //structure principal du jeu
     JEU->compteur.nbChateauO = 0;
@@ -57,9 +59,10 @@ int main() {
         for (int x = 0; x < COLONNES; x++) {
             fscanf(ifs, "%d", &construction);
             fscanf(ifs2, "%d", &ordre);
+            fscanf(ifs3, "%d", &affichage);
             JEU->G->tabCase[x][y].type = construction; // 0: rien 1:route 2:Usine 3:chateauEau 4:caserne 5:terrain vague
             JEU->G->tabCase[x][y].identite = ordre;
-            JEU->G->tabCase[x][y].affichage = 0;
+            JEU->G->tabCase[x][y].affichage = affichage;
             initialisationOrdre(JEU->G->tabCase, ordre, x, y, &JEU->compteur, JEU);
         }
     }
