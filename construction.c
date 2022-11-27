@@ -240,8 +240,6 @@ void batimentApercu(CASE** tabCase, int x, int y, int typeBatiment){
 
 void evolutionBat (CASE** tabCase, float* tempsEcoule, ECECITY* JEU, int* cycle) {
 
-
-
     //printf("%d\n", cycle);
     if (*cycle == TEMPS_CYCLE) {
         *cycle = 0;
@@ -306,4 +304,37 @@ void demolitionBatCapitaliste (CASE** tabCase, float* tempsEcoule, ECECITY* JEU,
         }
     }
 }
+/*
+void compteurTempsDuBat (CASE** tabCase, int x, int y, float* tempsEcoule, float tempsDepart) {
+    float tempsActuel = GetTime() - tempsDepart;
+    float deltaTemps = tempsActuel - *tempsEcoule;
 
+    if (deltaTemps >= 1.0){
+        //incremente les tics de chaque batiment
+        for (int y = 0; y < LIGNES; y++) {
+            for (int x = 0; x < COLONNES; x++) {
+                //tabCase[x][y].tic++;
+            }
+        }
+        printf("SS\n");
+        *tempsEcoule = tempsActuel;
+    }
+    DrawRectangle(200, 30, 180, 60, (Color){100, 190, 50, 200});
+    DrawText(TextFormat( "Temps : %.2f",tempsActuel) ,210, 40, 25, BLACK);
+}
+
+void compteurTempsDuBat (float* tempsEcoule, ECECITY* JEU) {
+    float tempsActuel = GetTime();
+    float deltaTemps = tempsActuel - *tempsEcoule;
+
+    if (deltaTemps >= 1.0){
+        //incremente les tics de chaque batiment
+        for (int x = 0; x < COLONNES; x++){
+            JEU->tabHab[x].tic++;
+        }
+        printf("SS\n");
+        *tempsEcoule = tempsActuel;
+    }
+    DrawRectangle(200, 30, 180, 60, (Color){100, 190, 50, 200});
+    DrawText(TextFormat( "Temps : %.2f",tempsActuel) ,210, 40, 25, BLACK);
+}*/

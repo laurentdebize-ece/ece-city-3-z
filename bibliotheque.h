@@ -18,7 +18,7 @@
 #define COUT_ROUTE 50
 #define COUT_TERRAIN_VAGUE 1000
 #define COUT_CASERNE 10000
- //170
+
 
 #define TAXE 50
 #define NBRHABITANT_CABANE 10
@@ -144,5 +144,7 @@ typedef struct{
 #include "affichage.h"
 #include "isoConfig.h"
 #include "barreOutil.h"
+#include "menu.h"
+#include "jeu.h"
 
 #endif //ECE_CITY_3_Z_BIBLIOTHEQUE_H
