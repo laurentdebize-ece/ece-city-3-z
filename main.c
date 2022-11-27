@@ -45,7 +45,7 @@ int main() {
     JEU->compteur.nbUsines = 0;
 
 
-    int categorieConstruction = 0; // 0:route 1:habitation 2:usine 3:chateauEau 4:caserne
+    int categorieConstruction; // 0:route 1:habitation 2:usine 3:chateauEau 4:caserne
     animationBarre barre;
     barre.etat = FERME;
     barre.temps = 0;
@@ -160,7 +160,7 @@ int main() {
                 evolutionBat(JEU->G->tabCase, &tempsEcoule, JEU, &cycle);
                 construireBat(categorieConstruction, PosXMouse, PosYMouse, terrainVague, Routes, mouseIso,
                               JEU->G->tabCase, centralEau, centralEauBis, centralElecBis, centralElec,
-                              rotationBattiment, construire);
+                              rotationBattiment, construire, JEU);
                 afficherBarreOutils(&barre, seconde, monnaie, temps, eau, elec, souris, calendrier, minute,
                                     compteEnBanque,
                                     heure, mois, annee, moinsAccel, plusAccel, routeImage, maisonImage,

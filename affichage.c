@@ -3,56 +3,85 @@
 #include "bibliotheque.h"
 
 
-void construireBat(int categorieConstruction, int posXMouse, int posYMouse, Texture2D building, Texture2D Routes,VECTEUR mouseIso,CASE **tabCase, Texture2D centralEau, Texture2D centralEauBis, Texture2D centralElec, Texture2D centralElecBis, int rotation, int construire) {
+void construireBat(int categorieConstruction, int posXMouse, int posYMouse, Texture2D building, Texture2D Routes,
+                   VECTEUR mouseIso, CASE **tabCase, Texture2D centralEau, Texture2D centralEauBis,
+                   Texture2D centralElec, Texture2D centralElecBis, int rotation, int construire, ECECITY* JEU) {
     Vector2 positionSprite;
     Rectangle route;
     int TypeRoute;
+    Color couleur;
     route.width = LARGEUR_TUILE_ISO;
     route.height = HAUTEUR_TUILE_ISO;
+    positionSprite.x =
+            mouseIso.x * (LARGEUR_TUILE_ISO / 2) + mouseIso.y * (LARGEUR_TUILE_ISO / 2) +
+            LARGEUR_TUILE_ISO * ISO_DECALAGE_X;
+    positionSprite.y =
+            mouseIso.x * (HAUTEUR_TUILE_ISO / 2) - mouseIso.y * (HAUTEUR_TUILE_ISO / 2) +
+            HAUTEUR_TUILE_ISO * ISO_DECALAGE_Y;
+    int longueureBatX;
+    int longueureBatY;
+    if(rotation==0){
+        longueureBatX=LONGUEURE_BATTIMENT;
+        longueureBatY=LARGEUR_BATTIMENT;
+    }
+    else{
+        longueureBatX=LARGEUR_BATTIMENT;
+        longueureBatY=LONGUEURE_BATTIMENT;
+    }
     switch (categorieConstruction) {
         case 0 :
+            if(mouseIso.x + 1 <= COLONNES && mouseIso.y + 1 <= LIGNES && mouseIso.x >= 0 && mouseIso.y >= 0) {
+                TypeRoute = typeRoute(tabCase, mouseIso.x, mouseIso.y);
 
-            for (int y = 0; y < LIGNES; y++) {
-                for (int x = 0; x < COLONNES; x++) {
-                    positionSprite.x =
-                            x * (LARGEUR_TUILE_ISO / 2) + y * (LARGEUR_TUILE_ISO / 2) + LARGEUR_TUILE_ISO * ISO_DECALAGE_X;
-                    positionSprite.y =
-                            x * (HAUTEUR_TUILE_ISO / 2) - y * (HAUTEUR_TUILE_ISO / 2) + HAUTEUR_TUILE_ISO * ISO_DECALAGE_Y;
-                    TypeRoute = typeRoute(tabCase, x, y);
-                    for (int i = 0; i <= 15; i++) {
-                        if (TypeRoute == i) {
-                            route.x = i * LARGEUR_TUILE_ISO + i;
-                            route.y = 0;
-                        }
+                for (int i = 0; i <= 15; i++) {
+                    if (TypeRoute == i) {
+                        route.x = i * LARGEUR_TUILE_ISO + i;
+                        route.y = 0;
                     }
-                    if (mouseIso.x == x && mouseIso.y == y) {
-                        if(tabCase[x][y].type == 0) {
-                            DrawTextureRec(Routes, route, positionSprite, GREEN);
-                        }
-                        else{
-                            DrawTextureRec(Routes, route, positionSprite, RED);
-                        }
-                    }
+                }
+                if (tabCase[mouseIso.x][mouseIso.y].type == 0) {
+                    DrawTextureRec(Routes, route, positionSprite, GREEN);
+                } else {
+                    DrawTextureRec(Routes, route, positionSprite, RED);
                 }
             }
             break;
         case 1 :
-            DrawTexture(building, posXMouse - 15, posYMouse - 25, GREEN);
+            if (mouseIso.x + LONGUEURE_TERRAIN_VAGUE <= COLONNES && mouseIso.y + LARGEUR_TERRAIN_VAGUE <= LIGNES && mouseIso.x >= 0 && mouseIso.y >= 0 && possibiliteDeConstruire(JEU->G->tabCase, mouseIso.x, mouseIso.y, LONGUEURE_TERRAIN_VAGUE, LARGEUR_TERRAIN_VAGUE) == 0 &&
+                    presenceRoute(JEU->G->tabCase, mouseIso.x, mouseIso.y, LONGUEURE_TERRAIN_VAGUE, LARGEUR_TERRAIN_VAGUE) != 0) {
+                DrawTexture(building, positionSprite.x, positionSprite.y - HAUTEUR_TUILE_ISO, GREEN);
+            }
+            else {
+                DrawTexture(building, positionSprite.x, positionSprite.y - HAUTEUR_TUILE_ISO, RED);
+            }
             break;
         case 2 :
-            if (rotation == 0){
-                DrawTexture(centralElecBis, posXMouse-10, posYMouse -40, GREEN);
+
+            if (mouseIso.x + longueureBatX <= COLONNES && mouseIso.y + longueureBatY <= LIGNES && mouseIso.x >= 0 && mouseIso.y >= 0 && possibiliteDeConstruire(JEU->G->tabCase, mouseIso.x, mouseIso.y, longueureBatX, longueureBatY) == 0 &&
+                presenceRoute(JEU->G->tabCase, mouseIso.x, mouseIso.y, longueureBatX, longueureBatY) != 0) {
+                couleur = GREEN;
             }
-            else{
-                DrawTexture(centralElec, posXMouse-10, posYMouse -58, GREEN);
+            else {
+                couleur = RED;
+            }
+            if(rotation == 0) {
+                DrawTexture(centralElecBis, positionSprite.x + 6, positionSprite.y - 30, couleur);
+            } else{
+                DrawTexture(centralElec, positionSprite.x , positionSprite.y - 47, couleur);
             }
             break;
         case 3 :
-            if (rotation == 0){
-                DrawTexture(centralEauBis, posXMouse-14, posYMouse -34, GREEN);
+            if (mouseIso.x + longueureBatX <= COLONNES && mouseIso.y + longueureBatY <= LIGNES && mouseIso.x >= 0 && mouseIso.y >= 0 && possibiliteDeConstruire(JEU->G->tabCase, mouseIso.x, mouseIso.y, longueureBatX, longueureBatY) == 0 &&
+                presenceRoute(JEU->G->tabCase, mouseIso.x, mouseIso.y, longueureBatX, longueureBatY) != 0) {
+                couleur = GREEN;
             }
-            else{
-                DrawTexture(centralEau, posXMouse-15, posYMouse -53, GREEN);
+            else {
+                couleur = RED;
+            }
+            if (rotation == 0) {
+                DrawTexture(centralEauBis, positionSprite.x + 6, positionSprite.y - 30, couleur);
+            } else {
+                DrawTexture(centralEau, positionSprite.x, positionSprite.y - 47, couleur);
             }
             break;
     }
@@ -130,7 +159,8 @@ void affichageRoute(Texture2D Routes, CASE **tabCase, int niveau) {
     }
 }
 
-void affichageTerrain(Texture2D Terrain, CASE **tabCase, Texture2D terrainVague, Texture2D cabane, Texture2D maison, Texture2D hotel, Texture2D gratteCiel) {
+void affichageTerrain(Texture2D Terrain, CASE **tabCase, Texture2D terrainVague, Texture2D cabane, Texture2D maison,
+                      Texture2D hotel, Texture2D gratteCiel) {
     Vector2 positionSprite;
     Rectangle terrain;
     terrain.width = LARGEUR_TUILE_ISO;
@@ -169,7 +199,8 @@ void affichageTerrain(Texture2D Terrain, CASE **tabCase, Texture2D terrainVague,
     }
 }
 
-void affichageBattiment(Texture2D Battiment, CASE **tabCase, Texture2D centralEau, Texture2D centralEauBis, Texture2D centralElec, Texture2D centralElecBis, int rotation) {
+void affichageBattiment(Texture2D Battiment, CASE **tabCase, Texture2D centralEau, Texture2D centralEauBis,
+                        Texture2D centralElec, Texture2D centralElecBis, int rotation) {
     Vector2 positionSprite;
     Rectangle battiment;
     battiment.width = LARGEUR_TUILE_ISO;
@@ -184,22 +215,22 @@ void affichageBattiment(Texture2D Battiment, CASE **tabCase, Texture2D centralEa
             positionSprite.y =
                     x * (HAUTEUR_TUILE_ISO / 2) - y * (HAUTEUR_TUILE_ISO / 2) + HAUTEUR_TUILE_ISO * ISO_DECALAGE_Y;
 
-            if (tabCase[x][y].affichage == 1){
+            if (tabCase[x][y].affichage == 1) {
                 if (tabCase[x][y].type == 3) {
-                    if (rotation == 0){
-                        DrawTexture(centralEauBis, positionSprite.x+5, positionSprite.y-30, WHITE);
+                    if (tabCase[x+LONGUEURE_BATTIMENT-1][y+LARGEUR_BATTIMENT-1].type == 3 && tabCase[x+LONGUEURE_BATTIMENT-1][y+LARGEUR_BATTIMENT-1].identite == tabCase[x][y].identite) {
+                        DrawTexture(centralEauBis, positionSprite.x + 5, positionSprite.y - 30, WHITE);
                     }
-                    if (rotation == 1){
-                        DrawTexture(centralEau, positionSprite.x+4, positionSprite.y-47, WHITE);
+                    else {
+                        DrawTexture(centralEau, positionSprite.x + 4, positionSprite.y - 47, WHITE);
                     }
                 }
 
                 if (tabCase[x][y].type == 2) {
-                    if (rotation == 0){
-                        DrawTexture(centralElecBis, positionSprite.x+3, positionSprite.y-31, WHITE);
+                    if (tabCase[x+LONGUEURE_BATTIMENT-1][y+LARGEUR_BATTIMENT-1].type == 2 && tabCase[x+LONGUEURE_BATTIMENT-1][y+LARGEUR_BATTIMENT-1].identite == tabCase[x][y].identite) {
+                        DrawTexture(centralElecBis, positionSprite.x + 3, positionSprite.y - 31, WHITE);
                     }
-                    if (rotation == 1){
-                        DrawTexture(centralElec, positionSprite.x+6, positionSprite.y-49, WHITE);
+                    else {
+                        DrawTexture(centralElec, positionSprite.x + 6, positionSprite.y - 49, WHITE);
                     }
                 }
             }
@@ -226,73 +257,73 @@ int typeRoute(CASE **tabCase, int x, int y) {
 }
 
 
-
-
-void enregistrerPartie(CASE** tabCase, int temps){
-    FILE * n = fopen("../map.txt","w+");
-    FILE * d = fopen("../ordreConstruction.txt","w+");
-    fprintf(n, "%d\n",temps);
+void enregistrerPartie(CASE **tabCase, int temps) {
+    FILE *n = fopen("../map.txt", "w+");
+    FILE *d = fopen("../ordreConstruction.txt", "w+");
+    fprintf(n, "%d\n", temps);
     for (int y = 0; y < LIGNES; y++) {
         for (int x = 0; x < COLONNES; x++) {
-            fprintf(n, "%d ",tabCase[x][y].type);
+            fprintf(n, "%d ", tabCase[x][y].type);
             fprintf(d, "%d ", tabCase[x][y].identite);
         }
-        fputs("\n",n);
-        fputs("\n",d);
+        fputs("\n", n);
+        fputs("\n", d);
     }
 }
 
-void recommencerPartie(CASE** tabCase, COMPTEUR* compteur, int* temps, int* cycle){
-    FILE * n = fopen("../map.txt","w+");
-    compteur->nbChateauO=0;
-    compteur->nbHab=0;
-    compteur->nbRues=0;
-    compteur->nbUsines=0;
+void recommencerPartie(CASE **tabCase, COMPTEUR *compteur, int *temps, int *cycle) {
+    FILE *n = fopen("../map.txt", "w+");
+    compteur->nbChateauO = 0;
+    compteur->nbHab = 0;
+    compteur->nbRues = 0;
+    compteur->nbUsines = 0;
     *temps = 0;
     *cycle = 0;
-    fprintf(n, "%d ",0);
+    fprintf(n, "%d ", 0);
     for (int y = 0; y < LIGNES; y++) {
         for (int x = 0; x < COLONNES; x++) {
-            fprintf(n, "%d ",0);
+            fprintf(n, "%d ", 0);
             tabCase[x][y].type = 0;
             tabCase[x][y].identite = 0;
         }
-        fputs("\n",n);
+        fputs("\n", n);
     }
 }
 
-void initialisationOrdre(CASE** tabCase, int ordre, int x, int y, COMPTEUR* compteur, ECECITY* JEU){
+void initialisationOrdre(CASE **tabCase, int ordre, int x, int y, COMPTEUR *compteur, ECECITY *JEU) {
 
-    if(tabCase[x][y].type == 1) {
+    if (tabCase[x][y].type == 1) {
         tabCase[x][y].identite = ordre;
-        if(ordre>compteur->nbRues){
+        if (ordre > compteur->nbRues) {
             compteur->nbRues = ordre;
         }
     }
-    if(tabCase[x][y].type == 2) {
+    if (tabCase[x][y].type == 2) {
         tabCase[x][y].identite = ordre;
-        if(ordre>compteur->nbUsines){
+        if (ordre > compteur->nbUsines) {
             compteur->nbUsines = ordre;
         }
     }
-    if(tabCase[x][y].type == 3) {
+    if (tabCase[x][y].type == 3) {
         tabCase[x][y].identite = ordre;
-        if(ordre>compteur->nbChateauO){
+        if (ordre > compteur->nbChateauO) {
             compteur->nbChateauO = ordre;
         }
     }
 
-    if(tabCase[x][y].type >= 5) {
+    if (tabCase[x][y].type >= 5) {
         tabCase[x][y].identite = ordre;
         JEU->tabHab[ordre].type = tabCase[x][y].type;
-        if(ordre>compteur->nbHab){
+        if (ordre > compteur->nbHab) {
             compteur->nbHab = ordre;
         }
     }
 
 }
 
-void tempsJeu(float* lastT, int* tempsVirtuelle, int* cycle, float accelerateurTemps, int* seconde, int* minute, int* mois, int* annee){
+void
+tempsJeu(float *lastT, int *tempsVirtuelle, int *cycle, float accelerateurTemps, int *seconde, int *minute, int *mois,
+         int *annee) {
     if (GetTime() - *lastT > accelerateurTemps) {
         (*tempsVirtuelle)++;
         (*cycle)++;
@@ -304,7 +335,7 @@ void tempsJeu(float* lastT, int* tempsVirtuelle, int* cycle, float accelerateurT
     if (*mois > 12) {
         *mois = 1;
     }
-    *minute = *tempsVirtuelle / 60 %60;
+    *minute = *tempsVirtuelle / 60 % 60;
     *seconde = *tempsVirtuelle % 60;
     //heure = tempsVirtuelle%3600;
 }
