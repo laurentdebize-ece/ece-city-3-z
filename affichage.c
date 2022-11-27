@@ -107,7 +107,6 @@ void affichageGrille(VECTEUR mouseIso, Texture2D texture) {
                 t = BLACK;
             }
             DrawTextureRec(texture, sprite, positionSprite, t);
-
         }
     }
 }
@@ -159,8 +158,7 @@ void affichageRoute(Texture2D Routes, CASE **tabCase, int niveau) {
     }
 }
 
-void affichageTerrain(Texture2D Terrain, CASE **tabCase, Texture2D terrainVague, Texture2D cabane, Texture2D maison,
-                      Texture2D hotel, Texture2D gratteCiel) {
+void affichageTerrain(Texture2D Terrain, CASE **tabCase, Texture2D terrainVague, Texture2D cabane, Texture2D maison, Texture2D hotel, Texture2D gratteCiel) {
     Vector2 positionSprite;
     Rectangle terrain;
     terrain.width = LARGEUR_TUILE_ISO;
@@ -185,13 +183,13 @@ void affichageTerrain(Texture2D Terrain, CASE **tabCase, Texture2D terrainVague,
                         DrawTexture(cabane, positionSprite.x, positionSprite.y - 19, WHITE);
                         break;
                     case 7 :
-                        DrawTexture(maison, positionSprite.x, positionSprite.y - 19, WHITE);
+                        DrawTexture(maison, positionSprite.x, positionSprite.y - 28, WHITE);
                         break;
                     case 8 :
-                        DrawTexture(hotel, positionSprite.x, positionSprite.y - 19, WHITE);
+                        DrawTexture(hotel, positionSprite.x, positionSprite.y - 60, WHITE);
                         break;
                     case 9 :
-                        DrawTexture(gratteCiel, positionSprite.x, positionSprite.y - 19, WHITE);
+                        DrawTexture(gratteCiel, positionSprite.x, positionSprite.y - 109, WHITE);
                         break;
                 }
             }

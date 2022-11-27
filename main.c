@@ -27,12 +27,14 @@ int main() {
     float accelerateurTemps = 1.00f;
     int compteurAccele = 1;
     int batimentSurvole;
-    int construire = 0;
+    int construire = 1;
 
     float tempsEcoule = 0;
     float tempsDepart;
     int jeuEnCour = 0;
     int modeActuel = MENU;
+
+    int quitter = 0;
 
 
     FILE *ifs = fopen("../map.txt", "r");
@@ -167,7 +169,8 @@ int main() {
                                     heure, mois, annee, moinsAccel, plusAccel, routeImage, maisonImage,
                                     centraleImage,
                                     puitImage, caserneImage, rotation, enregistrer, demolition, construire, detruire,
-                                    construireOn, construireOff, demolitionOff, plage, plage2);
+                                    construireOn, construireOff, demolitionOff, plage, plage2, quitter, JEU);
+
                 accelerationTemps(compteurAccele, &accelerateurTemps, x1,x2,x5,x10,x15,x30);
                 CalculeElec(JEU);
                 CalculeO(JEU);
@@ -182,7 +185,7 @@ int main() {
 
 
                 if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) == true) {
-                    clicGaucheBarreOutil(PosXMouse, PosYMouse, &compteurAccele, &rotationBattiment, &detruire, &construire, JEU, &tempsVirtuelle, &cycle);
+                    clicGaucheBarreOutil(PosXMouse, PosYMouse, &compteurAccele, &rotationBattiment, &detruire, &construire, JEU, &tempsVirtuelle, &cycle, &quitter, &modeActuel);
                     constructionSouris(&mouseIso, categorieConstruction, &niveau, JEU->G->tabCase, &compteEnBanque,
                                        &JEU->compteur, rotationBattiment, detruire, JEU);
                     detruireConstruction(&mouseIso, JEU->G->tabCase, &JEU->compteur, rotationBattiment, detruire,

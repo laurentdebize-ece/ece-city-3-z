@@ -25,7 +25,7 @@ void barreOutilSouris(int PosXMouse, int PosYMouse,  animationBarre* barre, int*
     }
 }
 
-void afficherBarreOutils(animationBarre* boiteOutils, int seconde, Texture2D monnaie, Texture2D temps, Texture2D eau, Texture2D elec, Texture2D souris, Texture2D calendrier, int min, int argent, int heure, int mois, int annee, Texture2D moinsAccel, Texture2D plusAccel, Texture2D route, Texture2D maison, Texture2D centrale, Texture2D puit, Texture2D caserne, Texture2D rotation, Texture2D enregister, Texture2D demolition, int construire, int detruire, Texture2D cosntruireOn, Texture2D cosntruireOff, Texture2D demolitionOff, Texture2D plage, Texture2D plage2){
+void afficherBarreOutils(animationBarre* boiteOutils, int seconde, Texture2D monnaie, Texture2D temps, Texture2D eau, Texture2D elec, Texture2D souris, Texture2D calendrier, int min, int argent, int heure, int mois, int annee, Texture2D moinsAccel, Texture2D plusAccel, Texture2D route, Texture2D maison, Texture2D centrale, Texture2D puit, Texture2D caserne, Texture2D rotation, Texture2D enregister, Texture2D demolition, int construire, int detruire, Texture2D cosntruireOn, Texture2D cosntruireOff, Texture2D demolitionOff, Texture2D plage, Texture2D plage2, int quitter, ECECITY *jeu){
     //int posXRectangleRange = 1025;
     //int posXRectanglePasRange = 930;
     int const posXFlecheIni = 1520;
@@ -93,17 +93,53 @@ void afficherBarreOutils(animationBarre* boiteOutils, int seconde, Texture2D mon
     DrawText("Niveau d'Eau :", 20, 530, 20, ColorAlpha(BLACK, 1));
     DrawText("Niveau d'Electricite :", 20, 620, 20, ColorAlpha(BLACK, 1));
     DrawRectangleRounded((Rectangle){20, 565, 200, 24}, 0.2, 16, WHITE);
+    DrawText(TextFormat("%d", jeu->compteur.nbChateauO*5000), 30, 567, 20, BLACK);
     DrawRectangleRounded((Rectangle){20, 655, 200, 24}, 0.2, 16, WHITE);
+    DrawText(TextFormat("%d", jeu->compteur.nbUsines*5000), 30, 657, 20, BLACK);
 
     DrawRectangleLines(1000, 50, 200, 24, WHITE);
     DrawText("Quitter la partie", 1005, 52, 20, WHITE);
     DrawRectangleLines(1000, 80, 250, 24, WHITE);
     DrawText("Recommencer la partie", 1005, 82, 20, WHITE);
 
+    if (quitter == 1){
+        DrawRectangleLinesEx((Rectangle){330, 300, 800, 200}, 5, BLACK);
+        DrawRectangleRounded((Rectangle){330, 300, 800, 200}, 0.2, 16, ColorAlpha(BLACK, 0.5));
+        DrawText("Souhaitez vous enregistrer la partie ?", 470, 330, 25, WHITE);
+        DrawRectangleLinesEx((Rectangle){540, 380, 130, 36}, 2, BLACK);
+        DrawText("OUI", 580, 385, 25, WHITE);
+        DrawRectangleLinesEx((Rectangle){760, 380, 130, 36}, 2, BLACK);
+        DrawText("NON", 800, 385, 25, WHITE);
+        DrawRectangleLinesEx((Rectangle){980, 430, 120, 36}, 2, BLACK);
+        DrawText("Annuler", 1000, 435, 25, WHITE);
+    }
+    if (quitter == 2){
+        DrawRectangleLinesEx((Rectangle){330, 300, 800, 200}, 5, BLACK);
+        DrawRectangleRounded((Rectangle){330, 300, 800, 200}, 0.2, 16, ColorAlpha(BLACK, 0.5));
+        DrawText("Souhaitez vous quitter le jeu ou revenir au menu ?", 450, 330, 25, WHITE);
+        DrawRectangleLinesEx((Rectangle){500, 380, 200, 36}, 2, BLACK);
+        DrawText("Quitter le jeu", 510, 385, 25, WHITE);
+        DrawRectangleLinesEx((Rectangle){760, 380, 220, 36}, 2, BLACK);
+        DrawText("Revenir au menu", 770, 385, 25, WHITE);
+    }
+
+    for (int y = 0; y < LIGNES; ++y) {
+        for (int x = 0; x < COLONNES; ++x) {
+            if(jeu->G->tabCase[x][y].affichage == 1){
+                if (jeu->G->tabCase[x][y].type == 2){
+                    DrawText(TextFormat("%d/5000", jeu->tabE[jeu->G->tabCase[x][y].identite].QErestant), x * (LARGEUR_TUILE_ISO / 2) + y * (LARGEUR_TUILE_ISO / 2) + LARGEUR_TUILE_ISO * ISO_DECALAGE_X+25, x * (HAUTEUR_TUILE_ISO / 2) - y * (HAUTEUR_TUILE_ISO / 2) + HAUTEUR_TUILE_ISO * ISO_DECALAGE_Y, 10, BLACK);
+                }
+                if (jeu->G->tabCase[x][y].type == 3){
+                    DrawText(TextFormat("%d/5000", jeu->tabO[jeu->G->tabCase[x][y].identite].QOrestant), x * (LARGEUR_TUILE_ISO / 2) + y * (LARGEUR_TUILE_ISO / 2) + LARGEUR_TUILE_ISO * ISO_DECALAGE_X+25, x * (HAUTEUR_TUILE_ISO / 2) - y * (HAUTEUR_TUILE_ISO / 2) + HAUTEUR_TUILE_ISO * ISO_DECALAGE_Y, 10, BLACK);
+                }
+            }
+
+        }
+    }
 }
 
 
-void clicGaucheBarreOutil(int PosXMouse, int PosYMouse, int* compteurAccele, int* rotationBattiment, int* detruire, int* construire, ECECITY* JEU, int* tempsVirtuelle, int* cycle){
+void clicGaucheBarreOutil(int PosXMouse, int PosYMouse, int* compteurAccele, int* rotationBattiment, int* detruire, int* construire, ECECITY* JEU, int* tempsVirtuelle, int* cycle, int *quitter, int *modeDeJeu){
     if (PosXMouse >= 10 && PosXMouse <= 30 && PosYMouse >= 200 && PosYMouse <= 220) {
         if (*compteurAccele > 1) {
             (*compteurAccele)--;
@@ -140,6 +176,21 @@ void clicGaucheBarreOutil(int PosXMouse, int PosYMouse, int* compteurAccele, int
     }
     if (PosXMouse >= 1000 && PosXMouse <= 1200 && PosYMouse >= 80 && PosYMouse <= 104) {
         recommencerPartie(JEU->G->tabCase, &JEU->compteur, tempsVirtuelle, cycle);
+    }
+    if (PosXMouse >= 1000 && PosXMouse <= 1250 && PosYMouse >= 50 && PosYMouse <= 74) {
+        *quitter = 1;
+    }
+    if (PosXMouse >= 540 && PosXMouse <= 670 && PosYMouse >= 380 && PosYMouse <= 416 && *quitter == 1) {
+        enregistrerPartie(JEU->G->tabCase, *tempsVirtuelle);
+        *quitter = 2;
+    }
+    if (PosXMouse >= 760 && PosXMouse <= 890 && PosYMouse >= 380 && PosYMouse <= 416 && *quitter == 1) {
+        *quitter = 2;
+    }
+    if (PosXMouse >= 500 && PosXMouse <= 700 && PosYMouse >= 380 && PosYMouse <= 416 && *quitter == 2) {
+    }
+    if (PosXMouse >= 760 && PosXMouse <= 980 && PosYMouse >= 380 && PosYMouse <= 416 && *quitter == 2) {
+        *modeDeJeu = MENU;
     }
 }
 
