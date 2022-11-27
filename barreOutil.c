@@ -101,3 +101,73 @@ void afficherBarreOutils(animationBarre* boiteOutils, int seconde, Texture2D mon
     DrawText("Recommencer la partie", 1005, 82, 20, WHITE);
 
 }
+
+
+void clicGaucheBarreOutil(int PosXMouse, int PosYMouse, int* compteurAccele, int* rotationBattiment, int* detruire, int* construire, ECECITY* JEU, int* tempsVirtuelle, int* cycle){
+    if (PosXMouse >= 10 && PosXMouse <= 30 && PosYMouse >= 200 && PosYMouse <= 220) {
+        if (*compteurAccele > 1) {
+            (*compteurAccele)--;
+        }
+    }
+    if (PosXMouse >= 80 && PosXMouse <= 100 && PosYMouse >= 200 && PosYMouse <= 220) {
+        if (*compteurAccele < 6) {
+            (*compteurAccele)++;
+        }
+    }
+    if (PosXMouse >= 300 && PosXMouse <= 380 && PosYMouse >= 720 && PosYMouse <= 800) {
+        if (*rotationBattiment != 1) {
+            (*rotationBattiment)++;
+        } else {
+            *rotationBattiment = 0;
+        }
+    }
+    if (PosXMouse >= 425 && PosXMouse <= 485 && PosYMouse >= 720 && PosYMouse <= 780) {
+        if (*detruire != 1) {
+            (*detruire)++;
+        } else {
+            *detruire = 0;
+        }
+    }
+    if (PosXMouse >= 50 && PosXMouse <= 90 && PosYMouse >= 720 && PosYMouse <= 780) {
+        if (*construire != 1) {
+            (*construire)++;
+        } else {
+            *construire = 0;
+        }
+    }
+    if (PosXMouse >= 175 && PosXMouse <= 255 && PosYMouse >= 700 && PosYMouse <= 780) {
+        enregistrerPartie(JEU->G->tabCase, *tempsVirtuelle);
+    }
+    if (PosXMouse >= 1000 && PosXMouse <= 1200 && PosYMouse >= 80 && PosYMouse <= 104) {
+        recommencerPartie(JEU->G->tabCase, &JEU->compteur, tempsVirtuelle, cycle);
+    }
+}
+
+void accelerationTemps(int compteurAccele, float* accelerateurTemps, Texture2D x1,Texture2D x2,Texture2D x5,Texture2D x10,Texture2D x15, Texture2D x30){
+    switch (compteurAccele) {
+        case 1 :
+            *accelerateurTemps = 1.00;
+            DrawTexture(x1, 35, 190, WHITE);
+            break;
+        case 2 :
+            *accelerateurTemps = 0.50;
+            DrawTexture(x2, 35, 190, WHITE);
+            break;
+        case 3 :
+            *accelerateurTemps = 0.20;
+            DrawTexture(x5, 35, 190, WHITE);
+            break;
+        case 4 :
+            *accelerateurTemps = 0.10;
+            DrawTexture(x10, 35, 190, WHITE);
+            break;
+        case 5 :
+            *accelerateurTemps = 0.06;
+            DrawTexture(x15, 35, 190, WHITE);
+            break;
+        case 6 :
+            *accelerateurTemps = 0.03;
+            DrawTexture(x30, 35, 190, WHITE);
+            break;
+    }
+}
