@@ -13,11 +13,11 @@ void affichageGrille(VECTEUR mouseIso, Texture2D texture);
 void affichageRoute(Texture2D Routes, CASE** tabCase, int niveau);
 void affichageTerrain(Texture2D Terrain, CASE** tabCase, Texture2D terrainVague, Texture2D cabane, Texture2D maison, Texture2D hotel, Texture2D gratteCiel);
 int typeRoute( CASE** tabCase, int x, int y);
-void affichageBattiment(Texture2D Battiment, CASE** tabCase);
+void affichageBattiment(Texture2D Battiment, CASE** tabCase, Texture2D centralEau, Texture2D centralEauBis, Texture2D centralElec, Texture2D centralElecBis, int rotation);
 void enregistrerPartie(CASE** tabCase);
 void recommencerPartie(CASE** tabCase, COMPTEUR* compteur);
 void initialisationOrdre(CASE** tabCase, int ordre, int x, int y, COMPTEUR* compteur);
 
 
-void construireBat(int categorieConstruction, int posXMouse, int posYMouse, Texture2D building, Texture2D route);
+void construireBat(int categorieConstruction, int posXMouse, int posYMouse, Texture2D building, Texture2D route, Texture2D centralEau, Texture2D centralEauBis, Texture2D centralElec, Texture2D centralElecBis, int rotation, int construire);
 #endif //ECE_CITY_3_Z_AFFICHAGE_H

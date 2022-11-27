@@ -25,14 +25,12 @@ void barreOutilSouris(int PosXMouse, int PosYMouse,  animationBarre* barre, int*
     }
 }
 
-void afficherBarreOutils(animationBarre* boiteOutils, int seconde, Texture2D monnaie, Texture2D temps, Texture2D eau, Texture2D elec, Texture2D souris, Texture2D calendrier, int min, int argent, int heure, int mois, int annee, Texture2D moinsAccel, Texture2D plusAccel, Texture2D route, Texture2D maison, Texture2D centrale, Texture2D puit, Texture2D caserne){
+void afficherBarreOutils(animationBarre* boiteOutils, int seconde, Texture2D monnaie, Texture2D temps, Texture2D eau, Texture2D elec, Texture2D souris, Texture2D calendrier, int min, int argent, int heure, int mois, int annee, Texture2D moinsAccel, Texture2D plusAccel, Texture2D route, Texture2D maison, Texture2D centrale, Texture2D puit, Texture2D caserne, Texture2D rotation, Texture2D enregister, Texture2D demolition, int construire, int detruire, Texture2D cosntruireOn, Texture2D cosntruireOff, Texture2D demolitionOff, Texture2D plage, Texture2D plage2){
     //int posXRectangleRange = 1025;
     //int posXRectanglePasRange = 930;
     int const posXFlecheIni = 1520;
     int const posXFlecheFin = 1300;
     char* m[] = {"Janvier","Fevrier","Mars","Avril","Mai","Juin","Juillet","Aout","Septembre","Octobre","Novembre","Decembre"};
-
-
 
     if (boiteOutils->etat == FERME){
         DrawRectangleRounded((Rectangle){1520, 340, 100, 60}, 0.2, 16, WHITE);
@@ -60,32 +58,46 @@ void afficherBarreOutils(animationBarre* boiteOutils, int seconde, Texture2D mon
         DrawText("Coût", 1520, 665, 20, BLACK);
         DrawText("1000", 1522, 695, 20, BLACK);
     }
-    DrawTriangle((Vector2){-10, -10}, (Vector2){0, 300},(Vector2){600, 0},  BLUE);
-    DrawTexture(temps, 10, 15, BLUE);
-    DrawTexture(monnaie, 200, 15, BLUE);
-    DrawTexture(calendrier, 10, 100, BLUE);
 
-    //DrawRectangle(10, 10, 40, 40, WHITE);
+    DrawTexture(plage, 0, 0, WHITE);
+   //DrawTriangle((Vector2){-10, -10}, (Vector2){0, 300},(Vector2){600, 0},  BLUE);
+    DrawTexture(temps, 10, 15, WHITE);
+    DrawTexture(monnaie, 200, 15, WHITE);
+    DrawTexture(calendrier, 10, 100, WHITE);
     DrawRectangleRounded((Rectangle){76, 38, 82, 24}, 0.2, 16, WHITE);
     DrawRectangleRounded((Rectangle){270, 38, 150, 24}, 0.2, 16, WHITE);
     DrawText(TextFormat("%.2d:%.2d:%.2d",heure, min, seconde), 78, 40, 20, ColorAlpha(BLACK, 1));
     DrawText(TextFormat("%d", argent), 272, 40, 20, ColorAlpha(BLACK, 1));
     DrawText(TextFormat("%s", m[mois]), 78, 110, 20, ColorAlpha(BLACK, 1));
     DrawText(TextFormat("%d", annee), 78, 140, 20, ColorAlpha(BLACK, 1));
+    DrawTexture(moinsAccel, 10, 200, WHITE);
+    DrawTexture(plusAccel, 80, 200, WHITE);
 
-    //DrawRectangleRounded((Rectangle){10, 200, 20, 20}, 0.2, 16, BLACK);
-    DrawTexture(moinsAccel, 10, 200, BLUE);
-    //DrawRectangleRounded((Rectangle){35, 190, 40, 40}, 0.2, 16, BLACK);
-    //DrawRectangleRounded((Rectangle){80, 200, 20, 20}, 0.2, 16, BLACK);
-    DrawTexture(plusAccel, 80, 200, BLUE);
+    DrawTexture(plage2, 0, 400, WHITE);
+    //DrawTriangle((Vector2){0, 400}, (Vector2){0, HAUTEUR}, (Vector2){750, HAUTEUR}, BLUE);
+    if (construire == 0){
+        DrawTexture(cosntruireOn, 30, 700, WHITE);
+    } else{
+        DrawTexture(cosntruireOff, 30, 700, WHITE);
+    }
+    DrawTexture(rotation, 300, 700, WHITE);
+    DrawTexture(enregister, 175, 700, WHITE);
+    if (detruire == 0){
+        DrawTexture(demolitionOff, 425, 700, WHITE);
+    } else{
+        DrawTexture(demolition, 425, 700, WHITE);
+    }
 
+    DrawTexture(eau, 170, 515, WHITE);
+    DrawTexture(elec, 240, 600, WHITE);
+    DrawText("Niveau d'Eau :", 20, 530, 20, ColorAlpha(BLACK, 1));
+    DrawText("Niveau d'Electricite :", 20, 620, 20, ColorAlpha(BLACK, 1));
+    DrawRectangleRounded((Rectangle){20, 565, 200, 24}, 0.2, 16, WHITE);
+    DrawRectangleRounded((Rectangle){20, 655, 200, 24}, 0.2, 16, WHITE);
 
-    DrawTriangle((Vector2){0, 400}, (Vector2){0, HAUTEUR}, (Vector2){700, HAUTEUR}, BLUE);
-    DrawTexture(souris, 50, 530, BLUE);
-    DrawTexture(eau, 170, 585, BLUE);
-    DrawTexture(elec, 240, 675, BLUE);
-    DrawText("Souris :", 30, 500, 20, ColorAlpha(BLACK, 1));
-    DrawText("Niveau d'Eau :", 20, 600, 20, ColorAlpha(BLACK, 1));
-    DrawText("Niveau d'Electricite :", 20, 680, 20, ColorAlpha(BLACK, 1));
+    DrawRectangleLines(1000, 50, 200, 24, WHITE);
+    DrawText("Quitter la partie", 1005, 52, 20, WHITE);
+    DrawRectangleLines(1000, 80, 250, 24, WHITE);
+    DrawText("Recommencer la partie", 1005, 82, 20, WHITE);
 
 }
