@@ -8,6 +8,7 @@
 #define COLONNES 45
 #define LIGNES 35
 #define TUILE 20
+#define TEMPS_CYCLE 5
 #define LARGEUR_TUILE_ISO 34
 #define HAUTEUR_TUILE_ISO 18
 #define ISO_DECALAGE_X 2
@@ -17,7 +18,7 @@
 #define COUT_ROUTE 50
 #define COUT_TERRAIN_VAGUE 1000
 #define COUT_CASERNE 10000
- //170
+
 
 #define TAXE 50
 #define NBRHABITANT_CABANE 10
@@ -143,5 +144,7 @@ typedef struct{
 #include "affichage.h"
 #include "isoConfig.h"
 #include "barreOutil.h"
+#include "menu.h"
+#include "jeu.h"
 
 #endif //ECE_CITY_3_Z_BIBLIOTHEQUE_H

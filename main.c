@@ -6,6 +6,7 @@ int main() {
     int niveau = 0;
     int construction;
     int ordre;
+    int mode = 0;
     int detruire = 0;
     int rotationBattiment = 0;
     COMPTEUR compteur;
@@ -20,7 +21,8 @@ int main() {
     int heure = 0;
     int mois = 11;
     int annee = 2022;
-    int tempsVirtuelle = 0;
+    int tempsVirtuelle;
+    int cycle;
     float lastT = 0.0f;
     float accelerateurTemps = 1.00f;
     int compteurAccele = 1;
@@ -28,6 +30,10 @@ int main() {
     int construire = 0;
 
     float tempsEcoule = 0;
+    float tempsDepart;
+    int jeuEnCour = 0;
+    enum gameMode modeActuel = MENU;
+
 
 
     FILE *ifs = fopen("../map.txt", "r");
@@ -50,7 +56,8 @@ int main() {
     for (int i = 0; i < COLONNES; i++) {
         JEU->G->tabCase[i] = malloc((LIGNES) * sizeof(CASE));
     }
-
+    fscanf(ifs, "%d", &tempsVirtuelle);
+    cycle = tempsVirtuelle%TEMPS_CYCLE;
     for (int y = 0; y < LIGNES; y++) {
         for (int x = 0; x < COLONNES; x++) {
             fscanf(ifs, "%d", &construction);
@@ -58,7 +65,7 @@ int main() {
             JEU->G->tabCase[x][y].type = construction; // 0: rien 1:route 2:Usine 3:chateauEau 4:caserne 5:terrain vague
             JEU->G->tabCase[x][y].identite = ordre;
             JEU->G->tabCase[x][y].affichage = 0;
-            initialisationOrdre(JEU->G->tabCase, ordre, x, y,&JEU->compteur);
+            initialisationOrdre(JEU->G->tabCase, ordre, x, y,&JEU->compteur, JEU);
         }
     }
 
@@ -108,32 +115,135 @@ int main() {
     Texture2D construireOff = LoadTexture("../images/construireOff.png");
     Texture2D demolitionOff = LoadTexture("../images/demolitionOff.png");
 
+    Texture2D team = LoadTexture("../Bitmap/Profile.png");
+    Texture2D fontMenu = LoadTexture("../Bitmap/font.png");
+    Texture2D rules = LoadTexture("../Bitmap/rules.png");
+    Texture2D capitaliste = LoadTexture("../Bitmap/capitaliste.png");
+    Texture communiste = LoadTexture("../Bitmap/communiste.png");
+
+
+
     while (!WindowShouldClose()) {
 
         BeginDrawing();
         ClearBackground(BLACK);
-        DrawTexture(testFond, 0, 0, WHITE);
-        if (GetTime() - lastT > accelerateurTemps) {
-            tempsVirtuelle++;
-            lastT = GetTime();
-        }
-        mois = (tempsVirtuelle / 15) % 12;
-        annee = 2022 + (tempsVirtuelle / 15) / 12;
-        if (mois > 12) {
-            mois = 1;
-        }
-        minute = tempsVirtuelle / 60 %60;
-        seconde = tempsVirtuelle % 60;
-        //heure = tempsVirtuelle%3600;
+
+        switch (modeActuel) {
+            case MENU : {
+                DrawTexturePro(fontMenu,
+                               (Rectangle) {.x = 0, .y = 0, .width = fontMenu.width, .height =  fontMenu.height},
+                               (Rectangle) {300, 0, .width = 1000, .height = 800}, (Vector2) {0, 0}, 0, WHITE);
+
+                ///DESSINER LES 3 RECTANGLES DES MENUS
+
+                DrawRectangle(556, 300, 512, 80, (Color) {255, 255, 0, 255});
+                DrawRectangle(556, 400, 512, 80, (Color) {255, 255, 0, 255});
+                DrawRectangle(556, 500, 512, 80, (Color) {255, 255, 0, 255});
+                DrawRectangle(556, 600, 512, 80, (Color) {255, 255, 0, 255});
+
+                DrawText("PLAY", 750, 318, 50, (Color) {0, 150, 0, 250});
+                DrawText("RULES", 750, 418, 50, (Color) {0, 150, 0, 250});
+                DrawText("TEAM", 750, 518, 50, (Color) {0, 150, 0, 250});
+                DrawText("MODE", 750, 618, 50, (Color) {0, 150, 0, 250});
 
 
-        coordSourisIso(&mouseIso, img);
-        affichageGrille(mouseIso, Tiles);
-        affichageRoute(Routes, JEU->G->tabCase, niveau);
-        affichageTerrain(Tiles, JEU->G->tabCase, terrainVague, cabane, maison, hotel, gratteCiel);
-        affichageBattiment(Tiles, JEU->G->tabCase, centralEau, centralEauBis, centralElecBis, centralElec, rotationBattiment);
-        evolutionBat(JEU->G->tabCase, &tempsEcoule, JEU);
+                ///On fait surbriller le rectangle sur lequelle se trouve la souris
+                if (GetMouseX() > 556 && GetMouseY() > 300 && GetMouseX() < 1078 && GetMouseY() < 380) {
+                    DrawRectangle(556, 300, 512, 80, (Color) {150, 150, 150, 115});
+                } else if (GetMouseX() > 556 && GetMouseY() > 420 && GetMouseX() < 1078 && GetMouseY() < 480) {
+                    DrawRectangle(556, 400, 512, 80, (Color) {150, 150, 150, 115});
+                } else if (GetMouseX() > 556 && GetMouseY() > 500 && GetMouseX() < 1078 && GetMouseY() < 580) {
+                    DrawRectangle(556, 500, 512, 80, (Color) {150, 150, 150, 115});
+                } else if (GetMouseX() > 556 && GetMouseY() > 600 && GetMouseX() < 1078 && GetMouseY() < 680) {
+                    DrawRectangle(556, 600, 512, 80, (Color) {150, 150, 150, 115});
+                }
+                break;
+            }
+            case RULES : {
+                DrawTexturePro(rules,
+                               (Rectangle) {.x = 0, .y = 0, .width = rules.width, .height =  rules.height},
+                               (Rectangle) {260, 0, .width = 1000, .height = 800}, (Vector2) {0, 0}, 0, WHITE);
 
+
+                ///FLECHES RETOUR
+                DrawRectangle(50, 50, 140, 90, (Color) {87, 213, 241, 180});
+                DrawText("RETURN", 55, 75, 30, (Color) {0, 0, 0, 255});
+
+                ///On fait surbriller le rectangle sur lequelle se trouve la souris
+                if (GetMouseX() > 50 && GetMouseY() > 50 && GetMouseX() < 200 && GetMouseY() < 150) {
+                    DrawRectangle(50, 50, 140, 90, (Color) {162, 213, 268, 50});
+                }
+                break;
+            }
+            case TEAM : {
+                DrawTexturePro(team,
+                               (Rectangle) {.x = 0, .y = 0, .width = team.width, .height =  team.height},
+                               (Rectangle) {260, 0, .width = 1000, .height = 800}, (Vector2) {0, 0}, 0, WHITE);
+
+                ///FLECHES RETOUR
+                DrawRectangle(50, 50, 140, 90, (Color) {87, 213, 241, 180});
+                DrawText("RETURN", 55, 75, 30, (Color) {0, 0, 0, 255});
+
+                ///On fait surbriller le rectangle sur lequelle se trouve la souris
+                if (GetMouseX() > 50 && GetMouseY() > 50 && GetMouseX() < 200 && GetMouseY() < 150) {
+                    DrawRectangle(50, 50, 140, 90, (Color) {162, 213, 268, 50});
+                }
+                break;
+            }
+            case MODE : {
+
+                DrawTexturePro(capitaliste,
+                               (Rectangle) {.x = 0, .y = 0, .width = capitaliste.width, .height =  capitaliste.height},
+                               (Rectangle) {300, 300, .width = 300, .height = 300}, (Vector2) {0, 0}, 0, WHITE);
+                if (GetMouseX() > 300 && GetMouseY() > 300 && GetMouseX() < 700 && GetMouseY() < 600) {
+                    DrawTexturePro(capitaliste,
+                                   (Rectangle) {.x = 0, .y = 0, .width = capitaliste.width, .height =  capitaliste.height},
+                                   (Rectangle) {300, 300, .width = 400, .height = 400}, (Vector2) {0, 0}, 0, WHITE);
+                }
+                DrawTexturePro(communiste,
+                               (Rectangle) {.x = 0, .y = 0, .width = communiste.width, .height =  communiste.height},
+                               (Rectangle) {800, 300, .width = 300, .height = 300}, (Vector2) {0, 0}, 0, WHITE);
+                if (GetMouseX() > 800 && GetMouseY() > 300 && GetMouseX() < 1200 && GetMouseY() < 600) {
+                    DrawTexturePro(communiste,
+                                   (Rectangle) {.x = 0, .y = 0, .width = communiste.width, .height =  communiste.height},
+                                   (Rectangle) {800, 300, .width = 400, .height = 400}, (Vector2) {0, 0}, 0, WHITE);
+                }
+                DrawText("CHOISISSEZ UN MODE DE JEU :", 400, 50, 40, YELLOW);
+                DrawText("MODE CAPITALISTE", 290, 150, 30, YELLOW);
+                DrawText("MODE COMMUNISTE", 790, 150, 30, YELLOW);
+
+
+                ///FLECHES RETOUR
+                DrawRectangle(50, 50, 140, 90, (Color) {87, 213, 241, 180});
+                DrawText("RETURN", 55, 75, 30, (Color) {0, 0, 0, 255});
+
+                ///On fait surbriller le rectangle sur lequelle se trouve la souris
+                if (GetMouseX() > 50 && GetMouseY() > 50 && GetMouseX() < 200 && GetMouseY() < 150) {
+                    DrawRectangle(50, 50, 140, 90, (Color) {162, 213, 268, 50});
+                }
+                break;
+            }
+            case PLAY :{
+                /* if (GetTime() - lastT > accelerateurTemps) {
+                     tempsVirtuelle++;
+                     lastT = GetTime();
+                 }
+                 mois = (tempsVirtuelle / 15) % 12;
+                 annee = 2022 + (tempsVirtuelle / 15) / 12;
+                 if (mois > 12) {
+                     mois = 1;
+                 }
+                 minute = tempsVirtuelle / 60 %60;
+                 seconde = tempsVirtuelle % 60;
+                 //heure = tempsVirtuelle%3600; */
+
+                tempsJeu(&lastT, &tempsVirtuelle, &cycle, accelerateurTemps, &seconde, &minute, &mois, &annee);
+                coordSourisIso(&mouseIso, img);
+                affichageGrille(mouseIso, Tiles);
+                affichageRoute(Routes, JEU->G->tabCase, niveau);
+                affichageTerrain(Tiles, JEU->G->tabCase, terrainVague, cabane, maison, hotel, gratteCiel);
+                affichageBattiment(Tiles, JEU->G->tabCase, centralEau, centralEauBis, centralElecBis, centralElec, rotationBattiment);
+                evolutionBat(JEU->G->tabCase, &tempsEcoule, JEU,&cycle);
 
 
 
@@ -238,10 +348,112 @@ int main() {
         }
         construireBat(categorieConstruction, PosXMouse, PosYMouse, terrainVague, Routes, centralEau, centralEauBis, centralElecBis, centralElec, rotationBattiment, construire);
 
-        EndDrawing();
+                if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) == true) {
 
+                    switch (modeActuel) {
+                        case RULES : {
+                            if (GetMouseX() > 50 && GetMouseY() > 50 && GetMouseX() < 200 && GetMouseY() < 150) {
+                                modeActuel = MENU;
+                            }
+                            break;
+                        }
+                        case TEAM : {
+                            if (GetMouseX() > 50 && GetMouseY() > 50 && GetMouseX() < 200 && GetMouseY() < 150) {
+                                modeActuel = MENU;
+                            }
+                            break;
+                        }
+                        case MODE : {
+                            if (GetMouseX() > 300 && GetMouseY() > 300 && GetMouseX() < 700 && GetMouseY() < 600) {
+                                mode = 1;  ///MODE CAPITALISTE
+                                DrawText("MODE CHOISI : CAPITALISTE", 400, 400, 30, BLACK);
+                            } else if (GetMouseX() > 800 && GetMouseY() > 300 && GetMouseX() < 1200 &&
+                                       GetMouseY() < 600) {
+                                mode = 2;  ///MODE COMMUNISTE
+                                DrawText("MODE CHOISI : COMMUNISTE", 400, 400, 30, BLACK);
+                            } else if (GetMouseX() > 50 && GetMouseY() > 50 && GetMouseX() < 200 && GetMouseY() < 150) {
+                                modeActuel = MENU;
+                            }
+                            break;
+                        }
+                        case MENU : {
+                            if (GetMouseX() > 256 && GetMouseY > 300 && GetMouseX() < 778 && GetMouseY() < 380) {
+                                modeActuel = PLAY;
+                                tempsDepart = GetTime();
+                                jeuEnCour = 1;
+                            } else if (GetMouseX() > 256 && GetMouseY > 420 && GetMouseX() < 778 && GetMouseY() < 480) {
+                                modeActuel = RULES;
+                            } else if (GetMouseX() > 256 && GetMouseY > 500 && GetMouseX() < 778 && GetMouseY() < 580) {
+                                modeActuel = TEAM;
+                            } else if (GetMouseX() > 256 && GetMouseY > 620 && GetMouseX() < 778 && GetMouseY() < 680) {
+                                modeActuel = MODE;
+                            }
+                            break;
+                        }
+                    }
+                }
+
+
+
+            }
+
+
+        }
+        if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) == true) {
+            //Rectangle rectangle = {256, 300, 512, 80};
+            //if (CheckCollisionPointRec(GetMousePosition(), rectangle)) {}
+
+            switch (modeActuel) {
+                case RULES : {
+                    if (GetMouseX() > 50 && GetMouseY() > 50 && GetMouseX() < 200 && GetMouseY() < 150) {
+                        modeActuel = MENU;
+                    }
+                    break;
+                }
+                case TEAM : {
+                    if (GetMouseX() > 50 && GetMouseY() > 50 && GetMouseX() < 200 && GetMouseY() < 150) {
+                        modeActuel = MENU;
+                    }
+                    break;
+                }
+                case MODE : {
+                    if (GetMouseX() > 300 && GetMouseY()>300 && GetMouseX()<700 && GetMouseY()<600){
+                        mode = 1;  ///MODE CAPITALISTE
+                        DrawText("MODE CHOISI : CAPITALISTE", 400, 400,30,  BLACK);
+                    }else if (GetMouseX() >800 && GetMouseY()>300 && GetMouseX()<1200 && GetMouseY()<600){
+                        mode = 2;  ///MODE COMMUNISTE
+                        DrawText("MODE CHOISI : COMMUNISTE", 400, 400,30,  BLACK);
+                    }
+                    if (GetMouseX() > 50 && GetMouseY() > 50 && GetMouseX() < 200 && GetMouseY() < 150) {
+                        modeActuel = MENU;
+                    }
+                    break;
+                }
+                case MENU : {
+                    if (GetMouseX() > 556 && GetMouseY > 300 && GetMouseX() < 1078 && GetMouseY() < 380) {
+                        modeActuel = PLAY;
+                        tempsDepart = GetTime();
+                        jeuEnCour = 1;
+                    } else if (GetMouseX() > 556 && GetMouseY > 420 && GetMouseX() < 1078 && GetMouseY() < 480) {
+                        modeActuel = RULES;
+
+                    } else if (GetMouseX() > 556 && GetMouseY > 500 && GetMouseX() < 1078 && GetMouseY() < 580) {
+                        modeActuel = TEAM;
+                    } else if (GetMouseX() > 556 && GetMouseY > 620 && GetMouseX() < 1078 && GetMouseY() < 680) {
+                        modeActuel = MODE;
+                    }
+                    break;
+                }
+            }
+        }
+        EndDrawing();
     }
 
+    UnloadTexture(fontMenu);
+    UnloadTexture(team);
+    UnloadTexture(rules);
+    UnloadTexture(capitaliste);
+    UnloadTexture(communiste);
     UnloadTexture(terrainVague);
     UnloadTexture(monnaie);
     UnloadTexture(temps);
