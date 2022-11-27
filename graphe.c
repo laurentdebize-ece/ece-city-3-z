@@ -478,6 +478,17 @@ bool checkApproO(int i, ECECITY *JEU) {
     return true;
 }
 
+void resetEO(ECECITY *JEU){
+    for(int i=1; i<=JEU->compteur.nbUsines;i++){
+        JEU->tabE[i].QErestant=5000;
+        JEU->tabE[i].QEmax=5000;
+    }
+    for(int i=1; i<=JEU->compteur.nbChateauO;i++){
+        JEU->tabO[i].QOrestant=5000;
+        JEU->tabO[i].QOmax=5000;
+    }
+}
+
 void CalculeO(ECECITY *JEU) {
     //On test d'abord si dans une composante connexe on a plus de QO que de nbHabitant
     //on récupére code CalculElec
@@ -548,6 +559,7 @@ void CalculeO(ECECITY *JEU) {
 //changer nb connexe
 
 void CalculeElec(ECECITY *JEU) {
+    resetEO(JEU);
     for (int i = 1; i <= JEU->G->nbConnexe; i++) {
         int QEcon = 0;
         int nbHabitantCon = 0;
