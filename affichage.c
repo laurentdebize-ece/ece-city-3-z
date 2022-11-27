@@ -258,14 +258,18 @@ int typeRoute(CASE **tabCase, int x, int y) {
 void enregistrerPartie(CASE **tabCase, int temps) {
     FILE *n = fopen("../map.txt", "w+");
     FILE *d = fopen("../ordreConstruction.txt", "w+");
+    FILE *p = fopen("../affichage.txt", "w+");
     fprintf(n, "%d\n", temps);
     for (int y = 0; y < LIGNES; y++) {
         for (int x = 0; x < COLONNES; x++) {
             fprintf(n, "%d ", tabCase[x][y].type);
             fprintf(d, "%d ", tabCase[x][y].identite);
+            fprintf(p, "%d ", tabCase[x][y].affichage);
+
         }
         fputs("\n", n);
         fputs("\n", d);
+        fputs("\n", p);
     }
 }
 
@@ -283,6 +287,7 @@ void recommencerPartie(CASE **tabCase, COMPTEUR *compteur, int *temps, int *cycl
             fprintf(n, "%d ", 0);
             tabCase[x][y].type = 0;
             tabCase[x][y].identite = 0;
+            tabCase[x][y].affichage = 0;
         }
         fputs("\n", n);
     }
