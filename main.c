@@ -198,10 +198,7 @@ int main() {
                     detruireConstruction(&mouseIso, JEU->G->tabCase, &JEU->compteur, rotationBattiment, detruire,
                                          JEU);
                     barreOutilSouris(PosXMouse, PosYMouse, &barre, &categorieConstruction);
-                    //printf("nb route: %d\nnb hab: %d\nnb usine: %d\nnb chateauO: %d\n ", JEU->compteur.nbRues,JEU->compteur.nbHab, JEU->compteur.nbUsines, JEU->compteur.nbChateauO);
-                    fflush(stdout);
-                    printf("\n\n%d\n\n",JEU->G->nbConnexe);
-                    fflush(stdout);
+
                 }
             }
         }

@@ -246,7 +246,6 @@ void batimentApercu(CASE** tabCase, int x, int y, int typeBatiment){
 
 void evolutionBat (CASE** tabCase, float* tempsEcoule, ECECITY* JEU, int* cycle) {
 
-    //printf("%d\n", cycle);
     if (*cycle == TEMPS_CYCLE) {
         *cycle = 0;
         for (int x = 1; x < 175; x++) {
@@ -271,9 +270,7 @@ void evolutionBat (CASE** tabCase, float* tempsEcoule, ECECITY* JEU, int* cycle)
                 }
             }
         }
-        printf("%d %d\n", JEU->tabHab[1].type, JEU->tabHab[2].type);
     }
-
 }
 
 
@@ -315,7 +312,6 @@ void demolitionBatCapitaliste (CASE** tabCase, float* tempsEcoule, ECECITY* JEU,
 
 ///Fonction faisant evoluer les batiment en mode capitaliste toutes les 15 sec
 void evolutionBatCapitaliste (CASE** tabCase, float* tempsEcoule, ECECITY* JEU, int* cycle) {
-    //printf("%d\n", cycle);
     if (*cycle == TEMPS_CYCLE) {
         *cycle = 0;
         for (int x = 1; x < 175; x++) {
@@ -340,7 +336,6 @@ void evolutionBatCapitaliste (CASE** tabCase, float* tempsEcoule, ECECITY* JEU, 
                 }
             }
         }
-        printf("%d %d\n", JEU->tabHab[1].type, JEU->tabHab[2].type);
     }
 }
 
@@ -429,9 +424,7 @@ void evolutionCommuniste (CASE** tabCase, float* tempsEcoule, ECECITY* JEU, int*
                     chgmtType(JEU,x);
                 }
             }
-
         }
-        printf("%d %d\n", JEU->tabHab[1].type, JEU->tabHab[2].type);
     }
 }
 
