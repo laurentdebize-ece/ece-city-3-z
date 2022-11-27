@@ -12,7 +12,7 @@ CASE **CreerArete(CASE **sommet, int s1X, int s1Y, int s2X, int s2Y, int valeurs
         return sommet;
     } else {
         pArc temp = sommet[s1X][s1Y].arc;
-        while (!(temp->arc_suivant == NULL)) {
+        while (temp->arc_suivant != NULL) {
             temp = temp->arc_suivant;
         }
         pArc Newarc = (pArc) malloc(sizeof(struct Arc));
@@ -51,6 +51,23 @@ void CalculeConnexe(CASE **tabCase, int i, int j, int *nbConnexe) {
     if (tabCase[x][y].type>0) {
         tabCase[i][j].connexe = *nbConnexe;
         (*nbConnexe)++;
+    }
+}
+
+void CalculeConnexeV2(ECECITY *JEU, int i, int j) {
+    pArc temp = JEU->G->tabCase[i][j].arc;
+    int x = JEU->G->tabCase[i][j].arc->sommetX;
+    int y = JEU->G->tabCase[i][j].arc->sommetY;
+    while (temp != NULL) {
+        if (JEU->G->tabCase[x][y].connexe != 0) {
+            JEU->G->tabCase[i][j].connexe = JEU->G->tabCase[x][y].connexe;
+            return;
+        }
+        temp = temp->arc_suivant;
+    }
+    if (JEU->G->tabCase[x][y].type>0) {
+        JEU->G->tabCase[i][j].connexe = JEU->G->nbConnexe;
+        (JEU->G->nbConnexe)++;
     }
 }
 
@@ -121,7 +138,7 @@ void CalculeCompteurEtTab(CASE **tabCase, int i, int j, ECECITY *JEU) {
 Graphe *CreerGraphe(FILE *ifs, FILE *ifsID, ECECITY *JEU) {
     int construction;
     int ID;
-    int nbConnexe = 1;
+    int nbConnexe = 0;
     CASE **tabCase = malloc((QUADRILIGNE) * sizeof(CASE *));
     for (int i = 0; i < QUADRILIGNE; i++) {
         tabCase[i] = malloc((QUADRICOLONNE) * sizeof(CASE));
@@ -145,23 +162,19 @@ Graphe *CreerGraphe(FILE *ifs, FILE *ifsID, ECECITY *JEU) {
             tabCase[i][j].etat = 0;
             tabCase[i][j].arc = NULL;//il n'y a aucune construction au debut
             //on créer les arretes pour les 4cases adjacente de la case ij
-            if (j != 0 && tabCase[i][j - 1].type != 0) {
+            if (j != 0) {
                 tabCase = CreerArete(tabCase, i, j, i, j - 1, 1);
             }
-            if (i != 0 && tabCase[i - 1][j].type != 0) {
+            if (i != 0) {
                 tabCase = CreerArete(tabCase, i, j, i - 1, j, 1);
             }
             if (j != QUADRICOLONNE - 1) {
-                if (tabCase[i][j + 1].type != 0) {
                     tabCase = CreerArete(tabCase, i, j, i, j + 1, 1);
-                }
             }
             if (i != QUADRILIGNE - 1) {
-                if (tabCase[i + 1][j].type != 0) {
                     tabCase = CreerArete(tabCase, i, j, i + 1, j, 1);
-                }
             }
-            //CalculeConnexe(tabCase, i, j, &nbConnexe);
+            CalculeConnexe(tabCase, i, j, &nbConnexe);
             CalculeCompteurEtTab(tabCase, i, j, JEU);
         }
 
@@ -296,29 +309,34 @@ int checkBlanc(Graphe *G, int num) {
     return QUADRICOLONNE + 1;
 }
 
-void BFS(Graphe *G, int SommetX, int SommetY, int *compte) {
+void BFS(ECECITY *JEU, int SommetX, int SommetY, int *compte) {
     *compte = 0;
     File f = CreerFile();
-    pArc arc = G->tabCase[SommetX][SommetY].arc;
-    G->tabCase[SommetX][SommetY].couleur = 1;
+    pArc arc = JEU->G->tabCase[SommetX][SommetY].arc;
+    JEU->G->tabCase[SommetX][SommetY].couleur = 1;
     enfiler(f, SommetX * 100 + SommetY);
-    ++(*compte);
     while (f->longueur != 0) {
-        while (arc != NULL) {
-            if (G->tabCase[arc->sommetX][arc->sommetY].couleur == 0 && G->tabCase[arc->sommetX][arc->sommetY].type >0) {
-                enfiler(f, arc->sommetX * 100 + arc->sommetY);
-                G->tabCase[arc->sommetX][arc->sommetY].couleur = 1;
-                G->tabCase[arc->sommetX][arc->sommetY].predX = arc->sommetX;//a potentiellement changé en SommetX
-                G->tabCase[arc->sommetX][arc->sommetY].predY = arc->sommetY;// same
-            }
-            arc = arc->arc_suivant;
-        }
-        G->tabCase[SommetX][SommetY].couleur = 2;
-        //on récupère
+        ++(*compte);
         float num = defilement(f);
         SommetX = num / 100;
         SommetY = num - SommetX;
-        arc = G->tabCase[SommetX][SommetY].arc;
+        arc = JEU->G->tabCase[SommetX][SommetY].arc;
+        while (arc != NULL) {
+            if (JEU->G->tabCase[arc->sommetX][arc->sommetY].couleur == 0 && JEU->G->tabCase[arc->sommetX][arc->sommetY].type ==1) {
+                enfiler(f, arc->sommetX * 100 + arc->sommetY);
+                JEU->G->tabCase[arc->sommetX][arc->sommetY].couleur = 1;
+                JEU->G->tabCase[arc->sommetX][arc->sommetY].predX = SommetX;
+                JEU->G->tabCase[arc->sommetX][arc->sommetY].predY = SommetY;
+            }
+            else if(JEU->G->tabCase[arc->sommetX][arc->sommetY].type >=5 && JEU->G->tabCase[arc->sommetX][arc->sommetY].couleur == 0){
+                JEU->G->tabCase[arc->sommetX][arc->sommetY].couleur = 1;
+                JEU->G->tabCase[arc->sommetX][arc->sommetY].predX = SommetX;
+                JEU->G->tabCase[arc->sommetX][arc->sommetY].predY = SommetY;
+            }
+            arc = arc->arc_suivant;
+        }
+        JEU->G->tabCase[SommetX][SommetY].couleur = 2;
+        //on récupère
     }
 }
 
@@ -332,25 +350,32 @@ void afficheBFS(int tab[], int compte, int *c) {
     (*c)++;
 }
 
-void touBlancs(Graphe *G) {
-    for (int i = 0; i < QUADRICOLONNE; i++) {
-        for (int j = 0; j < QUADRILIGNE; j++) {
-            G->tabCase[i][j].couleur = 0;
-            G->tabCase[i][j].distance = 0;
+void touBlancs(ECECITY *JEU) {
+    for (int i = 0; i < QUADRILIGNE; i++) {
+        for (int j = 0; j < QUADRICOLONNE; j++) {
+            if(JEU->G->tabCase[i][j].couleur != 0 ||JEU->G->tabCase[i][j].distance != 0) {
+                JEU->G->tabCase[i][j].couleur = 0;
+                JEU->G->tabCase[i][j].distance = 0;
+                JEU->G->tabCase[i][j].predX=-1;
+                JEU->G->tabCase[i][j].predY=-1;
+            }
         }
     }
 }
 
-void CalculDistance(Graphe *G, int SommetX, int SommetY, int con) {
-    for (int i = 0; i < QUADRICOLONNE; i++) {
-        for (int j = 0; j < QUADRILIGNE; j++) {
-            if (G->tabCase[i][j].type >= 5 && G->tabCase[i][j].connexe == con) {
+void CalculDistance(ECECITY *JEU, int SommetX, int SommetY, int con) {
+    for (int i = 0; i < QUADRILIGNE; i++) {
+        for (int j = 0; j < QUADRICOLONNE; j++) {
+            if (JEU->G->tabCase[i][j].type >= 5 && JEU->G->tabCase[i][j].connexe == con && JEU->G->tabCase[i][j].predX!=-1 && JEU->G->tabCase[i][j]
+            .predY != -1) {
                 int tempX = i;
                 int tempY = j;
+                int copie=tempX;
                 while (tempX != SommetX && tempY != SommetY) {
-                    G->tabCase[i][j].distance++;
-                    tempX = G->tabCase[tempX][tempY].predX;
-                    tempY = G->tabCase[tempX][tempY].predY;
+                    JEU->G->tabCase[i][j].distance++;
+                    tempX = JEU->G->tabCase[tempX][tempY].predX;
+                    tempY = JEU->G->tabCase[copie][tempY].predY;
+                    copie=tempX;
                 }
             }
         }
@@ -366,14 +391,25 @@ bool checkIdO(int *ordre, int nbHabitationCon, int id){
     return true;
 }
 
+void colorMaison(ECECITY*JEU, int id){
+    for (int i = 0; i < QUADRILIGNE; i++) {
+        for (int j = 0; j < QUADRICOLONNE; j++) {
+            if(JEU->G->tabCase[i][j].type>=5 && JEU->G->tabCase[i][j].identite==id){
+                JEU->G->tabCase[i][j].couleur=2;
+            }
+        }
+    }
+}
+
 void triDistance(int *ordre, ECECITY *JEU, int nbHabitationCon) {
     int a = 0;
     while (a != nbHabitationCon) {
         int distancemin = 999;
         int id=0;
-        for (int i = 0; i < QUADRICOLONNE; i++) {
-            for (int j = 0; j < QUADRILIGNE; j++) {
-                if (JEU->G->tabCase[i][j].distance!=0 && JEU->G->tabCase[i][j].distance<distancemin) {
+        for (int i = 0; i < QUADRILIGNE; i++) {
+            for (int j = 0; j < QUADRICOLONNE; j++) {
+                if (JEU->G->tabCase[i][j].distance!=0 && JEU->G->tabCase[i][j].distance<distancemin &&JEU->G->tabCase[i][j].type>=5 &&
+                JEU->G->tabCase[i][j].couleur != 2) {
                     distancemin = JEU->G->tabCase[i][j].distance;
                     id = JEU->G->tabCase[i][j].identite;
                 }
@@ -381,6 +417,7 @@ void triDistance(int *ordre, ECECITY *JEU, int nbHabitationCon) {
         }
         if(checkIdO(ordre, nbHabitationCon, id)) {
             ordre[a] = id;
+            colorMaison(JEU, id);
             a++;
         }
     }
@@ -406,7 +443,7 @@ void repartitionO(ECECITY *JEU, int* ordre, int nbHabitationCon, int id) {
     }
 }
 
-void ECEBFS(int con, int id, ECECITY *JEU, int nbHabitationCon) {
+void ECEBFS(int con, int id, ECECITY *JEU,int nbHabitant, int nbHabitationCon) {
     int compte;
     //chercher dans le graphe le chateau O qu'on évalu et faire le BFS a partir de ce sommet
     int SommetX = 0;
@@ -419,12 +456,14 @@ void ECEBFS(int con, int id, ECECITY *JEU, int nbHabitationCon) {
                 SommetX = i;
                 SommetY = j;
                 //on fait le BFS a partir du sommet trouver
-                touBlancs(JEU->G);
-                BFS(JEU->G, SommetX, SommetY, &compte);
-                CalculDistance(JEU->G, SommetX, SommetY, con);
-                triDistance(ordre, JEU, nbHabitationCon);
-                repartitionO(JEU, ordre, nbHabitationCon, id);
-                return;
+                touBlancs(JEU);
+                BFS(JEU, SommetX, SommetY, &compte);
+                if(compte>=2) {
+                    CalculDistance(JEU, SommetX, SommetY, con);
+                    triDistance(ordre, JEU, nbHabitationCon);
+                    repartitionO(JEU, ordre, nbHabitationCon, id);
+                    return;
+                }
             }
         }
     }
@@ -442,43 +481,45 @@ bool checkApproO(int i, ECECITY *JEU) {
 void CalculeO(ECECITY *JEU) {
     //On test d'abord si dans une composante connexe on a plus de QO que de nbHabitant
     //on récupére code CalculElec
-    for (int i = 1; i < JEU->G->nbConnexe; i++) {
+    for (int i = 1; i <= JEU->G->nbConnexe; i++) {
         //Calcul du nombre d'habitant et des ressources en O de la composante connexe
         int QOcon = 0;
         int nbHabitantCon = 0;
+        int nbHabitationCon=0;
 
-        for (int j = 1; j < JEU->compteur.nbChateauO; ++j) {
+        for (int j = 1; j <= JEU->compteur.nbChateauO; ++j) {
             if (JEU->tabO[j].connexe == i) {
                 QOcon = QOcon + 5000;
             }
         }
-        for (int j = 1; j < JEU->compteur.nbHab; ++j) {
+        for (int j = 1; j <= JEU->compteur.nbHab; ++j) {
             if (JEU->tabHab[j].connexe == i) {
                 nbHabitantCon = nbHabitantCon + JEU->tabHab[j].nbHabitant;
+                nbHabitationCon++;
             }
         }
 
         //Cas spéciaux ou on a pas besoin de faire une distribution en BFS car on à + ou = d'O que de nb habitants
         if (QOcon > nbHabitantCon) {
-            for (int j = 1; j < JEU->compteur.nbHab; ++j) {
+            for (int j = 1; j <= JEU->compteur.nbHab; ++j) {
                 if (JEU->tabHab[j].connexe == i) {
                     JEU->tabHab[j].QO = JEU->tabHab[j].nbHabitant;
                 }
             }
-            for (int j = 1; j < JEU->compteur.nbChateauO; ++j) {
+            for (int j = 1; j <= JEU->compteur.nbChateauO; ++j) {
                 if (JEU->tabO[j].connexe == i) {
                     JEU->tabO[j].QOrestant = 0;
                     QOcon = QOcon - 5000;
                 }
             }
         } else if (QOcon == nbHabitantCon) {
-            for (int j = 1; j < JEU->compteur.nbHab; ++j) {
+            for (int j = 1; j <= JEU->compteur.nbHab; ++j) {
                 if (JEU->tabHab[j].connexe == i) {
                     JEU->tabHab[j].QO = JEU->tabHab[j].nbHabitant;
                 }
             }
             QOcon = 0;
-            for (int j = 1; j < JEU->compteur.nbUsines; ++j) {
+            for (int j = 1; j <= JEU->compteur.nbUsines; ++j) {
                 if (JEU->tabO[j].connexe == i) {
                     JEU->tabO[j].QOrestant = 0;
                 }
@@ -487,10 +528,13 @@ void CalculeO(ECECITY *JEU) {
             //SINON Pour chaque chateau d'O on fait un BFS
         else {
             bool touApproO = checkApproO(i, JEU);
-            for (int j = 1; j < JEU->compteur.nbChateauO; j++) {
+            for (int j = 1; j <= JEU->compteur.nbChateauO; j++) {
                 if (JEU->tabO[j].connexe == i) {
-                    while (JEU->tabO[j].QOrestant < 0 && !touApproO) {
-                        ECEBFS(i, j, JEU, nbHabitantCon);
+                    JEU->tabO[j].QOrestant = 5000;
+                    while (JEU->tabO[j].QOrestant > 0 && touApproO) {
+                        fflush(stdout);
+                        printf("%d\n",JEU->G->tabCase[0][1].arc->arc_suivant->sommetY);
+                        ECEBFS(i, j, JEU, nbHabitantCon,nbHabitationCon);
                         touApproO = checkApproO(i, JEU);
                     }
                 }
@@ -507,50 +551,52 @@ void CalculeElec(ECECITY *JEU) {
     //int QE = JEU->compteur.nbUsines*5000;
     //int QErestant= 0;
 
-    for (int i = 1; i < JEU->G->nbConnexe; i++) {
+    for (int i = 1; i <= JEU->G->nbConnexe; i++) {
         int QEcon = 0;
         int nbHabitantCon = 0;
 
         //P1 on calcule la quantité d'élec disponible dans la composante connexe et son nombre d'habitant.
-        for (int j = 1; j < JEU->compteur.nbUsines; ++j) {
+        for (int j = 1; j <= JEU->compteur.nbUsines; ++j) {
             if (JEU->tabE[j].connexe == i) {
                 QEcon = QEcon + 5000;
             }
         }
-        for (int j = 1; j < JEU->compteur.nbHab; ++j) {
+        for (int j = 1; j <= JEU->compteur.nbHab; ++j) {
             if (JEU->tabHab[j].connexe == i) {
                 nbHabitantCon = nbHabitantCon + JEU->tabHab[j].nbHabitant;
             }
         }
+        fflush(stdout);
+        printf("%d", QEcon);
 
         //P2 on répartie l'elec
         if (QEcon > nbHabitantCon) {
-            for (int j = 1; j < JEU->compteur.nbHab; ++j) {
+            for (int j = 1; j <= JEU->compteur.nbHab; ++j) {
                 if (JEU->tabHab[j].connexe == i) {
                     JEU->tabHab[j].QE = JEU->tabHab[j].nbHabitant;
                 }
             }
-            for (int j = 1; j < JEU->compteur.nbUsines; ++j) {
+            for (int j = 1; j <= JEU->compteur.nbUsines; ++j) {
                 if (JEU->tabE[j].connexe == i) {
                     JEU->tabE[j].QErestant = 0;
                     QEcon = QEcon - 5000;
                 }
             }
         } else if (QEcon == nbHabitantCon) {
-            for (int j = 1; j < JEU->compteur.nbHab; ++j) {
+            for (int j = 1; j <= JEU->compteur.nbHab; ++j) {
                 if (JEU->tabHab[j].connexe == i) {
                     JEU->tabHab[j].QE = JEU->tabHab[j].nbHabitant;
                 }
             }
             QEcon = 0;
-            for (int j = 1; j < JEU->compteur.nbUsines; ++j) {
+            for (int j = 1; j <= JEU->compteur.nbUsines; ++j) {
                 if (JEU->tabE[j].connexe == i) {
                     JEU->tabE[j].QErestant = 0;
                 }
             }
         } else {
             int QEcon1 = QEcon;
-            for (int j = 1; j < JEU->compteur.nbHab; ++j) {
+            for (int j = 1; j <= JEU->compteur.nbHab; ++j) {
                 if (JEU->tabHab[j].connexe == i && QEcon >= JEU->tabHab[j].nbHabitant) {
                     JEU->tabHab[j].QE = JEU->tabHab[j].nbHabitant;
                     QEcon = QEcon - JEU->tabHab[j].nbHabitant;
@@ -558,7 +604,7 @@ void CalculeElec(ECECITY *JEU) {
                     JEU->tabHab[j].QE = 0;
                 }
             }
-            for (int j = 1; j < JEU->compteur.nbUsines; ++j) {
+            for (int j = 1; j <= JEU->compteur.nbUsines; ++j) {
                 if (JEU->tabE[j].connexe == i) {
                     if (QEcon1 > 5000) {
                         JEU->tabE[j].QErestant = 0;
@@ -572,52 +618,81 @@ void CalculeElec(ECECITY *JEU) {
     }
 }
 
-void modifGraphe(VECTEUR *mouseIso, CASE **tabCase){
-    //A faire
-    //mettre absolument la nouvelles constru en connexe 0
-}
 void eraseSupp(ECECITY* JEU, int erase){
     for(int i=1; i<175; i++){
         if(JEU->tabHab[i].connexe>erase){
             JEU->tabHab[i].connexe--;
         }
+        else if(JEU->tabHab[i].connexe>erase){
+            JEU->tabHab[i].connexe=erase;
+        }
     }for(int i=1; i<(QUADRILIGNE*QUADRICOLONNE/24); i++){
         if(JEU->tabE[i].connexe>erase){
             JEU->tabE[i].connexe--;
         }
+        else if(JEU->tabE[i].connexe>erase){
+            JEU->tabE[i].connexe=erase;
+        }
         if(JEU->tabO[i].connexe>erase){
             JEU->tabO[i].connexe--;
+        }
+        else if(JEU->tabO[i].connexe>erase){
+            JEU->tabO[i].connexe=erase;
+        }
+    }
+    JEU->G->nbConnexe--;
+}
+
+void modifConnexeDestru(ECECITY* JEU){
+    JEU->G->nbConnexe=0;
+    for (int i = 0; i < QUADRILIGNE; i++) {
+        for (int j = 0; j < QUADRICOLONNE; j++) {
+            JEU->G->tabCase[i][j].connexe=0;
+        }
+    }
+    for (int i = 0; i < QUADRILIGNE; i++) {
+        for (int j = 0; j < QUADRICOLONNE; j++) {
+            CalculeConnexeV2(JEU, i, j);
         }
     }
 }
 
 void modifConnexe(ECECITY* JEU, int X, int Y, int categorieConstruction, int rotation){
     pArc temp = JEU->G->tabCase[X][Y].arc;
+    bool fin=true;
     if (categorieConstruction==0) {
         while (temp != NULL) {
+            //CASE* tempact= &(JEU->G->tabCase[X][Y]);
+            //CASE* tempvise= &(JEU->G->tabCase[temp->sommetX][temp->sommetY]);
             if (JEU->G->tabCase[temp->sommetX][temp->sommetY].type == 1 && JEU->G->tabCase[X][Y].connexe == 0) {
                 JEU->G->tabCase[X][Y].connexe = JEU->G->tabCase[temp->sommetX][temp->sommetY].connexe;
+                fin=false;
             }
             else if(JEU->G->tabCase[temp->sommetX][temp->sommetY].type == 1 && JEU->G->tabCase[temp->sommetX][temp->sommetY]
             .connexe >0 && JEU->G->tabCase[X][Y].connexe!=JEU->G->tabCase[temp->sommetX][temp->sommetY].connexe){
                 if(JEU->G->tabCase[X][Y].connexe > JEU->G->tabCase[temp->sommetX][temp->sommetY].connexe){
                     int erase=JEU->G->tabCase[X][Y].connexe;
+                    JEU->G->tabCase[X][Y].connexe=JEU->G->tabCase[temp->sommetX][temp->sommetY].connexe;
                     eraseSupp(JEU, erase);
                 }
                 if(JEU->G->tabCase[X][Y].connexe < JEU->G->tabCase[temp->sommetX][temp->sommetY].connexe){
                     int erase=JEU->G->tabCase[temp->sommetX][temp->sommetY].connexe;
+                    JEU->G->tabCase[temp->sommetX][temp->sommetY].connexe=JEU->G->tabCase[X][Y].connexe;
                     eraseSupp(JEU, erase);
                 }
             }
             temp = temp->arc_suivant;
         }
-        JEU->G->tabCase[X][Y].connexe=JEU->G->nbConnexe;
-        JEU->G->nbConnexe++;
+        if (fin) {
+            JEU->G->nbConnexe++;
+            JEU->G->tabCase[X][Y].connexe = JEU->G->nbConnexe;
+        }
     }
     if(categorieConstruction==1) {
         for (int i = 0; i < LONGUEURE_TERRAIN_VAGUE; i++) {
             for (int j = 0; j < LARGEUR_TERRAIN_VAGUE; j++) {
-                if(i==0 || i==LONGUEURE_TERRAIN_VAGUE || j==0 || j==LARGEUR_TERRAIN_VAGUE) {
+                temp = JEU->G->tabCase[X+i][Y+j].arc;
+                if(i==0 || i==LONGUEURE_TERRAIN_VAGUE-1 || j==0 || j==LARGEUR_TERRAIN_VAGUE-1) {
                     while (temp != NULL) {
                         if (JEU->G->tabCase[temp->sommetX][temp->sommetY].type == 1 && JEU->G->tabCase[X][Y].connexe == 0) {
                             for (int a = 0; a < LONGUEURE_TERRAIN_VAGUE; a++) {
@@ -625,11 +700,12 @@ void modifConnexe(ECECITY* JEU, int X, int Y, int categorieConstruction, int rot
                                     JEU->G->tabCase[X + a][Y + b].connexe = JEU->G->tabCase[temp->sommetX][temp->sommetY].connexe;
                                 }
                             }
+                            fin=false;
+                            JEU->tabHab[JEU->compteur.nbHab].connexe=JEU->G->tabCase[temp->sommetX][temp->sommetY].connexe;
                             return;
                         }
                         temp = temp->arc_suivant;
                     }
-                    temp = JEU->G->tabCase[X][Y].arc;
                 }
             }
         }
@@ -638,7 +714,9 @@ void modifConnexe(ECECITY* JEU, int X, int Y, int categorieConstruction, int rot
                 JEU->G->tabCase[X + a][Y + b].connexe = JEU->G->nbConnexe;
             }
         }
-        JEU->G->nbConnexe++;
+        if (fin) {
+            JEU->G->nbConnexe++;
+        }
     }
     if(categorieConstruction==2 ||categorieConstruction==3) {
         int longueureBatX;
@@ -651,42 +729,41 @@ void modifConnexe(ECECITY* JEU, int X, int Y, int categorieConstruction, int rot
             longueureBatX=LARGEUR_BATTIMENT;
             longueureBatY=LONGUEURE_BATTIMENT;
         }
-        for (int i = 0; i < longueureBatX; i++) {
-            for (int j = 0; j < longueureBatY; j++) {
-                if(i==0 || i==longueureBatX || j==0 || j==longueureBatY) {
-                    while (temp != NULL) {
-                        if (JEU->G->tabCase[temp->sommetX][temp->sommetY].type == 1 && JEU->G->tabCase[X][Y].connexe == 0) {
-                            for (int a = 0; a < longueureBatX; a++) {
-                                for (int b = 0; b < longueureBatY; b++) {
-                                    JEU->G->tabCase[X + a][Y + b].connexe = JEU->G->tabCase[temp->sommetX][temp->sommetY].connexe;
+        if(possibiliteDeConstruire(JEU->G->tabCase,X,Y,longueureBatX,longueureBatY)) {
+            for (int i = 0; i < longueureBatX; i++) {
+                for (int j = 0; j < longueureBatY; j++) {
+                    if (i == 0 || i == longueureBatX-1 || j == 0 || j == longueureBatY-1) {
+                        temp = JEU->G->tabCase[X+i][Y+j].arc;
+                        while (temp != NULL) {
+                            if (JEU->G->tabCase[temp->sommetX][temp->sommetY].type == 1 && JEU->G->tabCase[X][Y].connexe == 0) {
+                                for (int a = 0; a < longueureBatX; a++) {
+                                    for (int b = 0; b < longueureBatY; b++) {
+                                        JEU->G->tabCase[X + a][Y + b].connexe = JEU->G->tabCase[temp->sommetX][temp->sommetY].connexe;
+                                    }
                                 }
+                                fin = false;
+                                if (categorieConstruction == 2) {
+                                    JEU->tabE[JEU->compteur.nbUsines].connexe = JEU->G->tabCase[temp->sommetX][temp->sommetY].connexe;
+                                } else {
+                                    JEU->tabO[JEU->compteur.nbChateauO].connexe = JEU->G->tabCase[temp->sommetX][temp->sommetY].connexe;
+                                }
+                                return;
                             }
-                            return;
+                            temp = temp->arc_suivant;
                         }
-                        temp = temp->arc_suivant;
+
                     }
-                    temp = JEU->G->tabCase[X][Y].arc;
                 }
             }
-        }
-        for (int a = 0; a < LONGUEURE_TERRAIN_VAGUE; a++) {
-            for (int b = 0; b < LARGEUR_TERRAIN_VAGUE; b++) {
-                JEU->G->tabCase[X + a][Y + b].connexe = JEU->G->nbConnexe;
+            for (int a = 0; a < LONGUEURE_TERRAIN_VAGUE; a++) {
+                for (int b = 0; b < LARGEUR_TERRAIN_VAGUE; b++) {
+                    JEU->G->tabCase[X + a][Y + b].connexe = JEU->G->nbConnexe;
+                }
+            }
+            if (fin) {
+                JEU->G->nbConnexe++;
             }
         }
-        JEU->G->nbConnexe++;
     }
-
 }
-/*
-int minimain() {
-    printf("DEBUG 0\n");
-    fflush(stdout);
-    ECECITY *JEU = iniJeu();
-
-    //int nbHabitant=300;
-    CalculeElec(JEU);
-    CalculeO(JEU);
-    return 0;
-}*/
 

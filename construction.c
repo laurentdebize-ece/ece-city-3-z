@@ -153,8 +153,9 @@ int presenceRoute(CASE** tabCase, int x, int y, int dimensionX, int dimensionY){
 
 
 void constructionSouris(VECTEUR* mouseIso, int categorieConstruction, int* niveau, CASE** tabCase, int* CompteEnBanque, COMPTEUR* compteur, int rotationBattiment, int detruire,ECECITY *JEU) {
+    bool modifcon=false;
     if(mouseIso->x>=0 && mouseIso->y>=0 && mouseIso->x<COLONNES && mouseIso->y<LIGNES && tabCase[mouseIso->x][mouseIso->y].type == 0 && detruire == 0) {
-
+        modifcon=true;
         *niveau = 0;
         if (categorieConstruction == 0) {
             if (*CompteEnBanque >= COUT_ROUTE) {
@@ -193,12 +194,15 @@ void constructionSouris(VECTEUR* mouseIso, int categorieConstruction, int* nivea
             }
         }
     }
-    //modifConnexe(JEU, mouseIso->x, mouseIso->y, categorieConstruction, rotationBattiment);
+    if (mouseIso->x>=0 && mouseIso->y>=0 && mouseIso->x<35 && mouseIso->y <45 && modifcon) {
+        modifConnexe(JEU, mouseIso->x, mouseIso->y, categorieConstruction, rotationBattiment);
+    }
 }
 
 void detruireConstruction(VECTEUR *mouseIso, CASE **tabCase, COMPTEUR *compteur, int rotationBattiment, int detruire,ECECITY *JEU) {
+    bool destruct=false;
     if (mouseIso->x >= 0 && mouseIso->y >= 0 && mouseIso->x < COLONNES && mouseIso->y < LIGNES && tabCase[mouseIso->x][mouseIso->y].type != 0 && detruire != 0) {
-
+        destruct=true;
         if (tabCase[mouseIso->x][mouseIso->y].type == 1) {
 
             route(tabCase, mouseIso->x, mouseIso->y, &(compteur->nbRues), detruire,JEU);
@@ -222,8 +226,9 @@ void detruireConstruction(VECTEUR *mouseIso, CASE **tabCase, COMPTEUR *compteur,
             batiment(tabCase, mouseIso->x, mouseIso->y, &(compteur->nbChateauO), 3, rotationBattiment,detruire,JEU);
         }
     }
-
-    //modifConnexe(JEU, mouseIso->x, mouseIso->y, categorieConstruction, rotationBattiment);
+    if(destruct) {
+        modifConnexeDestru(JEU);
+    }
 }
 void routeApercu (CASE** tabCase, int x, int y){
 

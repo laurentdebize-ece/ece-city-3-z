@@ -10,8 +10,8 @@
 
 ///////////////////////////Les macros/////////////////////////////
 
-#define QUADRICOLONNE 45
-#define QUADRILIGNE 35
+#define QUADRICOLONNE 35
+#define QUADRILIGNE 45
 
 ////////////////////// Les enums utilisés///////////////////
 
@@ -29,6 +29,7 @@ enum construction{terrainVague, cabane, maison, immeuble, gratteCiel};
 
 CASE **CreerArete(CASE **sommet, int s1X, int s1Y, int s2X, int s2Y, int valeurs);
 void CalculeConnexe(CASE **tabSommet, int i, int j, int *nbConnexe);
+void CalculeConnexeV2(ECECITY *JEU, int i, int j);
 void iniTabHab(CASE **tabCase, int i, int j, ECECITY *JEU);
 void iniTabE(CASE **tabCase, int i, int j, ECECITY *JEU);
 void iniTabO(CASE **tabCase, int i, int j, ECECITY *JEU);
@@ -43,18 +44,17 @@ File CreerFile();
 void enfiler(File F, int sommet);
 void ecrireFile(File F);
 int checkBlanc(Graphe *G, int num);
-void BFS(Graphe *G, int SommetX, int SommetY, int *compte);
+void BFS(ECECITY *JEU, int SommetX, int SommetY, int *compte);
 void afficheBFS(int tab[], int compte, int *c);
-void CalculDistance(Graphe *G, int SommetX, int SommetY, int con);
+void CalculDistance(ECECITY *JEU, int SommetX, int SommetY, int con);
 void triDistance(int *ordre, ECECITY *JEU, int nbHabitationCon);
 void repartitionO(ECECITY *JEU, int* ordre, int nbHabitationCon, int id);
-void ECEBFS(int con, int id, ECECITY *JEU, int nbHabitationCon);
+void ECEBFS(int con, int id, ECECITY *JEU, int nbHabitantCon,int nbHabitationCon);
 bool checkApproO(int i, ECECITY *JEU);
 void CalculeO(ECECITY *JEU);
 void CalculeElec(ECECITY *JEU);
+void modifConnexeDestru(ECECITY* JEU);
 void modifConnexe(ECECITY* JEU, int X, int Y, int categorieConstruction, int rotation);
-
-int minimain();
 
 
 #endif //ECE_CITY_3_Z_GRAPHE_H

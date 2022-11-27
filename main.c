@@ -51,10 +51,6 @@ int main() {
     barre.temps = 0;
 
 
-    JEU->G->tabCase = malloc((COLONNES) * sizeof(CASE *));
-    for (int i = 0; i < COLONNES; i++) {
-        JEU->G->tabCase[i] = malloc((LIGNES) * sizeof(CASE));
-    }
     fscanf(ifs, "%d", &tempsVirtuelle);
     cycle = tempsVirtuelle % TEMPS_CYCLE;
     for (int y = 0; y < LIGNES; y++) {
@@ -187,11 +183,10 @@ int main() {
                     barreOutilSouris(PosXMouse, PosYMouse, &barre, &categorieConstruction);
                     //printf("nb route: %d\nnb hab: %d\nnb usine: %d\nnb chateauO: %d\n ", JEU->compteur.nbRues,JEU->compteur.nbHab, JEU->compteur.nbUsines, JEU->compteur.nbChateauO);
                     CalculeElec(JEU);
-                    //CalculeO(JEU);
-                    printf("%d\n", JEU->tabHab[1].nbHabitant);
-                    printf("%d\n", JEU->tabHab[1].QE);
-                    printf("%d\n", JEU->tabHab[1].connexe);
-
+                    CalculeO(JEU);
+                    fflush(stdout);
+                    printf("\n\n%d\n\n",JEU->G->nbConnexe);
+                    fflush(stdout);
                 }
 
             }
