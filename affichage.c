@@ -3,7 +3,7 @@
 #include "bibliotheque.h"
 
 
-void construireBat(int categorieConstruction, int posXMouse, int posYMouse, Texture2D building, Texture2D Routes,VECTEUR mouseIso,CASE **tabCase) {
+void construireBat(int categorieConstruction, int posXMouse, int posYMouse, Texture2D building, Texture2D Routes,VECTEUR mouseIso,CASE **tabCase, Texture2D centralEau, Texture2D centralEauBis, Texture2D centralElec, Texture2D centralElecBis, int rotation, int construire) {
     Vector2 positionSprite;
     Rectangle route;
     int TypeRoute;
@@ -39,7 +39,24 @@ void construireBat(int categorieConstruction, int posXMouse, int posYMouse, Text
         case 1 :
             DrawTexture(building, posXMouse - 15, posYMouse - 25, GREEN);
             break;
+        case 2 :
+            if (rotation == 0){
+                DrawTexture(centralElecBis, posXMouse-10, posYMouse -40, GREEN);
+            }
+            else{
+                DrawTexture(centralElec, posXMouse-10, posYMouse -58, GREEN);
+            }
+            break;
+        case 3 :
+            if (rotation == 0){
+                DrawTexture(centralEauBis, posXMouse-14, posYMouse -34, GREEN);
+            }
+            else{
+                DrawTexture(centralEau, posXMouse-15, posYMouse -53, GREEN);
+            }
+            break;
     }
+
 }
 
 void affichageGrille(VECTEUR mouseIso, Texture2D texture) {
@@ -152,7 +169,7 @@ void affichageTerrain(Texture2D Terrain, CASE **tabCase, Texture2D terrainVague,
     }
 }
 
-void affichageBattiment(Texture2D Battiment, CASE **tabCase) {
+void affichageBattiment(Texture2D Battiment, CASE **tabCase, Texture2D centralEau, Texture2D centralEauBis, Texture2D centralElec, Texture2D centralElecBis, int rotation) {
     Vector2 positionSprite;
     Rectangle battiment;
     battiment.width = LARGEUR_TUILE_ISO;
@@ -166,12 +183,27 @@ void affichageBattiment(Texture2D Battiment, CASE **tabCase) {
                     x * (LARGEUR_TUILE_ISO / 2) + y * (LARGEUR_TUILE_ISO / 2) + LARGEUR_TUILE_ISO * ISO_DECALAGE_X;
             positionSprite.y =
                     x * (HAUTEUR_TUILE_ISO / 2) - y * (HAUTEUR_TUILE_ISO / 2) + HAUTEUR_TUILE_ISO * ISO_DECALAGE_Y;
-            if (tabCase[x][y].type == 3) {
-                DrawTextureRec(Battiment, battiment, positionSprite, WHITE);
+
+            if (tabCase[x][y].affichage == 1){
+                if (tabCase[x][y].type == 3) {
+                    if (rotation == 0){
+                        DrawTexture(centralEauBis, positionSprite.x+5, positionSprite.y-30, WHITE);
+                    }
+                    if (rotation == 1){
+                        DrawTexture(centralEau, positionSprite.x+4, positionSprite.y-47, WHITE);
+                    }
+                }
+
+                if (tabCase[x][y].type == 2) {
+                    if (rotation == 0){
+                        DrawTexture(centralElecBis, positionSprite.x+3, positionSprite.y-31, WHITE);
+                    }
+                    if (rotation == 1){
+                        DrawTexture(centralElec, positionSprite.x+6, positionSprite.y-49, WHITE);
+                    }
+                }
             }
-            if (tabCase[x][y].type == 2) {
-                DrawTextureRec(Battiment, battiment, positionSprite, WHITE);
-            }
+
         }
     }
 }
