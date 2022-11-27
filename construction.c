@@ -341,7 +341,23 @@ void evolutionBatCapitaliste (CASE** tabCase, float* tempsEcoule, ECECITY* JEU, 
 }*/
 
 bool checkcontactEO(ECECITY * JEU, int id){
-
+    JEU->tabHab[id].connexe;
+    bool O = false;
+    bool E = false;
+    for(int i = 0; i<=JEU->compteur.nbUsines;i++){
+        if(JEU->tabE[i].connexe==JEU->tabHab[id].connexe){
+            E=true;
+        }
+    }
+    for(int i = 0; i<=JEU->compteur.nbChateauO;i++){
+        if(JEU->tabO[i].connexe==JEU->tabHab[id].connexe){
+            O=true;
+        }
+    }
+    if(O&&E){
+        return true;
+    }
+    return false;
 }
 
 void chgmtType(ECECITY * JEU,int id){
@@ -364,8 +380,8 @@ void evolutionCommuniste (CASE** tabCase, float* tempsEcoule, ECECITY* JEU, int*
         *cycle = 0;
         for (int x = 1; x < 175; x++) {
             if (JEU->tabHab[x].type == 5) {
-                //faire des check de connexité
-                if (JEU->tabHab[x].QO >=0 && JEU->tabHab[x].QE >=0) {
+                bool check = checkcontactEO(JEU, x);
+                if (JEU->tabHab[x].QO >=0 && JEU->tabHab[x].QE >=0 && check) {
                     JEU->tabHab[x].type++;
                     JEU->tabHab[x].nbHabitant = 10;
                     chgmtType(JEU,x);
