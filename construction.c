@@ -48,13 +48,13 @@ void habitation(CASE **tabCase, int x, int y, int *compteur, int detruire,ECECIT
     } else {
         int caseIdentite = tabCase[x][y].identite;
         //(*compteur)--;
-        tabCase[x][y].affichage = 0;
         for (int b = 0; b < LIGNES; b++) {
             for (int a = 0; a < COLONNES; a++) {
 
                 if (tabCase[a][b].identite == caseIdentite && tabCase[a][b].type >= 5) {
                     tabCase[a][b].type = 0;
                     tabCase[a][b].identite = 0;
+                    tabCase[a][b].affichage = 0;
                 }
             }
         }
@@ -93,7 +93,7 @@ void batiment (CASE** tabCase, int x, int y, int* compteur, int typeBatiment, in
     }
     else {
         int caseIdentite;
-        tabCase[x][y].affichage = 0;
+
         caseIdentite = tabCase[x][y].identite;
 
 
@@ -103,6 +103,7 @@ void batiment (CASE** tabCase, int x, int y, int* compteur, int typeBatiment, in
                 if (tabCase[a][b].identite == caseIdentite && tabCase[a][b].type == typeBatiment) {
                     tabCase[a][b].type = 0;
                     tabCase[a][b].identite = 0;
+                    tabCase[a][b].affichage = 0;
                 }
             }
         }
