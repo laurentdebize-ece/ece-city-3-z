@@ -249,6 +249,11 @@ int main() {
                 construireBat(categorieConstruction, PosXMouse, PosYMouse, terrainVague, Routes, mouseIso,
                               JEU->G->tabCase, centralEau, centralEauBis, centralElecBis, centralElec,
                               rotationBattiment, construire);
+                afficherBarreOutils(&barre, seconde, monnaie, temps, eau, elec, souris, calendrier, minute,
+                                    compteEnBanque,
+                                    heure, mois, annee, moinsAccel, plusAccel, routeImage, maisonImage,
+                                    centraleImage,
+                                    puitImage, caserneImage, rotation,enregistrer,demolition,construire,detruire, construireOn,construireOff,demolitionOff,plage,plage2);
 
 
                 if (IsKeyPressed(KEY_SPACE) == true) {
@@ -310,15 +315,15 @@ int main() {
                         if (CheckCollisionPointRec(GetMousePosition(), (Rectangle) {})) {
                         }
                         if (PosXMouse >= 175 && PosXMouse <= 255 && PosYMouse >= 700 && PosYMouse <= 780) {
-                            enregistrerPartie(JEU->G->tabCase);
+                            enregistrerPartie(JEU->G->tabCase, tempsVirtuelle);
                         }
                         if (PosXMouse >= 1000 && PosXMouse <= 1200 && PosYMouse >= 80 && PosYMouse <= 104) {
-                            recommencerPartie(JEU->G->tabCase, &JEU->compteur);
+                            recommencerPartie(JEU->G->tabCase, &JEU->compteur,&tempsVirtuelle, &cycle);
                         }
                     }
 
                     if ((IsKeyDown(KEY_LEFT_CONTROL)) && (IsKeyPressed(KEY_KP_0))) {
-                        recommencerPartie(JEU->G->tabCase, &JEU->compteur);
+                        recommencerPartie(JEU->G->tabCase, &JEU->compteur,&tempsVirtuelle, &cycle);
                     }
                     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) == true) {
                         constructionSouris(&mouseIso, categorieConstruction, &niveau, JEU->G->tabCase, &compteEnBanque,
@@ -336,12 +341,7 @@ int main() {
                     if (CheckCollisionPointRec(GetMousePosition(), (Rectangle) {})) {
 
                     }
-                    afficherBarreOutils(&barre, seconde, monnaie, temps, eau, elec, souris, calendrier, minute,
-                                        compteEnBanque,
-                                        heure, mois, annee, moinsAccel, plusAccel, routeImage, maisonImage,
-                                        centraleImage, puitImage,
-                                        caserneImage, rotation, enregistrer, demolition, construire, detruire,
-                                        construireOn, construireOff, demolitionOff, plage, plage2);
+
                     switch (compteurAccele) {
                         case 1 :
                             accelerateurTemps = 1.00;
@@ -417,11 +417,7 @@ int main() {
                             }
                         }
                     }
-                    afficherBarreOutils(&barre, seconde, monnaie, temps, eau, elec, souris, calendrier, minute,
-                                        compteEnBanque,
-                                        heure, mois, annee, moinsAccel, plusAccel, routeImage, maisonImage,
-                                        centraleImage,
-                                        puitImage, caserneImage);
+
                     switch (compteurAccele) {
                         case 1 :
                             accelerateurTemps = 1.00;
