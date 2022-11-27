@@ -340,6 +340,25 @@ void evolutionBatCapitaliste (CASE** tabCase, float* tempsEcoule, ECECITY* JEU, 
     }
 }*/
 
+bool checkcontactEO(ECECITY * JEU, int id){
+
+}
+
+void chgmtType(ECECITY * JEU,int id){
+    for (int Y = 0; Y < LIGNES; Y++) {
+        for (int X = 0; X < COLONNES; X++) {
+            if (JEU->G->tabCase[X][Y].identite == id && JEU->G->tabCase[X][Y].type >= 5 && JEU->G->tabCase[X][Y].type <= 9) {
+                for (int i = 0; i < LONGUEURE_TERRAIN_VAGUE; i++) {
+                    for (int j = 0; j < LARGEUR_TERRAIN_VAGUE; j++) {
+                        JEU->G->tabCase[X + i][Y + j].type++;
+                    }
+                }
+                return;
+            }
+        }
+    }
+}
+
 void evolutionCommuniste (CASE** tabCase, float* tempsEcoule, ECECITY* JEU, int* cycle){
     if (*cycle == TEMPS_CYCLE) {
         *cycle = 0;
@@ -349,21 +368,25 @@ void evolutionCommuniste (CASE** tabCase, float* tempsEcoule, ECECITY* JEU, int*
                 if (JEU->tabHab[x].QO >=0 && JEU->tabHab[x].QE >=0) {
                     JEU->tabHab[x].type++;
                     JEU->tabHab[x].nbHabitant = 10;
+                    chgmtType(JEU,x);
                 }
             } else if (JEU->tabHab[x].type == 6) {
                 if (JEU->tabHab[x].QO >= 10  && JEU->tabHab[x].QE >= 10 ) {
                     JEU->tabHab[x].type++;
                     JEU->tabHab[x].nbHabitant = 50;
+                    chgmtType(JEU,x);
                 }
             } else if (JEU->tabHab[x].type == 7) {
                 if (JEU->tabHab[x].QO >= 50  && JEU->tabHab[x].QE >= 50 ) {
                     JEU->tabHab[x].type++;
                     JEU->tabHab[x].nbHabitant = 100;
+                    chgmtType(JEU,x);
                 }
             } else if (JEU->tabHab[x].type == 8) {
                 if (JEU->tabHab[x].QO >= 100  && JEU->tabHab[x].QE >= 100) {
                     JEU->tabHab[x].type++;
                     JEU->tabHab[x].nbHabitant = 1000;
+                    chgmtType(JEU,x);
                 }
             }
 
