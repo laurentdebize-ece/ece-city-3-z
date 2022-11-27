@@ -508,7 +508,7 @@ void CalculeO(ECECITY *JEU) {
             }
             for (int j = 1; j <= JEU->compteur.nbChateauO; ++j) {
                 if (JEU->tabO[j].connexe == i) {
-                    JEU->tabO[j].QOrestant = 0;
+                    JEU->tabO[j].QOrestant = JEU->tabO[j].QOrestant-nbHabitantCon;
                     QOcon = QOcon - 5000;
                 }
             }
@@ -548,14 +548,11 @@ void CalculeO(ECECITY *JEU) {
 //changer nb connexe
 
 void CalculeElec(ECECITY *JEU) {
-    //int QE = JEU->compteur.nbUsines*5000;
-    //int QErestant= 0;
-
     for (int i = 1; i <= JEU->G->nbConnexe; i++) {
         int QEcon = 0;
         int nbHabitantCon = 0;
 
-        //P1 on calcule la quantité d'élec disponible dans la composante connexe et son nombre d'habitant.
+        //P1 on calcule la quantité d'élec disponible dans la composante connexe et son nombre d'habitants
         for (int j = 1; j <= JEU->compteur.nbUsines; ++j) {
             if (JEU->tabE[j].connexe == i) {
                 QEcon = QEcon + 5000;
@@ -578,7 +575,7 @@ void CalculeElec(ECECITY *JEU) {
             }
             for (int j = 1; j <= JEU->compteur.nbUsines; ++j) {
                 if (JEU->tabE[j].connexe == i) {
-                    JEU->tabE[j].QErestant = 0;
+                    JEU->tabE[j].QErestant = JEU->tabE[j].QErestant-nbHabitantCon;
                     QEcon = QEcon - 5000;
                 }
             }

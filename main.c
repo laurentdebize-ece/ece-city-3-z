@@ -154,8 +154,8 @@ int main() {
                 affichageBattiment(Tiles, JEU->G->tabCase, centralEau, centralEauBis, centralElecBis, centralElec,
                                    rotationBattiment);
                 evolutionCommuniste(JEU->G->tabCase, &tempsEcoule, JEU, &cycle);
-                printf ("%d\t", JEU->tabHab[1].connexe);
-                printf ("%d\t", JEU->tabHab[1].nbHabitant);
+                printf("%d\t", JEU->tabHab[1].connexe);
+                printf("%d\t", JEU->tabHab[1].nbHabitant);
                 printf("%d \t", JEU->tabHab[1].QE);
                 printf("%d \n", JEU->tabHab[1].QO);
 
