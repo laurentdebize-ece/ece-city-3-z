@@ -51,10 +51,6 @@ int main() {
     barre.temps = 0;
 
 
-    JEU->G->tabCase = malloc((COLONNES) * sizeof(CASE *));
-    for (int i = 0; i < COLONNES; i++) {
-        JEU->G->tabCase[i] = malloc((LIGNES) * sizeof(CASE));
-    }
     fscanf(ifs, "%d", &tempsVirtuelle);
     cycle = tempsVirtuelle % TEMPS_CYCLE;
     for (int y = 0; y < LIGNES; y++) {
@@ -157,7 +153,10 @@ int main() {
                 affichageTerrain(Tiles, JEU->G->tabCase, terrainVague, cabane, maison, hotel, gratteCiel);
                 affichageBattiment(Tiles, JEU->G->tabCase, centralEau, centralEauBis, centralElecBis, centralElec,
                                    rotationBattiment);
-                evolutionBat(JEU->G->tabCase, &tempsEcoule, JEU, &cycle);
+                evolutionCommuniste(JEU->G->tabCase, &tempsEcoule, JEU, &cycle);
+                printf ("%d\t", JEU->tabHab[1].nbHabitant);
+                printf("%d \t", JEU->tabHab[1].QE);
+                printf("%d \n", JEU->tabHab[1].QO);
                 construireBat(categorieConstruction, PosXMouse, PosYMouse, terrainVague, Routes, mouseIso,
                               JEU->G->tabCase, centralEau, centralEauBis, centralElecBis, centralElec,
                               rotationBattiment, construire, JEU);
@@ -168,6 +167,8 @@ int main() {
                                     puitImage, caserneImage, rotation, enregistrer, demolition, construire, detruire,
                                     construireOn, construireOff, demolitionOff, plage, plage2);
                 accelerationTemps(compteurAccele, &accelerateurTemps, x1,x2,x5,x10,x15,x30);
+                CalculeElec(JEU);
+                CalculeO(JEU);
 
                 if (IsKeyPressed(KEY_SPACE) == true) {
                     if (niveau != 2) {
@@ -186,14 +187,10 @@ int main() {
                                          JEU);
                     barreOutilSouris(PosXMouse, PosYMouse, &barre, &categorieConstruction);
                     //printf("nb route: %d\nnb hab: %d\nnb usine: %d\nnb chateauO: %d\n ", JEU->compteur.nbRues,JEU->compteur.nbHab, JEU->compteur.nbUsines, JEU->compteur.nbChateauO);
-                    CalculeElec(JEU);
-                    //CalculeO(JEU);
-                    printf("%d\n", JEU->tabHab[1].nbHabitant);
-                    printf("%d\n", JEU->tabHab[1].QE);
-                    printf("%d\n", JEU->tabHab[1].connexe);
-
+                    fflush(stdout);
+                    printf("\n\n%d\n\n",JEU->G->nbConnexe);
+                    fflush(stdout);
                 }
-
             }
         }
         EndDrawing();

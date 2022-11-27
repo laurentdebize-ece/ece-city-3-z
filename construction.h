@@ -20,4 +20,7 @@ void evolutionBat (CASE** tabCase, float* tempsEcoule, ECECITY* JEU, int* cycle)
 void demolitionBatCapitaliste (CASE** tabCase, float* tempsEcoule, ECECITY* JEU, int compteEnBanque);
 //void compteurTempsDuBat (CASE** tabCase, int x, int y, float* tempsEcoule, float tempsDepart, ECECITY* JEU) ;
 //void evolutionBat (CASE** tabCase, float* tempsEcoule, float tempsDepart, ECECITY* JEU) ;
+void evolutionBatCapitaliste (CASE tabCase, float* tempsEcoule, ECECITY* JEU, int* cycle) ;
+void demolitionBatiment (CASE tabCase, float* tempsEcoule, ECECITY* JEU, int compteEnBanque, int* cycle);
+void evolutionCommuniste (CASE** tabCase, float* tempsEcoule, ECECITY* JEU, int* cycle);
 #endif //ECE_CITY_3_Z_CONSTRUCTION_H
