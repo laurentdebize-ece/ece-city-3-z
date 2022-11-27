@@ -119,7 +119,20 @@ void affichageTeam(Texture2D team){
     }
 }
 
-void affichageMode(Texture2D capitaliste, Texture2D communiste){
+void choixMode (int* mode){
+    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) == true){
+        if (GetMouseX() > 300 && GetMouseY() > 300 && GetMouseX() < 700 && GetMouseY() < 600) {
+            *mode = 1;
+            //evolutionBatCapitaliste(JEU->G->tabCase, &tempsEcoule, JEU, &cycle);
+        }
+        if (GetMouseX() > 800 && GetMouseY() > 300 && GetMouseX() < 1200 && GetMouseY() < 600) {
+            *mode = 2;
+            //evolutionCommuniste(JEU->G->tabCase, &tempsEcoule, JEU, &cycle);
+        }
+    }
+}
+
+void affichageMode(int mode,  Texture2D capitaliste, Texture2D communiste){
     DrawTexturePro(capitaliste,
                    (Rectangle) {.x = 0, .y = 0, .width = capitaliste.width, .height =  capitaliste.height},
                    (Rectangle) {300, 300, .width = 300, .height = 300}, (Vector2) {0, 0}, 0, WHITE);
@@ -127,6 +140,7 @@ void affichageMode(Texture2D capitaliste, Texture2D communiste){
         DrawTexturePro(capitaliste,
                        (Rectangle) {.x = 0, .y = 0, .width = capitaliste.width, .height =  capitaliste.height},
                        (Rectangle) {300, 300, .width = 400, .height = 400}, (Vector2) {0, 0}, 0, WHITE);
+        //mode = 1;
     }
     DrawTexturePro(communiste,
                    (Rectangle) {.x = 0, .y = 0, .width = communiste.width, .height =  communiste.height},
@@ -135,6 +149,7 @@ void affichageMode(Texture2D capitaliste, Texture2D communiste){
         DrawTexturePro(communiste,
                        (Rectangle) {.x = 0, .y = 0, .width = communiste.width, .height =  communiste.height},
                        (Rectangle) {800, 300, .width = 400, .height = 400}, (Vector2) {0, 0}, 0, WHITE);
+        //mode = 2;
     }
     DrawText("CHOISISSEZ UN MODE DE JEU :", 400, 50, 40, YELLOW);
     DrawText("MODE CAPITALISTE", 290, 150, 30, YELLOW);
@@ -149,4 +164,5 @@ void affichageMode(Texture2D capitaliste, Texture2D communiste){
     if (GetMouseX() > 50 && GetMouseY() > 50 && GetMouseX() < 200 && GetMouseY() < 150) {
         DrawRectangle(50, 50, 140, 90, (Color) {162, 213, 268, 50});
     }
+    DrawText(TextFormat( "MODE CHOISI : %d",mode), 500,700, 37, WHITE);
 }

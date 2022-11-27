@@ -310,36 +310,6 @@ void demolitionBatCapitaliste (CASE** tabCase, float* tempsEcoule, ECECITY* JEU,
         }
     }
 }
-/*
-void evolutionBatCapitaliste (CASE** tabCase, float* tempsEcoule, ECECITY* JEU, int* cycle) {
-    //printf("%d\n", cycle);
-    if (*cycle == TEMPS_CYCLE) {
-        *cycle = 0;
-        for (int x = 1; x < 175; x++) {
-            if (JEU->tabHab[x].type >= 5 && JEU->tabHab[x].type < 9) {
-                JEU->tabHab[x].type++;
-                if (JEU->tabHab[x].type == 6) {
-                    JEU->tabHab[x].nbHabitant = 10;
-                } else if (JEU->tabHab[x].type == 7) {
-                    JEU->tabHab[x].nbHabitant = 50;
-                } else if (JEU->tabHab[x].type == 8) {
-                    JEU->tabHab[x].nbHabitant = 100;
-                } else if (JEU->tabHab[x].type == 9) {
-                    JEU->tabHab[x].nbHabitant = 1000;
-                }
-
-                for (int y = 0; y < LIGNES; y++) {
-                    for (int i = 0; i < COLONNES; i++) {
-                        if (tabCase[i][y].identite == x && tabCase[i][y].type >= 5 && tabCase[i][y].type <= 9) {
-                            tabCase[i][y].type++;
-                        }
-                    }
-                }
-            }
-        }
-        printf("%d %d\n", JEU->tabHab[1].type, JEU->tabHab[2].type);
-    }
-}*/
 
 bool checkcontactEO(ECECITY * JEU, int id){
     JEU->tabHab[id].connexe;
@@ -368,6 +338,52 @@ void chgmtType(ECECITY * JEU,int id){
                 for (int i = 0; i < LONGUEURE_TERRAIN_VAGUE; i++) {
                     for (int j = 0; j < LARGEUR_TERRAIN_VAGUE; j++) {
                         JEU->G->tabCase[X + i][Y + j].type++;
+                    }
+                }
+                return;
+            }
+        }
+    }
+}
+
+
+void evolutionBatCapitaliste (CASE** tabCase, float* tempsEcoule, ECECITY* JEU, int* cycle) {
+    //printf("%d\n", cycle);
+    if (*cycle == TEMPS_CYCLE) {
+        *cycle = 0;
+        for (int x = 1; x < 175; x++) {
+            if (JEU->tabHab[x].type >= 5 && JEU->tabHab[x].type < 9) {
+                JEU->tabHab[x].type++;
+                if (JEU->tabHab[x].type == 6) {
+                    JEU->tabHab[x].nbHabitant = 10;
+                } else if (JEU->tabHab[x].type == 7) {
+                    JEU->tabHab[x].nbHabitant = 50;
+                } else if (JEU->tabHab[x].type == 8) {
+                    JEU->tabHab[x].nbHabitant = 100;
+                } else if (JEU->tabHab[x].type == 9) {
+                    JEU->tabHab[x].nbHabitant = 1000;
+                }
+
+                for (int y = 0; y < LIGNES; y++) {
+                    for (int i = 0; i < COLONNES; i++) {
+                        if (tabCase[i][y].identite == x && tabCase[i][y].type >= 5 && tabCase[i][y].type <= 9) {
+                            tabCase[i][y].type++;
+                        }
+                    }
+                }
+            }
+        }
+        printf("%d %d\n", JEU->tabHab[1].type, JEU->tabHab[2].type);
+    }
+}
+
+void chgmtTypeN(ECECITY * JEU,int id){
+    for (int Y = 0; Y < LIGNES; Y++) {
+        for (int X = 0; X < COLONNES; X++) {
+            if (JEU->G->tabCase[X][Y].identite == id && JEU->G->tabCase[X][Y].type >= 5 && JEU->G->tabCase[X][Y].type <= 9) {
+                for (int i = 0; i < LONGUEURE_TERRAIN_VAGUE; i++) {
+                    for (int j = 0; j < LARGEUR_TERRAIN_VAGUE; j++) {
+                        JEU->G->tabCase[X + i][Y + j].type--;
                     }
                 }
                 return;
@@ -411,73 +427,67 @@ void evolutionCommuniste (CASE** tabCase, float* tempsEcoule, ECECITY* JEU, int*
         printf("%d %d\n", JEU->tabHab[1].type, JEU->tabHab[2].type);
     }
 }
-/*
-void demolitionBatiment (CASE** tabCase, float* tempsEcoule, ECECITY* JEU, int compteEnBanque, int* cycle){
+
+void demolitionBatiment (CASE** tabCase, float* tempsEcoule, ECECITY* JEU,  int* cycle){
     if (*cycle == TEMPS_CYCLE) {
         *cycle = 0;
-        for (int x = 1; x < 175; x++) {
+        for (int x = 1; x <= JEU->compteur.nbHab; x++) {
             if (JEU->tabHab[x].type == 6) {
-                if (JEU->tabHab[x].QO < 10 && JEU->tabHab[x].QE < 10) {
+                if (JEU->tabHab[x].QO <= 10 && JEU->tabHab[x].QE <= 10) {
                     JEU->tabHab[x].type--;
                     JEU->tabHab[x].nbHabitant = 0;
+                    chgmtTypeN(JEU, x);
                 }
             } else if (JEU->tabHab[x].type == 7) {
-                if (JEU->tabHab[x].QO < 50 && JEU->tabHab[x].QO > 10 && JEU->tabHab[x].QE < 50 && JEU->tabHab[x].QE > 10) {
+                if (JEU->tabHab[x].QO < 50 && JEU->tabHab[x].QO >= 10 && JEU->tabHab[x].QE < 50 && JEU->tabHab[x].QE >= 10) {
                     JEU->tabHab[x].type--;
                     JEU->tabHab[x].nbHabitant = 10;
+                    chgmtTypeN(JEU, x);
                 }
             } else if (JEU->tabHab[x].type == 8) {
-                if (JEU->tabHab[x].QO < 100 && JEU->tabHab[x].QO > 50 && JEU->tabHab[x].QE < 100 && JEU->tabHab[x].QE > 50) {
+                if (JEU->tabHab[x].QO < 100 && JEU->tabHab[x].QO >= 50 && JEU->tabHab[x].QE < 100 && JEU->tabHab[x].QE >= 50) {
                     JEU->tabHab[x].type--;
                     JEU->tabHab[x].nbHabitant = 50;
+                    chgmtTypeN(JEU, x);
                 }
             } else if (JEU->tabHab[x].type == 9) {
-                if (JEU->tabHab[x].QO < 1000 && JEU->tabHab[x].QO > 100 && JEU->tabHab[x].QE < 1000 & JEU->tabHab[x].QE > 100) {
+                if (JEU->tabHab[x].QO < 1000 && JEU->tabHab[x].QO >= 100 && JEU->tabHab[x].QE < 1000 & JEU->tabHab[x].QE >= 100) {
                     JEU->tabHab[x].type--;
                     JEU->tabHab[x].nbHabitant = 100;
+                    chgmtTypeN(JEU, x);
                 }
             }
-            for (int y = 0; y < LIGNES; y++) {
+/*
+            while (JEU->tabHab[x].QO == 0 && JEU->tabHab[x].QE == 0) {
+                if (JEU->tabHab[x].type == 6) {
+                    JEU->tabHab[x].type--;
+                    JEU->tabHab[x].nbHabitant = 0;
+                    chgmtTypeN(JEU, x);
+
+                } else if (JEU->tabHab[x].type == 7) {
+                    JEU->tabHab[x].type--;
+                    JEU->tabHab[x].nbHabitant = 10;
+                    chgmtTypeN(JEU, x);
+
+                } else if (JEU->tabHab[x].type == 8) {
+                    JEU->tabHab[x].type--;
+                    JEU->tabHab[x].nbHabitant = 50;
+                    chgmtTypeN(JEU, x);
+
+                } else if (JEU->tabHab[x].type == 9) {
+
+                    JEU->tabHab[x].type--;
+                    JEU->tabHab[x].nbHabitant = 100;
+                    chgmtTypeN(JEU, x);
+                }
+            }*/
+            /*for (int y = 0; y < LIGNES; y++) {
                 for (int i = 0; i < COLONNES; i++) {
                     if (tabCase[i][y].identite == x && tabCase[i][y].type >= 5 && tabCase[i][y].type <= 9) {
                         tabCase[i][y].type--;
                     }
                 }
-            }
+            }*/
         }
     }
-}*/
-/*
-void compteurTempsDuBat (CASE** tabCase, int x, int y, float* tempsEcoule, float tempsDepart) {
-    float tempsActuel = GetTime() - tempsDepart;
-    float deltaTemps = tempsActuel - *tempsEcoule;
-
-    if (deltaTemps >= 1.0){
-        //incremente les tics de chaque batiment
-        for (int y = 0; y < LIGNES; y++) {
-            for (int x = 0; x < COLONNES; x++) {
-                //tabCase[x][y].tic++;
-            }
-        }
-        printf("SS\n");
-        *tempsEcoule = tempsActuel;
-    }
-    DrawRectangle(200, 30, 180, 60, (Color){100, 190, 50, 200});
-    DrawText(TextFormat( "Temps : %.2f",tempsActuel) ,210, 40, 25, BLACK);
 }
-
-void compteurTempsDuBat (float* tempsEcoule, ECECITY* JEU) {
-    float tempsActuel = GetTime();
-    float deltaTemps = tempsActuel - *tempsEcoule;
-
-    if (deltaTemps >= 1.0){
-        //incremente les tics de chaque batiment
-        for (int x = 0; x < COLONNES; x++){
-            JEU->tabHab[x].tic++;
-        }
-        printf("SS\n");
-        *tempsEcoule = tempsActuel;
-    }
-    DrawRectangle(200, 30, 180, 60, (Color){100, 190, 50, 200});
-    DrawText(TextFormat( "Temps : %.2f",tempsActuel) ,210, 40, 25, BLACK);
-}*/

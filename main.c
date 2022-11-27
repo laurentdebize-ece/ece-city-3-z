@@ -145,8 +145,8 @@ int main() {
                 break;
             }
             case MODE : {
-
-                affichageMode(capitaliste, communiste);
+                affichageMode(mode, capitaliste, communiste);
+                choixMode(&mode);
                 break;
             }
             case PLAY : {
@@ -158,7 +158,15 @@ int main() {
                 affichageTerrain(Tiles, JEU->G->tabCase, terrainVague, cabane, maison, hotel, gratteCiel);
                 affichageBattiment(Tiles, JEU->G->tabCase, centralEau, centralEauBis, centralElecBis, centralElec,
                                    rotationBattiment);
-                evolutionCommuniste(JEU->G->tabCase, &tempsEcoule, JEU, &cycle);
+                if (mode == 1){
+                    evolutionBatCapitaliste(JEU->G->tabCase, &tempsEcoule, JEU, &cycle);
+                }else if (mode == 2){
+                    evolutionCommuniste(JEU->G->tabCase, &tempsEcoule, JEU, &cycle);
+                }
+                printf ("%d\t", JEU->tabHab[1].connexe);
+                printf ("mode : %d\n", mode);
+
+                demolitionBatiment(JEU->G->tabCase, &tempsEcoule, JEU, &cycle);
                 printf("%d\t", JEU->tabHab[1].connexe);
                 printf("%d\t", JEU->tabHab[1].nbHabitant);
                 printf("%d \t", JEU->tabHab[1].QE);

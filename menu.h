@@ -9,7 +9,8 @@ void choixModeJeu(int* modeActuel, int* mode, float* tempsDepart, int* jeuEnCour
 void affichageMenu(Texture2D fontMenu);
 void affichageRegles(Texture2D rules);
 void affichageTeam(Texture2D team);
-void affichageMode(Texture2D capitaliste, Texture2D communiste);
+void affichageMode(int mode,  Texture2D capitaliste, Texture2D communiste);
+void choixMode(int* mode);
 #include <stdio.h>
 #include <time.h>
 
