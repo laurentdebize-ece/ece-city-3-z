@@ -135,13 +135,13 @@ int main() {
 
 
                 ///On fait surbriller le rectangle sur lequelle se trouve la souris
-                if (GetMouseX() > 556 && GetMouseY() > 300 && GetMouseX() < 778 && GetMouseY() < 380) {
+                if (GetMouseX() > 556 && GetMouseY() > 300 && GetMouseX() < 1078 && GetMouseY() < 380) {
                     DrawRectangle(556, 300, 512, 80, (Color) {150, 150, 150, 115});
-                } else if (GetMouseX() > 556 && GetMouseY() > 420 && GetMouseX() < 778 && GetMouseY() < 480) {
+                } else if (GetMouseX() > 556 && GetMouseY() > 420 && GetMouseX() < 1078 && GetMouseY() < 480) {
                     DrawRectangle(556, 400, 512, 80, (Color) {150, 150, 150, 115});
-                } else if (GetMouseX() > 556 && GetMouseY() > 500 && GetMouseX() < 778 && GetMouseY() < 580) {
+                } else if (GetMouseX() > 556 && GetMouseY() > 500 && GetMouseX() < 1078 && GetMouseY() < 580) {
                     DrawRectangle(556, 500, 512, 80, (Color) {150, 150, 150, 115});
-                } else if (GetMouseX() > 556 && GetMouseY() > 600 && GetMouseX() < 778 && GetMouseY() < 680) {
+                } else if (GetMouseX() > 556 && GetMouseY() > 600 && GetMouseX() < 1078 && GetMouseY() < 680) {
                     DrawRectangle(556, 600, 512, 80, (Color) {150, 150, 150, 115});
                 }
                 break;
@@ -210,7 +210,7 @@ int main() {
                 }
                 break;
             }
-            case PLAY : {
+            case PLAY :{
                 /* if (GetTime() - lastT > accelerateurTemps) {
                      tempsVirtuelle++;
                      lastT = GetTime();
@@ -374,6 +374,58 @@ int main() {
                         }
                     }
                 }
+
+
+
+            }
+
+
+        }
+        if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) == true) {
+            //Rectangle rectangle = {256, 300, 512, 80};
+            //if (CheckCollisionPointRec(GetMousePosition(), rectangle)) {}
+
+            switch (modeActuel) {
+                case RULES : {
+                    if (GetMouseX() > 50 && GetMouseY() > 50 && GetMouseX() < 200 && GetMouseY() < 150) {
+                        modeActuel = MENU;
+                    }
+                    break;
+                }
+                case TEAM : {
+                    if (GetMouseX() > 50 && GetMouseY() > 50 && GetMouseX() < 200 && GetMouseY() < 150) {
+                        modeActuel = MENU;
+                    }
+                    break;
+                }
+                case MODE : {
+                    if (GetMouseX() > 300 && GetMouseY()>300 && GetMouseX()<700 && GetMouseY()<600){
+                        mode = 1;  ///MODE CAPITALISTE
+                        DrawText("MODE CHOISI : CAPITALISTE", 400, 400,30,  BLACK);
+                    }else if (GetMouseX() >800 && GetMouseY()>300 && GetMouseX()<1200 && GetMouseY()<600){
+                        mode = 2;  ///MODE COMMUNISTE
+                        DrawText("MODE CHOISI : COMMUNISTE", 400, 400,30,  BLACK);
+                    }
+                    if (GetMouseX() > 50 && GetMouseY() > 50 && GetMouseX() < 200 && GetMouseY() < 150) {
+                        modeActuel = MENU;
+                    }
+                    break;
+                }
+                case MENU : {
+                    if (GetMouseX() > 556 && GetMouseY > 300 && GetMouseX() < 1078 && GetMouseY() < 380) {
+                        modeActuel = PLAY;
+                        tempsDepart = GetTime();
+                        jeuEnCour = 1;
+                    } else if (GetMouseX() > 556 && GetMouseY > 420 && GetMouseX() < 1078 && GetMouseY() < 480) {
+                        modeActuel = RULES;
+
+                    } else if (GetMouseX() > 556 && GetMouseY > 500 && GetMouseX() < 1078 && GetMouseY() < 580) {
+                        modeActuel = TEAM;
+                    } else if (GetMouseX() > 556 && GetMouseY > 620 && GetMouseX() < 1078 && GetMouseY() < 680) {
+                        modeActuel = MODE;
+                    }
+                    break;
+                }
             }
         }
         EndDrawing();
@@ -399,7 +451,6 @@ int main() {
     UnloadTexture(x10);
     UnloadTexture(x15);
     UnloadTexture(x30);
-    UnloadTexture(Routes);
     UnloadTexture(routeImage);
     UnloadTexture(maisonImage);
     UnloadTexture(caserneImage);

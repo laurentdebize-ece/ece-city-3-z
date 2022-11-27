@@ -239,8 +239,6 @@ void batimentApercu(CASE** tabCase, int x, int y, int typeBatiment){
 
 void evolutionBat (CASE** tabCase, float* tempsEcoule, ECECITY* JEU, int* cycle) {
 
-
-
     //printf("%d\n", cycle);
     if (*cycle == TEMPS_CYCLE) {
         *cycle = 0;
