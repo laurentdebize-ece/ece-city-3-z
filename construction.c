@@ -379,7 +379,7 @@ void chgmtType(ECECITY * JEU,int id){
 void evolutionCommuniste (CASE** tabCase, float* tempsEcoule, ECECITY* JEU, int* cycle){
     if (*cycle == TEMPS_CYCLE) {
         *cycle = 0;
-        for (int x = 1; x < 175; x++) {
+        for (int x = 1; x <= JEU->compteur.nbHab; x++) {
             if (JEU->tabHab[x].type == 5) {
                 bool check = checkcontactEO(JEU, x);
                 if (JEU->tabHab[x].QO >=0 && JEU->tabHab[x].QE >=0 && check) {

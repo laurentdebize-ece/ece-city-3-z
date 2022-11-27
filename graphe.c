@@ -319,7 +319,7 @@ void BFS(ECECITY *JEU, int SommetX, int SommetY, int *compte) {
         ++(*compte);
         float num = defilement(f);
         SommetX = num / 100;
-        SommetY = num - SommetX;
+        SommetY = num - (SommetX*100);
         arc = JEU->G->tabCase[SommetX][SommetY].arc;
         while (arc != NULL) {
             if (JEU->G->tabCase[arc->sommetX][arc->sommetY].couleur == 0 && JEU->G->tabCase[arc->sommetX][arc->sommetY].type ==1) {
@@ -618,26 +618,26 @@ void CalculeElec(ECECITY *JEU) {
     }
 }
 
-void eraseSupp(ECECITY* JEU, int erase){
-    for(int i=1; i<175; i++){
+void eraseSupp(ECECITY* JEU, int erase, int newCon){
+    for(int i=1; i<=JEU->compteur.nbHab; i++){
         if(JEU->tabHab[i].connexe>erase){
             JEU->tabHab[i].connexe--;
         }
-        else if(JEU->tabHab[i].connexe>erase){
-            JEU->tabHab[i].connexe=erase;
+        else if(JEU->tabHab[i].connexe==erase){
+            JEU->tabHab[i].connexe=newCon;
         }
     }for(int i=1; i<(QUADRILIGNE*QUADRICOLONNE/24); i++){
         if(JEU->tabE[i].connexe>erase){
             JEU->tabE[i].connexe--;
         }
-        else if(JEU->tabE[i].connexe>erase){
-            JEU->tabE[i].connexe=erase;
+        else if(JEU->tabE[i].connexe==erase){
+            JEU->tabE[i].connexe=newCon;
         }
         if(JEU->tabO[i].connexe>erase){
             JEU->tabO[i].connexe--;
         }
-        else if(JEU->tabO[i].connexe>erase){
-            JEU->tabO[i].connexe=erase;
+        else if(JEU->tabO[i].connexe==erase){
+            JEU->tabO[i].connexe=newCon;
         }
     }
     JEU->G->nbConnexe--;
@@ -672,13 +672,15 @@ void modifConnexe(ECECITY* JEU, int X, int Y, int categorieConstruction, int rot
             .connexe >0 && JEU->G->tabCase[X][Y].connexe!=JEU->G->tabCase[temp->sommetX][temp->sommetY].connexe){
                 if(JEU->G->tabCase[X][Y].connexe > JEU->G->tabCase[temp->sommetX][temp->sommetY].connexe){
                     int erase=JEU->G->tabCase[X][Y].connexe;
+                    int newCon=JEU->G->tabCase[temp->sommetX][temp->sommetY].connexe;
                     JEU->G->tabCase[X][Y].connexe=JEU->G->tabCase[temp->sommetX][temp->sommetY].connexe;
-                    eraseSupp(JEU, erase);
+                    eraseSupp(JEU, erase, newCon);
                 }
                 if(JEU->G->tabCase[X][Y].connexe < JEU->G->tabCase[temp->sommetX][temp->sommetY].connexe){
                     int erase=JEU->G->tabCase[temp->sommetX][temp->sommetY].connexe;
+                    int newCon=JEU->G->tabCase[X][Y].connexe;
                     JEU->G->tabCase[temp->sommetX][temp->sommetY].connexe=JEU->G->tabCase[X][Y].connexe;
-                    eraseSupp(JEU, erase);
+                    eraseSupp(JEU, erase, newCon);
                 }
             }
             temp = temp->arc_suivant;
