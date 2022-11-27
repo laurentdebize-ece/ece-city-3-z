@@ -101,7 +101,9 @@ int main() {
 
         BeginDrawing();
         ClearBackground(BLACK);
-
+        GetMousePosition();
+        int PosXMouse = GetMouseX();
+        int PosYMouse = GetMouseY();
 
         tempsJeu(&lastT, &tempsVirtuelle, &cycle, accelerateurTemps, &seconde, &minute, &mois, &annee);
         coordSourisIso(&mouseIso, img);
@@ -110,12 +112,12 @@ int main() {
         affichageTerrain(Tiles, JEU->G->tabCase, terrainVague, cabane, maison, hotel, gratteCiel);
         affichageBattiment(Tiles, JEU->G->tabCase);
         evolutionBat(JEU->G->tabCase, &tempsEcoule, JEU,&cycle);
+        construireBat(categorieConstruction, PosXMouse, PosYMouse, terrainVague, Routes, mouseIso, JEU->G->tabCase);
 
 
 
-        GetMousePosition();
-        int PosXMouse = GetMouseX();
-        int PosYMouse = GetMouseY();
+
+
 
         if (IsKeyPressed(KEY_SPACE) == true) {
             if (niveau != 2) {
@@ -205,7 +207,6 @@ int main() {
                 DrawTexture(x30, 35, 190, BLUE);
                 break;
         }
-        construireBat(categorieConstruction, PosXMouse, PosYMouse, terrainVague, Routes);
 
         EndDrawing();
 

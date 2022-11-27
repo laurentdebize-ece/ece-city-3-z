@@ -33,7 +33,7 @@ void habitation(CASE **tabCase, int x, int y, int *compteur, int detruire,ECECIT
                 JEU->tabHab[*compteur].nbHabitant = 0;
                 JEU->tabHab[*compteur].QO = 0;
                 JEU->tabHab[*compteur].QE = 0;
-                JEU->tabHab[*compteur].tic = 0;
+
 
 
                 //JEU->tabHab[*compteur].tic = 0;
@@ -87,6 +87,7 @@ void batiment (CASE** tabCase, int x, int y, int* compteur, int typeBatiment, in
 
                     }
                 }
+
             }
         }
     }

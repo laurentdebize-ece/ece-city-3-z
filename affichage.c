@@ -5,10 +5,38 @@
 #include "bibliotheque.h"
 
 
-void construireBat(int categorieConstruction, int posXMouse, int posYMouse, Texture2D building, Texture2D route) {
+void construireBat(int categorieConstruction, int posXMouse, int posYMouse, Texture2D building, Texture2D Routes,VECTEUR mouseIso,CASE **tabCase) {
+    Vector2 positionSprite;
+    Rectangle route;
+    int TypeRoute;
+    route.width = LARGEUR_TUILE_ISO;
+    route.height = HAUTEUR_TUILE_ISO;
     switch (categorieConstruction) {
         case 0 :
-            DrawTextureRec(route, (Rectangle){5*35, 0, 34, 18}, (Vector2){posXMouse-10, posYMouse-5}, GREEN);
+
+            for (int y = 0; y < LIGNES; y++) {
+                for (int x = 0; x < COLONNES; x++) {
+                    positionSprite.x =
+                            x * (LARGEUR_TUILE_ISO / 2) + y * (LARGEUR_TUILE_ISO / 2) + LARGEUR_TUILE_ISO * ISO_DECALAGE_X;
+                    positionSprite.y =
+                            x * (HAUTEUR_TUILE_ISO / 2) - y * (HAUTEUR_TUILE_ISO / 2) + HAUTEUR_TUILE_ISO * ISO_DECALAGE_Y;
+                    TypeRoute = typeRoute(tabCase, x, y);
+                    for (int i = 0; i <= 15; i++) {
+                        if (TypeRoute == i) {
+                            route.x = i * LARGEUR_TUILE_ISO + i;
+                            route.y = 0;
+                        }
+                    }
+                    if (mouseIso.x == x && mouseIso.y == y) {
+                        if(tabCase[x][y].type == 0) {
+                            DrawTextureRec(Routes, route, positionSprite, GREEN);
+                        }
+                        else{
+                            DrawTextureRec(Routes, route, positionSprite, RED);
+                        }
+                    }
+                }
+            }
             break;
         case 1 :
             DrawTexture(building, posXMouse - 15, posYMouse - 25, GREEN);
@@ -173,7 +201,7 @@ int typeRoute(CASE **tabCase, int x, int y) {
 void enregistrerPartie(CASE** tabCase, int temps){
     FILE * n = fopen("../map.txt","w+");
     FILE * d = fopen("../ordreConstruction.txt","w+");
-    fprintf(n, "%d ",temps);
+    fprintf(n, "%d\n",temps);
     for (int y = 0; y < LIGNES; y++) {
         for (int x = 0; x < COLONNES; x++) {
             fprintf(n, "%d ",tabCase[x][y].type);

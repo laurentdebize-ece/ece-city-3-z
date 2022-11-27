@@ -18,6 +18,6 @@ void enregistrerPartie(CASE** tabCase, int temps);
 void recommencerPartie(CASE** tabCase, COMPTEUR* compteur, int* temps, int* cycle);
 void initialisationOrdre(CASE** tabCase, int ordre, int x, int y, COMPTEUR* compteur, ECECITY* JEU);
 void temps(int* lastT, int* tempsVirtuelle, int* cycle, int accelerateurTemps, int* seconde, int* minute, int* mois, int* annee);
-void construireBat(int categorieConstruction, int posXMouse, int posYMouse, Texture2D building);
+void construireBat(int categorieConstruction, int posXMouse, int posYMouse, Texture2D building, Texture2D route,VECTEUR mouseIso,CASE **tabCase);
 void tempsJeu(float* lastT, int* tempsVirtuelle, int* cycle, float accelerateurTemps, int* seconde, int* minute, int* mois, int* annee);
 #endif //ECE_CITY_3_Z_AFFICHAGE_H
