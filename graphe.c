@@ -1,6 +1,7 @@
 #include "bibliotheque.h"
 #include "graphe.h"
 
+//fonction pour créer les arretes
 CASE **CreerArete(CASE **sommet, int s1X, int s1Y, int s2X, int s2Y, int valeurs) {
     if (sommet[s1X][s1Y].arc == NULL) {
         pArc Newarc = (pArc) malloc(sizeof(struct Arc));
@@ -37,6 +38,7 @@ CASE **CreerArete(CASE **sommet, int s1X, int s1Y, int s2X, int s2Y, int valeurs
     }
 }
 
+//permet à partir du tabCase de retrouver les composantes connexes
 void CalculeConnexe(CASE **tabCase, int i, int j, int *nbConnexe) {
     pArc temp = tabCase[i][j].arc;
     int x = tabCase[i][j].arc->sommetX;
@@ -53,6 +55,9 @@ void CalculeConnexe(CASE **tabCase, int i, int j, int *nbConnexe) {
         (*nbConnexe)++;
     }
 }
+
+//2ème version de la fonction précédente afin de le faire ne prenant pour paramètre la structure JEU
+//est utile car dans la première version la struct JEU est en création donc ne peut pas etre prise en para
 
 void CalculeConnexeV2(ECECITY *JEU, int i, int j) {
     pArc temp = JEU->G->tabCase[i][j].arc;
@@ -71,7 +76,7 @@ void CalculeConnexeV2(ECECITY *JEU, int i, int j) {
     }
 }
 
-
+//initialisation du tableau regroupant toutes les habitations
 void iniTabHab(CASE **tabCase, int i, int j, ECECITY *JEU) {
     if (JEU->tabHab[tabCase[i][j].identite].connexe == 0) {
         JEU->tabHab[tabCase[i][j].identite].connexe = tabCase[i][j].connexe;
@@ -97,6 +102,7 @@ void iniTabHab(CASE **tabCase, int i, int j, ECECITY *JEU) {
     }
 }
 
+//initialisation du tableau regroupant toutes les Usines (E pour éléctricité)
 void iniTabE(CASE **tabCase, int i, int j, ECECITY *JEU) {
     if (JEU->tabE[tabCase[i][j].identite].connexe == 0) {
         JEU->tabE[tabCase[i][j].identite].connexe = tabCase[i][j].connexe;
@@ -107,6 +113,7 @@ void iniTabE(CASE **tabCase, int i, int j, ECECITY *JEU) {
     }
 }
 
+//initialisation du tableau regroupant tous les Chateau d'eau (O pour Eau même son)
 void iniTabO(CASE **tabCase, int i, int j, ECECITY *JEU) {
     if (JEU->tabO[tabCase[i][j].identite].connexe == 0) {
         JEU->tabO[tabCase[i][j].identite].connexe = tabCase[i][j].connexe;
@@ -117,6 +124,7 @@ void iniTabO(CASE **tabCase, int i, int j, ECECITY *JEU) {
     }
 }
 
+//pour initialiser les compteurs
 void CalculeCompteurEtTab(CASE **tabCase, int i, int j, ECECITY *JEU) {
     if (tabCase[i][j].type == 1) {
         JEU->compteur.nbRues++;
@@ -135,6 +143,7 @@ void CalculeCompteurEtTab(CASE **tabCase, int i, int j, ECECITY *JEU) {
     }
 }
 
+// fonction pour créer le graphe au lancement du jeu
 Graphe *CreerGraphe(FILE *ifs, FILE *ifsID, ECECITY *JEU) {
     int construction;
     int ID;
@@ -185,6 +194,7 @@ Graphe *CreerGraphe(FILE *ifs, FILE *ifsID, ECECITY *JEU) {
     return Newgraphe;
 }
 
+//fonction lisant la matrcie de sauvegarde afin de créer un graphe équivalant
 Graphe *lire_graphe(char *nomFichier, char *nomFichierid, ECECITY *JEU) {
     Graphe *graphe;
     FILE *ifs = fopen(nomFichier, "r+");
@@ -198,6 +208,7 @@ Graphe *lire_graphe(char *nomFichier, char *nomFichierid, ECECITY *JEU) {
     return graphe;
 }
 
+//Initialisation et création de la structure JEU
 ECECITY *iniJeu() {
     ECECITY *JEU = malloc((QUADRILIGNE) * sizeof(JEU));
     JEU->tabHab = malloc((QUADRILIGNE*QUADRICOLONNE/9) * sizeof(Habitations));
@@ -213,6 +224,7 @@ ECECITY *iniJeu() {
     return JEU;
 }
 
+//pas utilisé dans le code mais utilisé lors des tests pour vérifier le fonctionnement des fonctions d'ini et de création
 void afficher_successeurs(CASE **sommet, int i, int j) {
 
     printf("sommet %d:\n", i * 100 + j);
@@ -226,6 +238,7 @@ void afficher_successeurs(CASE **sommet, int i, int j) {
 
 }
 
+//même principe que pour la fonction au dessus
 void graphe_afficher(Graphe *graphe) {
     printf("graphe\n");
 
@@ -242,6 +255,7 @@ void graphe_afficher(Graphe *graphe) {
 
 }
 
+//utile pour le BFS plus tard utilisant une file pour récupérer la tete de la file
 int defilement(File F) {
     Cellule cellule;
     int sommet;
@@ -258,6 +272,7 @@ int defilement(File F) {
     return (sommet);
 }
 
+//même principe que pour au dessus  permet de créer la file
 File CreerFile() {
     File F;
     F = (File) malloc(sizeof(struct _file));
@@ -267,6 +282,7 @@ File CreerFile() {
     return (F);
 }
 
+//même principe que pour au dessus permet d'entré une nouvelle cellule dans la file
 void enfiler(File F, int sommet) {
     Cellule cellule;
     if (F == NULL) printf("file existe pas - enfiler");
@@ -283,6 +299,7 @@ void enfiler(File F, int sommet) {
     ++(F->longueur);
 }
 
+//même principe que pour au dessus
 void ecrireFile(File F) {
     Cellule cellule;
     if (F == NULL) printf("erreur ecrireFile");
@@ -300,6 +317,7 @@ void ecrireFile(File F) {
     printf("\n");
 }
 
+//potentiellement utile
 int checkBlanc(Graphe *G, int num) {
     for (int i = 0; i < QUADRICOLONNE; i++) {
         if (G->tabCase[i]->couleur == 0) {
@@ -309,6 +327,7 @@ int checkBlanc(Graphe *G, int num) {
     return QUADRICOLONNE + 1;
 }
 
+//BFS pour la distibution de l'eau
 void BFS(ECECITY *JEU, int SommetX, int SommetY, int *compte) {
     *compte = 0;
     File f = CreerFile();
@@ -340,6 +359,7 @@ void BFS(ECECITY *JEU, int SommetX, int SommetY, int *compte) {
     }
 }
 
+//utile pour vérifier le BFS
 void afficheBFS(int tab[], int compte, int *c) {
 
     printf("composante connexe %d QUADRICOLONNE de découverte : \n", *c);
@@ -350,6 +370,7 @@ void afficheBFS(int tab[], int compte, int *c) {
     (*c)++;
 }
 
+//permet de tout rénitialiser pour refaire un BFS
 void touBlancs(ECECITY *JEU) {
     for (int i = 0; i < QUADRILIGNE; i++) {
         for (int j = 0; j < QUADRICOLONNE; j++) {
@@ -363,6 +384,7 @@ void touBlancs(ECECITY *JEU) {
     }
 }
 
+//calcule les distance après le BFS
 void CalculDistance(ECECITY *JEU, int SommetX, int SommetY, int con) {
     for (int i = 0; i < QUADRILIGNE; i++) {
         for (int j = 0; j < QUADRICOLONNE; j++) {
@@ -382,6 +404,7 @@ void CalculDistance(ECECITY *JEU, int SommetX, int SommetY, int con) {
     }
 }
 
+//vérifie si l'id a déjà été enregistré
 bool checkIdO(int *ordre, int nbHabitationCon, int id){
     for (int i=0; i<nbHabitationCon; i++){
         if(id==ordre[i]){
@@ -391,6 +414,7 @@ bool checkIdO(int *ordre, int nbHabitationCon, int id){
     return true;
 }
 
+//pour ne pas enregistrer deux fois une meme maison
 void colorMaison(ECECITY*JEU, int id){
     for (int i = 0; i < QUADRILIGNE; i++) {
         for (int j = 0; j < QUADRICOLONNE; j++) {
@@ -401,6 +425,7 @@ void colorMaison(ECECITY*JEU, int id){
     }
 }
 
+//tri dans l'ordre croissant les distances
 void triDistance(int *ordre, ECECITY *JEU, int nbHabitationCon) {
     int a = 0;
     while (a != nbHabitationCon) {
@@ -423,6 +448,7 @@ void triDistance(int *ordre, ECECITY *JEU, int nbHabitationCon) {
     }
 }
 
+//répartie l'eau en fonction du BFS
 void repartitionO(ECECITY *JEU, int* ordre, int nbHabitationCon, int id) {
     for(int i =0 ; i<nbHabitationCon; i++){
         if(JEU->tabO[id].QOrestant==0){
@@ -443,6 +469,7 @@ void repartitionO(ECECITY *JEU, int* ordre, int nbHabitationCon, int id) {
     }
 }
 
+//fonction principale faisant toute la distrib de l'eau par BFS
 void ECEBFS(int con, int id, ECECITY *JEU,int nbHabitant, int nbHabitationCon) {
     int compte;
     //chercher dans le graphe le chateau O qu'on évalu et faire le BFS a partir de ce sommet
@@ -478,6 +505,7 @@ bool checkApproO(int i, ECECITY *JEU) {
     return true;
 }
 
+//reset les quantités pour le calcul des quantités restantes
 void resetEO(ECECITY *JEU){
     for(int i=1; i<=JEU->compteur.nbUsines;i++){
         JEU->tabE[i].QErestant=5000;
@@ -489,6 +517,7 @@ void resetEO(ECECITY *JEU){
     }
 }
 
+//répartie en fonction l'eau dans différents cas pour éviter de faire un BFS(car lourd)
 void CalculeO(ECECITY *JEU) {
     //On test d'abord si dans une composante connexe on a plus de QO que de nbHabitant
     //on récupére code CalculElec
@@ -556,7 +585,6 @@ void CalculeO(ECECITY *JEU) {
 
 }
 
-//changer nb connexe
 
 void CalculeElec(ECECITY *JEU) {
     resetEO(JEU);
@@ -666,6 +694,7 @@ void modifConnexeDestru(ECECITY* JEU){
     }
 }
 
+//fonction principale modifiant les composantes connexes à chaque nouvelles constructions
 void modifConnexe(ECECITY* JEU, int X, int Y, int categorieConstruction, int rotation){
     pArc temp = JEU->G->tabCase[X][Y].arc;
     bool fin=true;
