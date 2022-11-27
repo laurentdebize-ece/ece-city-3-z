@@ -1,9 +1,6 @@
-//
-// Created by Ilayda Kocer on 04/11/2022.
-//
-
 #include "bibliotheque.h"
 
+///Chois des actions dans le menu (comme voir les règles....)
 void choixModeJeu(int* modeActuel, int* mode, float* tempsDepart, int* jeuEnCour){
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) == true) {
         //Rectangle rectangle = {256, 300, 512, 80};
@@ -58,6 +55,7 @@ void choixModeJeu(int* modeActuel, int* mode, float* tempsDepart, int* jeuEnCour
     }
 }
 
+///Affichage du menu au lancement du jeu
 void affichageMenu(Texture2D fontMenu){
     DrawTexturePro(fontMenu,
                    (Rectangle) {.x = 0, .y = 0, .width = fontMenu.width, .height =  fontMenu.height},
@@ -88,6 +86,7 @@ void affichageMenu(Texture2D fontMenu){
     }
 }
 
+///Affichage des regles dans l'onglet "regles"
 void affichageRegles(Texture2D rules){
     DrawTexturePro(rules,
                    (Rectangle) {.x = 0, .y = 0, .width = rules.width, .height =  rules.height},
@@ -104,6 +103,7 @@ void affichageRegles(Texture2D rules){
     }
 }
 
+///Affichage de l'equipe dans l'onglet "TEAM"
 void affichageTeam(Texture2D team){
     DrawTexturePro(team,
                    (Rectangle) {.x = 0, .y = 0, .width = team.width, .height =  team.height},
@@ -119,6 +119,7 @@ void affichageTeam(Texture2D team){
     }
 }
 
+///Fonction permettant de choisir le mode de jeu
 void choixMode (int* mode){
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) == true){
         if (GetMouseX() > 300 && GetMouseY() > 300 && GetMouseX() < 700 && GetMouseY() < 600) {
@@ -132,6 +133,7 @@ void choixMode (int* mode){
     }
 }
 
+///Fonction qui affiche la fenetre du mode de jeu
 void affichageMode(int mode,  Texture2D capitaliste, Texture2D communiste){
     DrawTexturePro(capitaliste,
                    (Rectangle) {.x = 0, .y = 0, .width = capitaliste.width, .height =  capitaliste.height},

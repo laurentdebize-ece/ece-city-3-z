@@ -55,9 +55,9 @@ int main() {
     barre.temps = 0;
 
 
-    fscanf(ifs, "%d", &tempsVirtuelle);
-    cycle = tempsVirtuelle % TEMPS_CYCLE;
-    for (int y = 0; y < LIGNES; y++) {
+    fscanf(ifs, "%d", &tempsVirtuelle); // Lecture du temps acuel enregistré dans le fichier texte
+    cycle = tempsVirtuelle % TEMPS_CYCLE; // Le cycle correspond au nb de seconde restant avant la prochaine évolution, un cycle = 15 secondes
+    for (int y = 0; y < LIGNES; y++) {  // Initialisation de la matrice du jeu en fonctions des types, des identités et des affichages enregistrés dans des fichiers texte différnets
         for (int x = 0; x < COLONNES; x++) {
             fscanf(ifs, "%d", &construction);
             fscanf(ifs2, "%d", &ordre);
@@ -71,7 +71,7 @@ int main() {
 
     InitWindow(LARGEUR, HAUTEUR, "Projet");
     SetWindowState(FLAG_WINDOW_RESIZABLE);
-
+    // Initialisation de ttes les Textures
     Texture2D Tiles = LoadTexture("../tiles/tiles.png");
     Texture2D Routes = LoadTexture("../tiles/route.png");
     Texture2D monnaie = LoadTexture("../images/monnaie.png");
@@ -122,16 +122,16 @@ int main() {
     Texture communiste = LoadTexture("../Bitmap/communiste.png");
 
 
-    while (!WindowShouldClose()) {
+    while (!WindowShouldClose()) { // Lancement de la boucle du jeu
 
-        BeginDrawing();
+        BeginDrawing(); // On commence à dessiner
         ClearBackground(BLACK);
         GetMousePosition();
-        int PosXMouse = GetMouseX();
+        int PosXMouse = GetMouseX(); // on stocke les coordonnées de la souris dans deux variavles
         int PosYMouse = GetMouseY();
-        choixModeJeu(&modeActuel, &mode, &tempsDepart, &jeuEnCour);
+        choixModeJeu(&modeActuel, &mode, &tempsDepart, &jeuEnCour); // On choisit si on veut lancer une partie, regarder les règles...
 
-        switch (modeActuel) {
+        switch (modeActuel) { //on affiche ce qu'on a choisit commme mode
             case MENU : {
                 affichageMenu(fontMenu);
                 break;
@@ -152,25 +152,21 @@ int main() {
             case PLAY : {
 
                 tempsJeu(&lastT, &tempsVirtuelle, &cycle, accelerateurTemps, &seconde, &minute, &mois, &annee);
-                coordSourisIso(&mouseIso, img);
-                affichageGrille(mouseIso, Tiles);
-                affichageRoute(Routes, JEU->G->tabCase, niveau);
-                affichageTerrain(Tiles, JEU->G->tabCase, terrainVague, cabane, maison, hotel, gratteCiel);
-                affichageBattiment(Tiles, JEU->G->tabCase, centralEau, centralEauBis, centralElecBis, centralElec,
+                coordSourisIso(&mouseIso, img); // Passage des coordonnées de la souris en coordonnées isométriques
+                affichageGrille(mouseIso, Tiles);// on affiche la grille
+                affichageRoute(Routes, JEU->G->tabCase, niveau);// on affiche les route si il y en a qui ont été posé
+                affichageTerrain(Tiles, JEU->G->tabCase, terrainVague, cabane, maison, hotel, gratteCiel);// on affiche les terrains si il y en a qui ont été posé
+                affichageBattiment(Tiles, JEU->G->tabCase, centralEau, centralEauBis, centralElecBis, centralElec,// on affiche les battiments si il y en a qui ont été posé
                                    rotationBattiment);
-                if (mode == 1){
+                if (mode == 1){// En fonction du mode on chosit le type d'évolution
                     evolutionBatCapitaliste(JEU->G->tabCase, &tempsEcoule, JEU, &cycle);
                 }else if (mode == 2){
                     evolutionCommuniste(JEU->G->tabCase, &tempsEcoule, JEU, &cycle);
                 }
-                printf ("%d\t", JEU->tabHab[1].connexe);
-                printf ("mode : %d\n", mode);
+
 
                 demolitionBatiment(JEU->G->tabCase, &tempsEcoule, JEU, &cycle);
-                printf("%d\t", JEU->tabHab[1].connexe);
-                printf("%d\t", JEU->tabHab[1].nbHabitant);
-                printf("%d \t", JEU->tabHab[1].QE);
-                printf("%d \n", JEU->tabHab[1].QO);
+
 
                 construireBat(categorieConstruction, PosXMouse, PosYMouse, terrainVague, Routes, mouseIso,
                               JEU->G->tabCase, centralEau, centralEauBis, centralElecBis, centralElec,
@@ -186,7 +182,7 @@ int main() {
                 CalculeElec(JEU);
                 CalculeO(JEU);
 
-                if (IsKeyPressed(KEY_SPACE) == true) {
+                if (IsKeyPressed(KEY_SPACE) == true) {// Affichage des niveaux
                     if (niveau != 2) {
                         niveau++;
                     } else {
@@ -195,7 +191,7 @@ int main() {
                 }
 
 
-                if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) == true) {
+                if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) == true) { // Si le bouton de la souris est appuyé alors on réalise les fonctions suivantes
                     clicGaucheBarreOutil(PosXMouse, PosYMouse, &compteurAccele, &rotationBattiment, &detruire, &construire, JEU, &tempsVirtuelle, &cycle, &quitter, &modeActuel);
                     constructionSouris(&mouseIso, categorieConstruction, &niveau, JEU->G->tabCase, &compteEnBanque,
                                        &JEU->compteur, rotationBattiment, detruire, JEU);

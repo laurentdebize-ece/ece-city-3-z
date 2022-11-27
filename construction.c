@@ -311,42 +311,9 @@ void demolitionBatCapitaliste (CASE** tabCase, float* tempsEcoule, ECECITY* JEU,
     }
 }
 
-bool checkcontactEO(ECECITY * JEU, int id){
-    JEU->tabHab[id].connexe;
-    bool O = false;
-    bool E = false;
-    for(int i = 0; i<=JEU->compteur.nbUsines;i++){
-        if(JEU->tabE[i].connexe==JEU->tabHab[id].connexe){
-            E=true;
-        }
-    }
-    for(int i = 0; i<=JEU->compteur.nbChateauO;i++){
-        if(JEU->tabO[i].connexe==JEU->tabHab[id].connexe){
-            O=true;
-        }
-    }
-    if(O&&E){
-        return true;
-    }
-    return false;
-}
-
-void chgmtType(ECECITY * JEU,int id){
-    for (int Y = 0; Y < LIGNES; Y++) {
-        for (int X = 0; X < COLONNES; X++) {
-            if (JEU->G->tabCase[X][Y].identite == id && JEU->G->tabCase[X][Y].type >= 5 && JEU->G->tabCase[X][Y].type <= 9) {
-                for (int i = 0; i < LONGUEURE_TERRAIN_VAGUE; i++) {
-                    for (int j = 0; j < LARGEUR_TERRAIN_VAGUE; j++) {
-                        JEU->G->tabCase[X + i][Y + j].type++;
-                    }
-                }
-                return;
-            }
-        }
-    }
-}
 
 
+///Fonction faisant evoluer les batiment en mode capitaliste toutes les 15 sec
 void evolutionBatCapitaliste (CASE** tabCase, float* tempsEcoule, ECECITY* JEU, int* cycle) {
     //printf("%d\n", cycle);
     if (*cycle == TEMPS_CYCLE) {
@@ -377,6 +344,45 @@ void evolutionBatCapitaliste (CASE** tabCase, float* tempsEcoule, ECECITY* JEU, 
     }
 }
 
+
+
+
+bool checkcontactEO(ECECITY * JEU, int id){
+    JEU->tabHab[id].connexe;
+    bool O = false;
+    bool E = false;
+    for(int i = 0; i<=JEU->compteur.nbUsines;i++){
+        if(JEU->tabE[i].connexe==JEU->tabHab[id].connexe){
+            E=true;
+        }
+    }
+    for(int i = 0; i<=JEU->compteur.nbChateauO;i++){
+        if(JEU->tabO[i].connexe==JEU->tabHab[id].connexe){
+            O=true;
+        }
+    }
+    if(O&&E){
+        return true;
+    }
+    return false;
+}
+
+///Changement du type des batiments dans le graphe(evolution)
+void chgmtType(ECECITY * JEU,int id){
+    for (int Y = 0; Y < LIGNES; Y++) {
+        for (int X = 0; X < COLONNES; X++) {
+            if (JEU->G->tabCase[X][Y].identite == id && JEU->G->tabCase[X][Y].type >= 5 && JEU->G->tabCase[X][Y].type <= 9) {
+                for (int i = 0; i < LONGUEURE_TERRAIN_VAGUE; i++) {
+                    for (int j = 0; j < LARGEUR_TERRAIN_VAGUE; j++) {
+                        JEU->G->tabCase[X + i][Y + j].type++;
+                    }
+                }
+                return;
+            }
+        }
+    }
+}
+///Changement du type des batiments dans le graphe (regressionà)
 void chgmtTypeN(ECECITY * JEU,int id){
     for (int Y = 0; Y < LIGNES; Y++) {
         for (int X = 0; X < COLONNES; X++) {
@@ -392,6 +398,7 @@ void chgmtTypeN(ECECITY * JEU,int id){
     }
 }
 
+///Fonction faisant evoluer les batiment en mode communiste toutes les 15 sec
 void evolutionCommuniste (CASE** tabCase, float* tempsEcoule, ECECITY* JEU, int* cycle){
     if (*cycle == TEMPS_CYCLE) {
         *cycle = 0;
@@ -428,6 +435,7 @@ void evolutionCommuniste (CASE** tabCase, float* tempsEcoule, ECECITY* JEU, int*
     }
 }
 
+///Fonction permettant de faire régresser les batiments d'un niveau a chaque nv cycle
 void demolitionBatiment (CASE** tabCase, float* tempsEcoule, ECECITY* JEU,  int* cycle){
     if (*cycle == TEMPS_CYCLE) {
         *cycle = 0;
@@ -473,9 +481,7 @@ void demolitionBatiment (CASE** tabCase, float* tempsEcoule, ECECITY* JEU,  int*
                     JEU->tabHab[x].type--;
                     JEU->tabHab[x].nbHabitant = 50;
                     chgmtTypeN(JEU, x);
-
                 } else if (JEU->tabHab[x].type == 9) {
-
                     JEU->tabHab[x].type--;
                     JEU->tabHab[x].nbHabitant = 100;
                     chgmtTypeN(JEU, x);
@@ -491,3 +497,4 @@ void demolitionBatiment (CASE** tabCase, float* tempsEcoule, ECECITY* JEU,  int*
         }
     }
 }
+
